@@ -21,10 +21,45 @@ with tabs[0]:
         nome_ata = st.text_input("Nome da ATA")
         data_ata = st.date_input("Data da ATA")
         fornecedor = st.selectbox("Fornecedor", ["Selecione"] + [f["nome"] for f in st.session_state.fornecedores])
+
+        # Lista de equipamentos da ATA
+        equipamentos_ata = []
+
+        # Adicionar equipamentos à ATA
+        st.subheader("Equipamentos")
+
+        with st.form("equipamento_ata"):
+            especificacao = st.text_input("Especificação")
+            marca_modelo = st.text_input("Marca/Modelo")
+            codigo = st.text_input("Código")
+            unidade = st.selectbox("Unidade", ["Unidade", "Caixa", "Pacote", "Outro"])
+            quantidade = st.number_input("Quantidade", min_value=1, step=1)
+            valor_unitario = st.number_input("Valor Unitário", min_value=0.0, format="%.2f")
+            valor_total = valor_unitario * quantidade if valor_unitario > 0 and quantidade > 0 else 0.0
+            adicionar_equipamento = st.form_submit_button("Adicionar Equipamento")
+
+            if adicionar_equipamento:
+                equipamentos_ata.append({
+                    "especificacao": especificacao,
+                    "marca_modelo": marca_modelo,
+                    "codigo": codigo,
+                    "unidade": unidade,
+                    "quantidade": quantidade,
+                    "valor_unitario": valor_unitario,
+                    "valor_total": valor_total
+                })
+                st.success(f"Equipamento '{especificacao}' adicionado!")
+
+        # Botão para cadastrar ATA com equipamentos
         submit_ata = st.form_submit_button("Cadastrar ATA")
 
         if submit_ata and nome_ata and data_ata and fornecedor != "Selecione":
-            st.session_state.atas.append({"nome": nome_ata, "data": data_ata, "fornecedor": fornecedor})
+            st.session_state.atas.append({
+                "nome": nome_ata,
+                "data": data_ata,
+                "fornecedor": fornecedor,
+                "equipamentos": equipamentos_ata
+            })
             st.success(f"ATA '{nome_ata}' cadastrada com sucesso!")
 
     # Listagem de ATAs cadastradas
@@ -88,6 +123,11 @@ with tabs[3]:
         
         if ata_filtro != "Todas":
             df_empenhos = df_empenhos[df_empenhos["ata"] == ata_filtro]
+        
+        st.dataframe(df_empenhos)
+    else:
+        st.info("Nenhum empenho registrado ainda.")
+
         
         st.dataframe(df_empenhos)
     else:
