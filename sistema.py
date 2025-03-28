@@ -28,7 +28,7 @@ with tabs[0]:
     # Formulário para cadastrar nova Ata
     with st.form("nova_ata"):
         nome_ata = st.text_input("Nome da Ata")
-        data_ata = st.date_input("Data da Ata")
+        data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
         validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
         fornecedor = st.selectbox("Fornecedor", fornecedores_cadastrados, key="select_fornecedor")
         link_ata = st.text_input("Link para o PDF da Ata")
