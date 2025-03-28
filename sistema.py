@@ -25,14 +25,14 @@ with tabs[0]:
     # Atualizar lista de fornecedores (sempre pegar os fornecedores cadastrados)
     fornecedores_cadastrados = ["Selecione"] + [f["nome"] for f in st.session_state.fornecedores]
 
-    # Formulário para cadastrar nova ATA
+    # Formulário para cadastrar nova Ata
     with st.form("nova_ata"):
-        nome_ata = st.text_input("Nome da ATA")
-        data_ata = st.date_input("Data da ATA")
-        validade_ata = st.date_input("Validade da ATA", min_value=data_ata)
+        nome_ata = st.text_input("Nome da Ata")
+        data_ata = st.date_input("Data da Ata")
+        validade_ata = st.date_input("Validade da Ata", min_value=data_ata)
         fornecedor = st.selectbox("Fornecedor", fornecedores_cadastrados, key="select_fornecedor")
-        link_ata = st.text_input("Link para o PDF da ATA")
-        submit_ata = st.form_submit_button("Cadastrar ATA")
+        link_ata = st.text_input("Link para o PDF da Ata")
+        submit_ata = st.form_submit_button("Cadastrar Ata")
 
         if submit_ata and nome_ata and data_ata and fornecedor != "Selecione":
             st.session_state.atas.append({
@@ -43,12 +43,12 @@ with tabs[0]:
                 "equipamentos": [],
                 "link": link_ata
             })
-            st.success(f"ATA '{nome_ata}' cadastrada com sucesso!")
+            st.success(f"Ata '{nome_ata}' cadastrada com sucesso!")
 
-    # Adicionando Equipamentos à ATA
-    st.subheader("Cadastrar Equipamentos para a ATA")
+    # Adicionando Equipamentos à Ata
+    st.subheader("Cadastrar Equipamentos para a Ata")
     if len(st.session_state.atas) > 0:
-        ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_ata")
+        ata_selecionada = st.selectbox("Selecione a Ata", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_ata")
         
         if ata_selecionada != "Selecione":
             ata = next(a for a in st.session_state.atas if a["nome"] == ata_selecionada)
@@ -80,7 +80,7 @@ with tabs[0]:
                     })
                     st.success(f"Equipamento '{especificacao}' adicionado com sucesso!")
 
-            # Exibir equipamentos cadastrados para a ATA selecionada
+            # Exibir equipamentos cadastrados para a Ata selecionada
             if ata["equipamentos"]:
                 equipamentos_df = pd.DataFrame(ata["equipamentos"])
                 st.subheader("Equipamentos Cadastrados")
@@ -88,7 +88,7 @@ with tabs[0]:
             else:
                 st.info("Nenhum equipamento cadastrado ainda.")
     else:
-        st.info("Nenhuma ATA cadastrada para adicionar equipamentos.")
+        st.info("Nenhuma Ata cadastrada para adicionar equipamentos.")
         
 # Registro de Fornecedores
 with tabs[1]:
@@ -125,8 +125,8 @@ with tabs[1]:
 with tabs[2]:
     st.header("Registro de Empenhos")
 
-    # Seleção da ATA e equipamento
-    ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_empenho_ata")
+    # Seleção da Ata e equipamento
+    ata_selecionada = st.selectbox("Selecione a Ata", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_empenho_ata")
     equipamento = st.text_input("Nome do Equipamento")
     quantidade = st.number_input("Quantidade", min_value=1, step=1)
     registrar_empenho = st.button("Registrar Empenho")
@@ -149,8 +149,8 @@ with tabs[2]:
 with tabs[3]:
     st.header("Histórico de Empenhos")
 
-    # Seleção de ATA para filtrar empenhos
-    ata_filtro = st.selectbox("Filtrar por ATA", ["Todas"] + [a["nome"] for a in st.session_state.atas], key="select_filtro_ata")
+    # Seleção de Ata para filtrar empenhos
+    ata_filtro = st.selectbox("Filtrar por Ata", ["Todas"] + [a["nome"] for a in st.session_state.atas], key="select_filtro_ata")
     
     if st.session_state.empenhos:
         df_empenhos = pd.DataFrame(st.session_state.empenhos)
@@ -172,7 +172,7 @@ with tabs[4]:
         for equip in ata["equipamentos"]:
             saldo_utilizado = equip["quantidade"] - equip["saldo_disponivel"]
             relatorio_consumo.append({
-                "ATA": ata["nome"],
+                "Ata": ata["nome"],
                 "Equipamento": equip["especificacao"],
                 "Saldo Utilizado": saldo_utilizado,
                 "Saldo Disponível": equip["saldo_disponivel"],
@@ -192,6 +192,6 @@ with tabs[4]:
     if alertas_vencimento:
         st.warning("Alertas de vencimento de atas em 7 dias:")
         for alerta in alertas_vencimento:
-            st.write(f"ATA: {alerta['nome']} - Validade: {alerta['validade']}")
+            st.write(f"Ata: {alerta['nome']} - Validade: {alerta['validade']}")
     else:
-        st.info("Nenhuma ATA vencendo em 7 dias.")
+        st.info("Nenhuma Ata vencendo em 7 dias.")
