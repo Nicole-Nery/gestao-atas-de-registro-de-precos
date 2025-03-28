@@ -14,7 +14,7 @@ tabs = st.tabs(["Registro de Atas", "Cadastro de Fornecedores", "Registro de Emp
 
 # Registro de Atas
 with tabs[0]:
-    st.header("Registro de preço de ATAS")
+    st.header("Registro de Atas")
 
     # Formulário para cadastrar nova ATA
     with st.form("nova_ata"):
