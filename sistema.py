@@ -1,24 +1,95 @@
 import streamlit as st
 import pandas as pd
 
-# Título do app
-st.title("Gestão de Atas de Registro de Preços")
-
-# Criar um DataFrame para armazenar os dados (simulação)
+# Inicializa session state para armazenar dados temporários
 if "atas" not in st.session_state:
-    st.session_state.atas = pd.DataFrame(columns=["Nome", "Fornecedor", "Validade", "Saldo"])
+    st.session_state.atas = []
+if "fornecedores" not in st.session_state:
+    st.session_state.fornecedores = []
+if "empenhos" not in st.session_state:
+    st.session_state.empenhos = []
 
-# Formulário para adicionar uma nova ata
-with st.form("nova_ata"):
-    nome = st.text_input("Nome da Ata")
-    fornecedor = st.text_input("Fornecedor")
-    validade = st.date_input("Validade")
-    saldo = st.number_input("Saldo Inicial", min_value=0)
-    submit = st.form_submit_button("Adicionar Ata")
+# Layout com abas
+tabs = st.tabs(["Registro de Atas", "Cadastro de Fornecedores", "Registro de Empenhos", "Histórico de Empenhos"])
 
-    if submit:
-        nova_linha = pd.DataFrame([[nome, fornecedor, validade, saldo]], columns=st.session_state.atas.columns)
-        st.session_state.atas = pd.concat([st.session_state.atas, nova_linha], ignore_index=True)
+# Registro de Atas
+with tabs[0]:
+    st.header("Registro de preço de ATAS")
 
-# Mostrar a tabela de atas cadastradas
-st.dataframe(st.session_state.atas)
+    # Formulário para cadastrar nova ATA
+    with st.form("nova_ata"):
+        nome_ata = st.text_input("Nome da ATA")
+        data_ata = st.date_input("Data da ATA")
+        fornecedor = st.selectbox("Fornecedor", ["Selecione"] + [f["nome"] for f in st.session_state.fornecedores])
+        submit_ata = st.form_submit_button("Cadastrar ATA")
+
+        if submit_ata and nome_ata and data_ata and fornecedor != "Selecione":
+            st.session_state.atas.append({"nome": nome_ata, "data": data_ata, "fornecedor": fornecedor})
+            st.success(f"ATA '{nome_ata}' cadastrada com sucesso!")
+
+    # Listagem de ATAs cadastradas
+    st.subheader("ATAs organizadas por data")
+    if st.session_state.atas:
+        atas_df = pd.DataFrame(st.session_state.atas)
+        st.dataframe(atas_df.sort_values(by="data"))
+    else:
+        st.info("Nenhuma ATA cadastrada ainda.")
+
+# Cadastro de Fornecedores
+with tabs[1]:
+    st.header("Cadastro de Fornecedor")
+
+    # Formulário para cadastrar fornecedor
+    with st.form("novo_fornecedor"):
+        nome_fornecedor = st.text_input("Nome do Fornecedor")
+        cnpj = st.text_input("CNPJ")
+        info1 = st.text_input("Informação 1")
+        info2 = st.text_input("Informação 2")
+        observacao = st.text_area("Observação")
+        submit_fornecedor = st.form_submit_button("Cadastrar Fornecedor")
+
+        if submit_fornecedor and nome_fornecedor and cnpj:
+            st.session_state.fornecedores.append({
+                "nome": nome_fornecedor, "cnpj": cnpj, "info1": info1, "info2": info2, "observacao": observacao
+            })
+            st.success(f"Fornecedor '{nome_fornecedor}' cadastrado!")
+
+    # Listagem de fornecedores
+    st.subheader("Fornecedores cadastrados")
+    if st.session_state.fornecedores:
+        fornecedores_df = pd.DataFrame(st.session_state.fornecedores)
+        st.dataframe(fornecedores_df)
+    else:
+        st.info("Nenhum fornecedor cadastrado ainda.")
+
+# Registro de Empenhos
+with tabs[2]:
+    st.header("Registro de Empenhos")
+
+    # Seleção da ATA e equipamento
+    ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas])
+    equipamento = st.text_input("Nome do Equipamento")
+    quantidade = st.number_input("Quantidade", min_value=1, step=1)
+    registrar_empenho = st.button("Registrar Empenho")
+
+    if registrar_empenho and ata_selecionada != "Selecione" and equipamento:
+        st.session_state.empenhos.append({"ata": ata_selecionada, "equipamento": equipamento, "quantidade": quantidade})
+        st.success("Empenho registrado!")
+
+# Histórico de Empenhos
+with tabs[3]:
+    st.header("Histórico de Empenhos")
+
+    # Seleção de ATA para filtrar empenhos
+    ata_filtro = st.selectbox("Filtrar por ATA", ["Todas"] + [a["nome"] for a in st.session_state.atas])
+    
+    if st.session_state.empenhos:
+        df_empenhos = pd.DataFrame(st.session_state.empenhos)
+        
+        if ata_filtro != "Todas":
+            df_empenhos = df_empenhos[df_empenhos["ata"] == ata_filtro]
+        
+        st.dataframe(df_empenhos)
+    else:
+        st.info("Nenhum empenho registrado ainda.")
+
