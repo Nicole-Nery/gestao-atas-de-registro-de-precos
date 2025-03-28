@@ -16,11 +16,14 @@ tabs = st.tabs(["Registro de Atas", "Cadastro de Fornecedores", "Registro de Emp
 with tabs[0]:
     st.header("Registro de Atas")
 
+    # Atualizar lista de fornecedores (sempre pegar os fornecedores cadastrados)
+    fornecedores_cadastrados = ["Selecione"] + [f["nome"] for f in st.session_state.fornecedores]
+
     # Formulário para cadastrar nova ATA
     with st.form("nova_ata"):
         nome_ata = st.text_input("Nome da ATA")
         data_ata = st.date_input("Data da ATA")
-        fornecedor = st.selectbox("Fornecedor", ["Selecione"] + [f["nome"] for f in st.session_state.fornecedores])
+        fornecedor = st.selectbox("Fornecedor", fornecedores_cadastrados, key="select_fornecedor")
         submit_ata = st.form_submit_button("Cadastrar ATA")
 
         if submit_ata and nome_ata and data_ata and fornecedor != "Selecione":
@@ -30,7 +33,7 @@ with tabs[0]:
     # Adicionando Equipamentos à ATA
     st.subheader("Cadastrar Equipamentos para a ATA")
     if len(st.session_state.atas) > 0:
-        ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas])
+        ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_ata")
         
         if ata_selecionada != "Selecione":
             ata = next(a for a in st.session_state.atas if a["nome"] == ata_selecionada)
@@ -97,7 +100,7 @@ with tabs[2]:
     st.header("Registro de Empenhos")
 
     # Seleção da ATA e equipamento
-    ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas])
+    ata_selecionada = st.selectbox("Selecione a ATA", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_empenho_ata")
     equipamento = st.text_input("Nome do Equipamento")
     quantidade = st.number_input("Quantidade", min_value=1, step=1)
     registrar_empenho = st.button("Registrar Empenho")
@@ -111,7 +114,7 @@ with tabs[3]:
     st.header("Histórico de Empenhos")
 
     # Seleção de ATA para filtrar empenhos
-    ata_filtro = st.selectbox("Filtrar por ATA", ["Todas"] + [a["nome"] for a in st.session_state.atas])
+    ata_filtro = st.selectbox("Filtrar por ATA", ["Todas"] + [a["nome"] for a in st.session_state.atas], key="select_filtro_ata")
     
     if st.session_state.empenhos:
         df_empenhos = pd.DataFrame(st.session_state.empenhos)
