@@ -29,7 +29,7 @@ with tabs[0]:
     with st.form("nova_ata"):
         nome_ata = st.text_input("Nome da Ata")
         data_ata = st.date_input("Data da Ata")
-        validade_ata = st.date_input("Validade da Ata", min_value=data_ata)
+        validade_ata = st.date_input("Validade da Ata", min_value=data_ata, str="DD/MM/YYYY")
         fornecedor = st.selectbox("Fornecedor", fornecedores_cadastrados, key="select_fornecedor")
         link_ata = st.text_input("Link para o PDF da Ata")
         submit_ata = st.form_submit_button("Cadastrar Ata")
