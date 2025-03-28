@@ -24,10 +24,11 @@ with tabs[0]:
         nome_ata = st.text_input("Nome da ATA")
         data_ata = st.date_input("Data da ATA")
         fornecedor = st.selectbox("Fornecedor", fornecedores_cadastrados, key="select_fornecedor")
+        link_ata = st.text_input("Link para o PDF da ATA")
         submit_ata = st.form_submit_button("Cadastrar ATA")
 
         if submit_ata and nome_ata and data_ata and fornecedor != "Selecione":
-            st.session_state.atas.append({"nome": nome_ata, "data": data_ata, "fornecedor": fornecedor, "equipamentos": []})
+            st.session_state.atas.append({"nome": nome_ata, "data": data_ata, "fornecedor": fornecedor, "equipamentos": [], "link": link_ata})
             st.success(f"ATA '{nome_ata}' cadastrada com sucesso!")
 
     # Adicionando Equipamentos à ATA
