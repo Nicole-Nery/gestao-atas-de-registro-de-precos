@@ -58,8 +58,6 @@ with tabs[0]:
                 # Formulário para adicionar equipamento
                 especificacao = st.text_input("Especificação")
                 marca_modelo = st.text_input("Marca/Modelo")
-                codigo = st.text_input("Código")
-                unidade = st.text_input("Unidade")
                 quantidade = st.number_input("Quantidade", min_value=1, step=1)
                 saldo_disponivel = st.number_input("Saldo Disponível", min_value=0, step=1)
                 valor_unitario = st.number_input("Valor Unitário", min_value=0.0, format="%.2f")
@@ -71,8 +69,6 @@ with tabs[0]:
                     ata["equipamentos"].append({
                         "especificacao": especificacao,
                         "marca_modelo": marca_modelo,
-                        "codigo": codigo,
-                        "unidade": unidade,
                         "quantidade": quantidade,
                         "saldo_disponivel": saldo_disponivel,
                         "valor_unitario": valor_unitario,
