@@ -122,37 +122,6 @@ with tabs[1]:
 with tabs[2]:
     st.header("Registro de Empenhos")
 
-    # Seleção da Ata e equipamento
-    ata_selecionada = st.selectbox("Selecione a Ata", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_empenho_ata")
-    
-    if ata_selecionada != "Selecione":
-        ata = next(a for a in st.session_state.atas if a["nome"] == ata_selecionada)
-        equipamentos_dessa_ata = ["Selecione"] + [e["especificacao"] for e in ata["equipamento"] if e["saldo_disponivel"]>0]
-
-        if len(equipamentos_dessa_ata) > 1:
-            equipamento = st.selectbox("Selecione o Equipamento", equipamentos_dessa_ata, key="select_equipamento_empenho")
-        else:
-            st.warning("Nenhum equipamento está disponível para empenho nesta Ata.")
-            equipamento = "Selecione"
-
-        quantidade = st.number_input("Quantidade", min_value=1, step=1)
-        registrar_empenho = st.button("Registrar Empenho")
-
-    if registrar_empenho and (equipamento != "Selecione"):
-            for e in ata["equipamentos"]:
-                if e["especificacao"] == equipamento:
-                    if e["saldo_disponivel"] >= quantidade:
-                        e["saldo_disponivel"] -= quantidade
-                        st.session_state.empenhos.append({"ata": ata_selecionada, "equipamento": equipamento, "quantidade": quantidade})
-                        st.success("Empenho registrado!")
-                    else:
-                        st.warning("Quantidade insuficiente disponível.")
-                    break
-
-# Registro de Empenhos
-with tabs[2]:
-    st.header("Registro de Empenhos")
-
     # Seleção da Ata
     ata_selecionada = st.selectbox("Selecione a Ata", ["Selecione"] + [a["nome"] for a in st.session_state.atas], key="select_empenho_ata")
 
@@ -182,6 +151,23 @@ with tabs[2]:
         else:
             st.warning("Nenhum equipamento está disponível para empenho nesta Ata.")
 
+
+# Histórico de Empenhos
+with tabs[3]:
+    st.header("Histórico de Empenhos")
+
+    # Seleção de Ata para filtrar empenhos
+    ata_filtro = st.selectbox("Filtrar por Ata", ["Todas"] + [a["nome"] for a in st.session_state.atas], key="select_filtro_ata")
+    
+    if st.session_state.empenhos:
+        df_empenhos = pd.DataFrame(st.session_state.empenhos)
+        
+        if ata_filtro != "Todas":
+            df_empenhos = df_empenhos[df_empenhos["ata"] == ata_filtro]
+        
+        st.dataframe(df_empenhos)
+    else:
+        st.info("Nenhum empenho registrado ainda.")
 
 # Relatórios de Consumo e Status
 with tabs[4]:
