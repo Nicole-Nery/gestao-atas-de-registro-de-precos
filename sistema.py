@@ -138,7 +138,7 @@ with tabs[2]:
         quantidade = st.number_input("Quantidade", min_value=1, step=1)
         registrar_empenho = st.button("Registrar Empenho")
 
-    if registrar_empenho and equipamento != "Selecione":
+    if registrar_empenho and (equipamento != "Selecione"):
             for e in ata["equipamentos"]:
                 if e["especificacao"] == equipamento:
                     if e["saldo_disponivel"] >= quantidade:
