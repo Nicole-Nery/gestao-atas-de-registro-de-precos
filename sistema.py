@@ -3,7 +3,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 # Alterando o nome da página e o ícone
-st.set_page_config(page_title="Gestão de ARP", page_icon="📄")
+st.set_page_config(page_title="Gestão de ARP", 
+                   page_icon="📄", )
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
 
