@@ -24,7 +24,7 @@ with tabs[0]:
     st.header("Cadastro de Fornecedor")
 
     # Formulário para cadastrar fornecedor
-    with st.form("novo_fornecedor"):
+    with st.form("novo_fornecedor", clear_on_submit=True):
         nome_fornecedor = st.text_input("Nome do Fornecedor", key="nome_fornecedor")
         cnpj = st.text_input("CNPJ", key="cnpj")
         email = st.text_input("E-mail", key="email")
