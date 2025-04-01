@@ -24,22 +24,33 @@ with tabs[0]:
 
     # Formulário para cadastrar fornecedor
     with st.form("novo_fornecedor"):
-        nome_fornecedor = st.text_input("Nome do Fornecedor")
-        cnpj = st.text_input("CNPJ")
-        info1 = st.text_input("Informação 1")
-        info2 = st.text_input("Informação 2")
-        observacao = st.text_area("Observação")
+        nome_fornecedor = st.text_input("Nome do Fornecedor", key="nome_fornecedor")
+        cnpj = st.text_input("CNPJ", key="cnpj")
+        email = st.text_input("E-mail", key="email")
+        endereco = st.text_input("Endereço", key="endereco")
+        telefone = st.text_input("Telefone", key="telefone")
+        observacao = st.text_area("Observação", key="observacao")
         submit_fornecedor = st.form_submit_button("Cadastrar Fornecedor")
 
-        if submit_fornecedor and nome_fornecedor and cnpj: # Itens obrigatórios de serem preenchidos para que o fornecedor possa ser cadastrado
+    limpar_campos = st.button("Limpar campos")
+
+    if submit_fornecedor and nome_fornecedor and cnpj: # Itens obrigatórios de serem preenchidos para que o fornecedor possa ser cadastrado
             st.session_state.fornecedores.append({
                 "nome": nome_fornecedor,
                 "cnpj": cnpj,
-                "info1": info1,
-                "info2": info2,
+                "e-mail": email,
+                "endereco": endereco,
+                "telefone": telefone,
                 "observacao": observacao
             })
             st.success(f"Fornecedor '{nome_fornecedor}' cadastrado!")
+
+    '''if limpar_campos:
+        nome_fornecedor = ""
+        cnpj = ""
+        info1 = ""
+        info2 = ""
+        observacao = ""'''
 
     # Listagem de fornecedores
     st.subheader("Fornecedores cadastrados")
@@ -90,18 +101,16 @@ with tabs[1]:
                 especificacao = st.text_input("Especificação")
                 marca_modelo = st.text_input("Marca/Modelo")
                 quantidade = st.number_input("Quantidade", min_value=1, step=1)
-                saldo_disponivel = st.number_input("Saldo Disponível", min_value=0)
                 valor_unitario = st.number_input("Valor Unitário", min_value=0.0, format="%.2f")
                 valor_total = valor_unitario * quantidade
                 submit_equipamento = st.form_submit_button("Adicionar Equipamento")
 
-                if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
+                if submit_equipamento and especificacao and marca_modelo and quantidade and valor_unitario:
                     # Adicionando o equipamento à ata
                     ata["equipamentos"].append({
                         "especificacao": especificacao,
                         "marca_modelo": marca_modelo,
                         "quantidade": quantidade,
-                        "saldo_disponivel": saldo_disponivel,
                         "valor_unitario": valor_unitario,
                         "valor_total": valor_total
                     })
@@ -175,7 +184,10 @@ with tabs[4]:
 
     # Relatório de consumo por ata e equipamento
     relatorio_consumo = []
-    for ata in st.session_state.atas:
+
+    atas_ordenadas = sorted(st.session_state.atas, key=lambda ata: ata["validade"])
+
+    for ata in atas_ordenadas:
         for equip in ata["equipamentos"]:
             saldo_utilizado = equip["quantidade"] - equip["saldo_disponivel"]
             relatorio_consumo.append({
