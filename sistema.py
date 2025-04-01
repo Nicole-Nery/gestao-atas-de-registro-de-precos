@@ -30,7 +30,6 @@ with tabs[0]:
         email = st.text_input("E-mail", key="email")
         endereco = st.text_input("Endereço", key="endereco")
         telefone = st.text_input("Telefone", key="telefone")
-        observacao = st.text_area("Observação", key="observacao")
         submit_fornecedor = st.form_submit_button("Cadastrar Fornecedor")
 
     limpar_campos = st.button("Limpar campos")
@@ -41,8 +40,7 @@ with tabs[0]:
                 "cnpj": cnpj,
                 "e-mail": email,
                 "endereco": endereco,
-                "telefone": telefone,
-                "observacao": observacao
+                "telefone": telefone
             })
             st.success(f"Fornecedor '{nome_fornecedor}' cadastrado!")
 
