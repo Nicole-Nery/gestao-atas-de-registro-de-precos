@@ -32,7 +32,6 @@ with tabs[0]:
         telefone = st.text_input("Telefone", key="telefone")
         submit_fornecedor = st.form_submit_button("Cadastrar Fornecedor")
 
-    limpar_campos = st.button("Limpar campos")
 
     if submit_fornecedor and nome_fornecedor and cnpj: # Itens obrigatórios de serem preenchidos para que o fornecedor possa ser cadastrado
             st.session_state.fornecedores.append({
@@ -43,13 +42,6 @@ with tabs[0]:
                 "telefone": telefone
             })
             st.success(f"Fornecedor '{nome_fornecedor}' cadastrado!")
-
-    '''if limpar_campos:
-        nome_fornecedor = ""
-        cnpj = ""
-        info1 = ""
-        info2 = ""
-        observacao = ""'''
 
     # Listagem de fornecedores
     st.subheader("Fornecedores cadastrados")
@@ -67,12 +59,13 @@ with tabs[1]:
     fornecedores_cadastrados = ["Selecione"] + [f["nome"] for f in st.session_state.fornecedores]
 
     # Formulário para cadastrar nova Ata
-    with st.form("nova_ata"):
+    with st.form("nova_ata", clear_on_submit=True):
         nome_ata = st.text_input("Nome da Ata")
         data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY", value=None)
         validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY", value=None)
         fornecedor = st.selectbox("Fornecedor", fornecedores_cadastrados, key="select_fornecedor")
         link_ata = st.text_input("Link para o PDF da Ata")
+
         submit_ata = st.form_submit_button("Cadastrar Ata")
 
         if submit_ata and nome_ata and data_ata and validade_ata and fornecedor != "Selecione":
@@ -93,7 +86,7 @@ with tabs[1]:
         
         if ata_selecionada != "Selecione":
             ata = next(a for a in st.session_state.atas if a["nome"] == ata_selecionada)
-            with st.form("equipamento_ata"):
+            with st.form("equipamento_ata", clear_on_submit=True):
                 st.subheader("Adicione os Equipamentos")
 
                 # Formulário para adicionar equipamento
