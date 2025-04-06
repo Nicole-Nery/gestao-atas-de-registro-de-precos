@@ -313,6 +313,7 @@ with tabs[3]:
 
         if empenhos_result:
             df_empenhos = pd.DataFrame(empenhos_result, columns=["Ata", "Equipamento", "Quantidade", "Data do Empenho", "Observação"])
+            df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"]).dt.strftime('%d/%m/%Y')
             st.dataframe(df_empenhos)
         else:
             st.info("Nenhum empenho registrado ainda.")
