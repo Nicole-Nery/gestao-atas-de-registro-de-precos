@@ -6,7 +6,7 @@ import psycopg2
 def conectar (): 
     return psycopg2.connect(
         host = "db.btstungeitzcizcysupd.supabase.co",
-        port = "5432",
+        port = "5433",
         dbname = "postgres",
         user = "postgres",
         password = "gestaodeatashc"
