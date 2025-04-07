@@ -5,11 +5,11 @@ import psycopg2
 
 def conectar (): 
     return psycopg2.connect(
-        host = "localhost",
-        port = "5433",
-        dbname = "grpdb",
+        host = "db.btstungeitzcizcysupd.supabase.co",
+        port = "5432",
+        dbname = "postgres",
         user = "postgres",
-        password = "mypassword"
+        password = "gestaodeatashc"
     )
 
 # Alterando o nome da página e o ícone
