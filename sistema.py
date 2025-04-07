@@ -51,7 +51,14 @@ with tabs[0]:
         response = supabase.table("fornecedores").select("*").order("nome").execute()
         fornecedores_result = response.data
         
-        df_fornecedores = pd.DataFrame(fornecedores_result, columns=["Nome", "CNPJ", "E-mail", "Endereço", "Telefone"])
+        df_fornecedores = pd.DataFrame(fornecedores_result)
+        df_fornecedores = df_fornecedores.rename(columns={
+            "nome": "Nome",
+            "cnpj": "CNPJ",
+            "email": "E-mail",
+            "endereco": "Endereço",
+            "telefone": "Telefone"
+        })
         st.dataframe(df_fornecedores)
 
     except Exception as e:
