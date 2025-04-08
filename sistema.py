@@ -50,7 +50,7 @@ with tabs[0]:
     # Listagem de fornecedores
     st.subheader("Fornecedores cadastrados")
     try:
-        response = supabase.table("fornecedores").select("*").order("nome").execute()
+        response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
         fornecedores_result = response.data # Devolve um dicionário
         
         df_fornecedores = pd.DataFrame(fornecedores_result)
@@ -205,7 +205,7 @@ with tabs[1]:
                 equipamentos = response.data
 
                 st.subheader("Equipamentos Cadastrados")
-                
+
                 if equipamentos:
                     df_equip = pd.DataFrame(equipamentos)
                     df_equip = df_equip.rename(columns={
