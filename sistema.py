@@ -100,7 +100,7 @@ with tabs[1]:
                         "data_validade": validade_ata.isoformat(),
                         "fornecedor_id": fornecedor_id,
                         "link_ata": link_ata
-                    })
+                    }).execute()
                     st.success(f"Ata '{nome_ata}' cadastrada com sucesso!")
 
                 except Exception as e:
