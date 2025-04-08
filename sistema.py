@@ -71,7 +71,7 @@ with tabs[1]:
     try:
         response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
         fornecedores_result = response.data
-        fornecedores_dict = {nome: id_ for id_, nome in fornecedores_result}
+        fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_result}
         fornecedores_cadastrados = ["Selecione"] + list(fornecedores_dict.keys())
 
     except Exception as e:
