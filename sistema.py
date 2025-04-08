@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import psycopg2
 from supabase import create_client, Client
 
 # Conectar ao Supabase
