@@ -15,7 +15,7 @@ st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
 
 # Estabelecendo o layout com abas
-tabs = st.tabs(["Cadastro de Fornecedores", "Registro de Atas", "Registro de Empenhos", "Histórico de Empenhos", "Relatórios"])
+tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios"])
 
 # Registro de Fornecedores
 with tabs[0]:
@@ -30,7 +30,7 @@ with tabs[0]:
         telefone = st.text_input("Telefone")
         submit_fornecedor = st.form_submit_button("Cadastrar Fornecedor")
 
-    if submit_fornecedor and nome_fornecedor and cnpj: # Itens obrigatórios para que o fornecedor possa ser cadastrado
+    if submit_fornecedor and nome_fornecedor and cnpj:
         try:
             response = supabase.table("fornecedores").insert({
                 "nome": nome_fornecedor,
@@ -44,11 +44,14 @@ with tabs[0]:
         except Exception as e:
             st.error(f"Erro ao cadastrar fornecedor: {e}.")
 
+    else:
+        st.warning("Preencha todos os campos obrigatórios.")
+
     # Listagem de fornecedores
     st.subheader("Fornecedores cadastrados")
     try:
         response = supabase.table("fornecedores").select("*").order("nome").execute()
-        fornecedores_result = response.data
+        fornecedores_result = response.data # Devolve um dicionário
         
         df_fornecedores = pd.DataFrame(fornecedores_result)
         df_fornecedores = df_fornecedores.rename(columns={
@@ -117,6 +120,7 @@ with tabs[1]:
         atas_result = response.data
         atas_dict = {a["nome"]: a["id"] for a in atas_result}
         atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+
     except Exception as e:
         st.error(f"Erro ao buscar atas: {e}")
         atas_cadastradas = ["Selecione"]
@@ -165,6 +169,7 @@ with tabs[1]:
         atas_result = response.data
         atas_dict = {a["nome"]: a["id"] for a in atas_result}
         atas_opcoes = ["Selecione"] + list(atas_dict.keys())
+
     except Exception as e:
         st.error(f"Erro ao buscar atas: {e}")
         atas_opcoes = ["Selecione"]
@@ -200,6 +205,7 @@ with tabs[1]:
                 equipamentos = response.data
 
                 st.subheader("Equipamentos Cadastrados")
+                
                 if equipamentos:
                     df_equip = pd.DataFrame(equipamentos)
                     df_equip = df_equip.rename(columns={
