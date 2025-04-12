@@ -17,7 +17,7 @@ st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar sa
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios"])
 
-# Fornecedores
+# Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
     st.header("Cadastro de Fornecedores")
 
@@ -128,7 +128,7 @@ with tabs[0]:
         st.error(f"Erro ao carregar fornecedores: {e}")
 
 
-# Atas
+# Atas -----------------------------------------------------------------------------------------------------------------------
 with tabs[1]:
     st.header("Registro de Atas")
 
@@ -173,54 +173,54 @@ with tabs[1]:
                 st.warning("Preencha todos os campos obrigatórios.")
             
 
-    # Adicionando Equipamentos à Ata
+        # Adicionando Equipamentos à Ata
 
-    st.subheader("Cadastro de Equipamentos para Ata")
+        st.subheader("Cadastro de Equipamentos para Ata")
 
-    try:
-        response = supabase.table("atas").select("id, nome").order("nome").execute()
-        atas_result = response.data
-        atas_dict = {a["nome"]: a["id"] for a in atas_result}
-        atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+        try:
+            response = supabase.table("atas").select("id, nome").order("nome").execute()
+            atas_result = response.data
+            atas_dict = {a["nome"]: a["id"] for a in atas_result}
+            atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
-    except Exception as e:
-        st.error(f"Erro ao buscar atas: {e}")
-        atas_cadastradas = ["Selecione"]
-        atas_dict = {}
+        except Exception as e:
+            st.error(f"Erro ao buscar atas: {e}")
+            atas_cadastradas = ["Selecione"]
+            atas_dict = {}
 
-    ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome")
+        ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome")
 
-    if ata_nome != "Selecione":
-        ata_id = atas_dict[ata_nome]
+        if ata_nome != "Selecione":
+            ata_id = atas_dict[ata_nome]
 
-        with st.form("novo_equipamento", clear_on_submit=True):
-            st.subheader("Adicionar Equipamento")
+            with st.form("novo_equipamento", clear_on_submit=True):
+                st.subheader("Adicionar Equipamento")
 
-            especificacao = st.text_input("Especificação")
-            marca_modelo = st.text_input("Marca/Modelo")
-            quantidade = st.number_input("Quantidade", min_value=1, step=1)
-            saldo_disponivel = st.number_input("Saldo disponível", min_value=0, step=1)
-            valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
-            valor_total = valor_unitario * quantidade
+                especificacao = st.text_input("Especificação")
+                marca_modelo = st.text_input("Marca/Modelo")
+                quantidade = st.number_input("Quantidade", min_value=1, step=1)
+                saldo_disponivel = st.number_input("Saldo disponível", min_value=0, step=1)
+                valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
+                valor_total = valor_unitario * quantidade
 
-            submit_equipamento = st.form_submit_button("Adicionar Equipamento")
+                submit_equipamento = st.form_submit_button("Adicionar Equipamento")
 
-            if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
-                try:
-                    response = supabase.table("equipamentos").insert({
-                        "ata_id": ata_id,
-                        "especificacao": especificacao,
-                        "marca_modelo": marca_modelo,
-                        "quantidade": quantidade,
-                        "saldo_disponivel": saldo_disponivel,
-                        "valor_unitario": valor_unitario,
-                        "valor_total": valor_total
-                    }).execute()
-                    st.success(f"Equipamento '{especificacao}' cadastrado com sucesso na ata '{ata_nome}'!")
-                except Exception as e:
-                    st.error(f"Erro ao cadastrar equipamento: {e}")
-            else:
-                st.warning("Preencha todos os campos obrigatórios.")
+                if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
+                    try:
+                        response = supabase.table("equipamentos").insert({
+                            "ata_id": ata_id,
+                            "especificacao": especificacao,
+                            "marca_modelo": marca_modelo,
+                            "quantidade": quantidade,
+                            "saldo_disponivel": saldo_disponivel,
+                            "valor_unitario": valor_unitario,
+                            "valor_total": valor_total
+                        }).execute()
+                        st.success(f"Equipamento '{especificacao}' cadastrado com sucesso na ata '{ata_nome}'!")
+                    except Exception as e:
+                        st.error(f"Erro ao cadastrar equipamento: {e}")
+                else:
+                    st.warning("Preencha todos os campos obrigatórios.")
 
     # Visualização dos dados cadastrados na Ata selecionada
     st.subheader("Visualizar Atas Cadastradas")
@@ -393,7 +393,7 @@ with tabs[1]:
     except Exception as e:
         st.error(f"Erro ao carregar equipamentos: {e}")
 
-                
+# Empenhos -----------------------------------------------------------------------------------------------------------------                
 with tabs[2]:
     st.header("Registro de Empenhos")
 
@@ -474,7 +474,7 @@ with tabs[2]:
         except Exception as e:
             st.error(f"Erro ao buscar empenhos: {e}")
 
-# Histórico de Empenhos
+# Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
 with tabs[3]:
     st.header("Histórico de Empenhos")
 
@@ -523,7 +523,7 @@ with tabs[3]:
         st.error(f"Erro ao buscar empenhos: {e}")
 
 
-# Aba 4: Relatórios de Consumo e Status
+# Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
 with tabs[4]:
     st.header("Relatórios de Consumo e Status")
 
