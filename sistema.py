@@ -80,7 +80,8 @@ with tabs[0]:
         if fornecedor_selecionado != "Selecione":
             fornecedor_id = fornecedores_dict[fornecedor_selecionado]
 
-            fornecedor_info = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+            fornecedor_info_response = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+            fornecedor_info = fornecedor_info_response.data
 
             with st.form("form_editar_fornecedor"):
                 novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
