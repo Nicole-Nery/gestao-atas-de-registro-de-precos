@@ -78,7 +78,7 @@ with tabs[0]:
         fornecedor_selecionado = st.selectbox("Escolha um fornecedor para editar ou excluir", fornecedores_nomes)
 
         if fornecedor_selecionado != "Selecione":
-            fornecedor_id = fornecedores_dict[fornecedores_nomes]
+            fornecedor_id = fornecedores_dict[fornecedor_selecionado]
 
             fornecedor_info = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).execute()
 
