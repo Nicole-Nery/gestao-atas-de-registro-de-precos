@@ -91,8 +91,8 @@ with tabs[0]:
                 novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
 
                 col1, col2 = st.columns(2)    
-                atualizar = col1.form_submit_button("Atualizar")
-                excluir = col2.form_submit_button("Excluir")
+                atualizar = col1.form_submit_button("Atualizar Fornecedor", type="primary", icon=":material/edit:")
+                excluir = col2.form_submit_button("Excluir Fornecedor", type="primary", icon=":material/delete:")
 
                 if atualizar:
                     try:
