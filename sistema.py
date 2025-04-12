@@ -9,7 +9,7 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
-st.set_page_config(page_title= "Gestão de ARP",
+st.set_page_config(page_title= "Gestão de ARP", 
                    page_icon= "📄")
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
@@ -342,7 +342,7 @@ with tabs[1]:
                     st.error(f"Erro ao excluir a Ata: {e}")
             
 
-            # Buscar equipamentos vinculados à Ata
+            '''# Buscar equipamentos vinculados à Ata
             response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
             equipamentos = response_equip.data
 
@@ -385,7 +385,7 @@ with tabs[1]:
                                 supabase.table("equipamentos").delete().eq("id", equipamento["id"]).execute()
                                 st.success(f"Equipamento '{equipamento['especificacao']}' excluído com sucesso!")
                             except Exception as e:
-                                st.error(f"Erro ao excluir equipamento: {e}")
+                                st.error(f"Erro ao excluir equipamento: {e}")'''
     except Exception as e:
         st.error(f"Erro ao carregar equipamentos: {e}")
 
