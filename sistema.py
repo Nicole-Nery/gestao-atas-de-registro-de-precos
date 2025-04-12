@@ -310,25 +310,11 @@ with tabs[1]:
             with st.form("form_editar_ata"):
                 novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
                 
-                nova_data = st.date_input(
-                    "Data da Ata", 
-                    format="DD/MM/YYYY", 
-                    value=pd.to_datetime(ata_info["data_inicio"]).date()
-                )
+                nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
 
-                nova_validade_ata = st.date_input(
-                    "Validade da Ata", 
-                    min_value=nova_data, 
-                    format="DD/MM/YYYY", 
-                    value=pd.to_datetime(ata_info["data_validade"]).date()
-                )
+                nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
 
-                novo_fornecedor_nome = st.selectbox(
-                    "Fornecedor", 
-                    fornecedores_nomes,
-                    key="selecione_fornecedor_nome", 
-                    index=fornecedores_nomes.index(nome_fornecedor_atual)
-                )
+                novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
 
                 novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
 
