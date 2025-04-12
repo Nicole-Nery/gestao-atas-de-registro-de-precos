@@ -9,9 +9,8 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
-st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon=":material/tv_options_edit_channels:")
-                   #page_icon= "📄")
+st.set_page_config(page_title= "Gestão de ARP",
+                   page_icon= "📄")
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
 
@@ -310,16 +309,16 @@ with tabs[1]:
 
             with st.form("form_editar_ata"):
                 novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
-                nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value= pd.to_datetime(ata_info["data_inicio"]))
-                nova_validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]))
+                nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value= (ata_info["data_inicio"]))
+                nova_validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY", value=(ata_info["data_validade"]))
                 novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
                 novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
 
                 col1, col2 = st.columns(2)
-                editar = col1.form_submit_button("Editar Ata", icon=":material/edit:")
+                atualizar = col1.form_submit_button("Editar Ata", icon=":material/edit:")
                 excluir = col2.form_submit_button("Excluir Ata", icon=":material/delete:")
 
-            if editar:
+            if atualizar:
                 try:
                     novo_fornecedor_id = fornecedores_dict[novo_fornecedor_nome]
 
@@ -330,6 +329,7 @@ with tabs[1]:
                         "fornecedor_id": novo_fornecedor_id,
                         "link_ata": novo_link_ata
                     }).eq("id", ata_id).execute()
+
                     st.success("Ata atualizada com sucesso!")
                 except Exception as e:
                     st.error(f"Erro ao atualizar a Ata: {e}")
@@ -340,21 +340,7 @@ with tabs[1]:
                     st.success("Ata excluída com sucesso!")
                 except Exception as e:
                     st.error(f"Erro ao excluir a Ata: {e}")
-        
-    except Exception as e:
-        st.error(f"Erro ao carregar a ata: {e}")
-
-    try:
-        # Buscar atas
-        response_atas = supabase.table("atas").select("id, nome").order("nome").execute()
-        atas_data = response_atas.data
-        atas_dict = {a["nome"]: a["id"] for a in atas_data}
-        atas_nomes = ["Selecione"] + list(atas_dict.keys())
-
-        ata_selecionada = st.selectbox("Selecione uma Ata", atas_nomes)
-
-        if ata_selecionada != "Selecione":
-            ata_id = atas_dict[ata_selecionada]
+            
 
             # Buscar equipamentos vinculados à Ata
             response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
@@ -377,10 +363,10 @@ with tabs[1]:
                             st.text(f"Valor Total: R$ {valor_total:.2f}")
 
                             col1, col2 = st.columns(2)
-                            editar = col1.form_submit_button("✏️ Editar")
-                            excluir = col2.form_submit_button("🗑️ Excluir")
+                            atualizar = col1.form_submit_button("Editar Equipamento", icon=":material/edit:")
+                            excluir = col2.form_submit_button("Excluir Equipamento", icon=":material/delete:")
 
-                        if editar:
+                        if atualizar:
                             try:
                                 supabase.table("equipamentos").update({
                                     "especificacao": nova_especificacao,
@@ -401,8 +387,7 @@ with tabs[1]:
                             except Exception as e:
                                 st.error(f"Erro ao excluir equipamento: {e}")
     except Exception as e:
-        st.error(f"Erro ao carregar atas ou equipamentos: {e}")
-    
+        st.error(f"Erro ao carregar equipamentos: {e}")
 
                 
 with tabs[2]:
