@@ -67,7 +67,7 @@ with tabs[0]:
         st.error(f"Erro ao buscar fornecedor: {e}.")
 
     # Edição e Exclusão de fornecedores:
-    st.subheader("Editar ou Excluir Fornecedor")
+    st.header("Editar ou Excluir Fornecedor")
 
     try:
         response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
@@ -80,7 +80,7 @@ with tabs[0]:
         if fornecedor_selecionado != "Selecione":
             fornecedor_id = fornecedores_dict[fornecedores_nomes]
 
-            fornecedor_info = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+            fornecedor_info = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).execute()
 
             with st.form("form_editar_fornecedor"):
                 novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
