@@ -17,7 +17,7 @@ st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar sa
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios"])
 
-# Registro de Fornecedores
+# Fornecedores
 with tabs[0]:
     st.header("Cadastro de Fornecedores")
 
@@ -66,7 +66,68 @@ with tabs[0]:
     except Exception as e:
         st.error(f"Erro ao buscar fornecedor: {e}.")
 
-# Registro de Atas
+    # Edição e Exclusão de fornecedores:
+    st.subheader("Editar ou Excluir Fornecedor")
+
+    try:
+        response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
+        fornecedores_data = response.data
+        fornecedores_dict = {f["nome"]:f["id"] for f in fornecedores_data}
+        fornecedores_nomes =  ["Selecione"] + list(fornecedores_dict.keys())
+
+        fornecedor_selecionado = st.selectbox("Escolha um fornecedor para editar ou excluir", fornecedores_nomes)
+
+        if fornecedor_selecionado != "Selecione":
+            fornecedor_id = fornecedores_dict[fornecedores_nomes]
+
+            fornecedor_info = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+
+            with st.form("form_editar_fornecedor"):
+                novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
+                novo_cnpj = st.text_input("CNPJ", value=fornecedor_info["cnpj"])
+                novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
+                novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
+                novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
+
+                col1, col2 = st.columns(2)    
+                atualizar = col1.form_submit_button("Atualizar")
+                excluir = col2.form_submit_button("Excluir")
+
+                if atualizar:
+                    try:
+                        supabase.table("fornecedores").update({
+                            "nome": novo_nome,
+                            "cnpj": novo_cnpj,
+                            "email": novo_email,
+                            "endereco": novo_endereco,
+                            "telefone": novo_telefone
+                        }).eq("id", fornecedor_id).execute()
+
+                        st.success(f"Fornecedor {novo_nome} atualizado com sucesso!")
+                        st.experimental_rerun()
+                    except Exception as e:
+                        st.error(f"Erro ao atualizar fornecedor: {e}")
+                
+                if excluir:
+                    confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
+
+                    if confirmar:
+                        try:
+                            supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
+                            st.sucess("Fornecedor excluído com sucesso!")
+                            st.experimental_rerun()
+
+                        except Exception as e:
+                            st.error(f"Erro ao excluir fornecedor: {e}")
+                    else:
+                        st.warning("Marque a caixa de confirmação para excluir o fornecedor.")
+
+
+    except Exception as e:
+        st.error(f"Erro ao carregar fornecedores: {e}")
+
+
+# Atas
 with tabs[1]:
     st.header("Registro de Atas")
 
