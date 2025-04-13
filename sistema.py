@@ -477,26 +477,24 @@ with tabs[2]:
                             atualizar = col1.form_submit_button("Editar Empenho", icon=":material/edit:")
                             excluir = col2.form_submit_button("Excluir Empenho", icon=":material/delete:")
 
-                        with col1:
-                            if st.button("Editar Empenho", key=f"atualizar_{emp['id']}"):
-                                try:
-                                    supabase.table("empenhos").update({
-                                        "quantidade_empenhada": nova_quantidade,
-                                        "data_empenho": nova_data.isoformat(),
-                                        "observacao": nova_obs
-                                    }).eq("id", emp["id"]).execute()
-                                    st.success("Empenho atualizado com sucesso.")
-                                    st.experimental_rerun()
-                                except Exception as e:
-                                    st.error(f"Erro ao atualizar empenho: {e}")
-                        with col2:
-                            if st.button("Excluir Empenho", key=f"excluir_{emp['id']}"):
-                                try:
-                                    supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
-                                    st.success("Empenho excluído com sucesso.")
-                                    st.experimental_rerun()
-                                except Exception as e:
-                                    st.error(f"Erro ao excluir empenho: {e}")
+                        if atualizar:
+                            try:
+                                supabase.table("empenhos").update({
+                                    "quantidade_empenhada": nova_quantidade,
+                                    "data_empenho": nova_data.isoformat(),
+                                    "observacao": nova_obs
+                                }).eq("id", emp["id"]).execute()
+                                st.success("Empenho atualizado com sucesso.")
+                                st.experimental_rerun()
+                            except Exception as e:
+                                st.error(f"Erro ao atualizar empenho: {e}")
+                        if excluir:
+                            try:
+                                supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
+                                st.success("Empenho excluído com sucesso.")
+                                st.experimental_rerun()
+                            except Exception as e:
+                                st.error(f"Erro ao excluir empenho: {e}")
 
             else:
                 st.info("Nenhum empenho registrado para esta Ata.")
