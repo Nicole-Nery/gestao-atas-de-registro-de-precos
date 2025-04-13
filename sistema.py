@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import plotly.express as px
+import streamlit.components.v1 as components
 from supabase import create_client, Client
 
 # Conectar ao Supabase
@@ -568,24 +569,36 @@ with tabs[3]:
 
             st.markdown("## 📊 Análises e Gráficos")
 
-            # Converter data para datetime, se ainda não estiver
-            df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"], format="%d/%m/%Y")
+            # Resumos
+            total_empenhos = len(df_empenhos)
+            quantidade_total = df_empenhos["Quantidade"].sum()
+            total_atas = df_empenhos["Ata"].nunique()
 
-            # Total por Ata
-            total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
-            fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata", text_auto=True)
-            st.plotly_chart(fig_ata, use_container_width=True)
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Total de Empenhos", total_empenhos)
+            col2.metric("Quantidade Total Empenhada", quantidade_total)
+            col3.metric("Atas Envolvidas", total_atas)
 
-            # Quantidade por mês
-            df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
-            quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
-            fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True, title="Quantidade Empenhada por Mês")
-            st.plotly_chart(fig_mensal, use_container_width=True)
+            aba1, aba2, aba3 = st.tabs(["📊 Por Ata", "📈 Por Mês", "🔧 Por Equipamento"])
 
-            # Top 5 equipamentos mais empenhados
-            top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
-            fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h", title="Top 5 Equipamentos Mais Empenhados", text_auto=True)
-            st.plotly_chart(fig_top_eq, use_container_width=True)
+            with aba1:
+                total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
+                fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata", text_auto=True)
+                st.plotly_chart(fig_ata, use_container_width=True)
+
+            with aba2:
+                df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"], format="%d/%m/%Y")
+                df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
+                quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
+                fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True,
+                                    title="Quantidade Empenhada por Mês")
+                st.plotly_chart(fig_mensal, use_container_width=True)
+
+            with aba3:
+                top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
+                fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h",
+                                    title="Top 5 Equipamentos Mais Empenhados", text_auto=True)
+                st.plotly_chart(fig_top_eq, use_container_width=True)
 
         else:
             st.info("Nenhum empenho encontrado com os filtros selecionados.")
