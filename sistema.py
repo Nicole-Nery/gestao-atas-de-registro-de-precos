@@ -470,7 +470,7 @@ with tabs[2]:
                     with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {emp['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
                         with st.form(f"form_emp_{emp['id']}"):
                             nova_quantidade = st.number_input("Quantidade", min_value=1, value=emp["quantidade_empenhada"], key=f"qtd_{emp['id']}")
-                            nova_data = st.date_input("Data do Empenho", value=pd.to_datetime(emp["data_empenho"]).strftime('%d/%m/%Y'), key=f"data_{emp['id']}")
+                            nova_data = st.date_input("Data do Empenho", value=pd.to_datetime(emp["data_empenho"]).date(), key=f"data_{emp['id']}")
                             nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
 
                             col1, col2 = st.columns(2)
