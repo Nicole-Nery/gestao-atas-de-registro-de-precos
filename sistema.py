@@ -289,6 +289,7 @@ with tabs[1]:
 
     # Editar ou Excluir Ata/Equipamento
     st.header("Editar ou Excluir Ata")
+    st.write("Clique no equipamento que deseja atualizar ou excluir.")
 
     try:
         response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
