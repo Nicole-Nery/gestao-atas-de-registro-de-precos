@@ -473,8 +473,11 @@ with tabs[2]:
                         nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
 
                         col1, col2 = st.columns(2)
+                        atualizar = col1.form_submit_button("Editar Empenho", icon=":material/edit:")
+                        excluir = col2.form_submit_button("Excluir Empenho", icon=":material/delete:")
+
                         with col1:
-                            if st.button("Atualizar Empenho", key=f"atualizar_{emp['id']}"):
+                            if st.button("Editar Empenho", key=f"atualizar_{emp['id']}"):
                                 try:
                                     supabase.table("empenhos").update({
                                         "quantidade_empenhada": nova_quantidade,
