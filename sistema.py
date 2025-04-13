@@ -38,7 +38,7 @@ custom_style = """
     }, 100);
 </script>
 """
-st.markdown(custom_css, unsafe_allow_html=True)
+st.markdown(custom_style, unsafe_allow_html=True)
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
