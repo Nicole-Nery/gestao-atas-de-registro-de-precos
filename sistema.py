@@ -10,7 +10,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon= "📄")
+                   page_icon= "📄", layout="wide")
 custom_style = """
 <style>
     /* Força o ajuste de largura via JavaScript após o carregamento */
