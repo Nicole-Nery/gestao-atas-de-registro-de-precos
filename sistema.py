@@ -514,12 +514,23 @@ with tabs[3]:
 
         ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
-        # Buscar todos os equipamentos (para cruzar depois com atas e empenhos)
+        # Buscar todos os equipamentos
         equipamentos_response = supabase.table("equipamentos").select("id, especificacao, ata_id").execute()
         equipamentos_data = equipamentos_response.data
         equipamentos_dict = {eq["id"]: eq for eq in equipamentos_data}
 
-        # Buscar todos os empenhos
+        # Opções de equipamentos para filtro
+        equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_data)))
+        equipamento_filtro = st.selectbox("Filtrar por Equipamento", equipamentos_opcoes, key="filtro_equipamento")
+
+        # Filtro de data
+        col1, col2 = st.columns(2)
+        with col1:
+            data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2023-01-01"), key="data_inicio")
+        with col2:
+            data_fim = st.date_input("Data final", value=pd.to_datetime("today"), key="data_fim")
+
+        # Buscar empenhos
         empenhos_response = supabase.table("empenhos").select("*").order("data_empenho", desc=True).execute()
         empenhos_data = empenhos_response.data
 
@@ -528,26 +539,36 @@ with tabs[3]:
             equipamento = equipamentos_dict.get(emp["equipamento_id"])
             if not equipamento:
                 continue
+
             ata_id = equipamento["ata_id"]
             ata_nome = next((nome for nome, id_ in atas_dict.items() if id_ == ata_id), "Desconhecida")
+            especificacao = equipamento["especificacao"]
+            data_empenho = pd.to_datetime(emp["data_empenho"])
 
-            if ata_filtro == "Todas" or atas_dict[ata_filtro] == ata_id:
-                empenhos_filtrados.append({
-                    "Ata": ata_nome,
-                    "Equipamento": equipamento["especificacao"],
-                    "Quantidade": emp["quantidade_empenhada"],
-                    "Data do Empenho": emp["data_empenho"],
-                    "Observação": emp["observacao"]
-                })
+            # Aplicar filtros
+            if ata_filtro != "Todas" and atas_dict[ata_filtro] != ata_id:
+                continue
+            if equipamento_filtro != "Todos" and especificacao != equipamento_filtro:
+                continue
+            if not (data_inicio <= data_empenho.date() <= data_fim):
+                continue
+
+            empenhos_filtrados.append({
+                "Ata": ata_nome,
+                "Equipamento": especificacao,
+                "Quantidade": emp["quantidade_empenhada"],
+                "Data do Empenho": data_empenho.strftime('%d/%m/%Y'),
+                "Observação": emp["observacao"]
+            })
 
         if empenhos_filtrados:
             df_empenhos = pd.DataFrame(empenhos_filtrados)
-            df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"]).dt.strftime('%d/%m/%Y')
             st.dataframe(df_empenhos)
         else:
-            st.info("Nenhum empenho registrado ainda.")
+            st.info("Nenhum empenho encontrado com os filtros selecionados.")
     except Exception as e:
         st.error(f"Erro ao buscar empenhos: {e}")
+
 
 
 # Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
