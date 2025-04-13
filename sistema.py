@@ -467,7 +467,7 @@ with tabs[2]:
 
             if empenhos:
                 for emp in empenhos:
-                    with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {emp['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
+                    with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {e['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
                         nova_quantidade = st.number_input("Quantidade", min_value=1, value=emp["quantidade_empenhada"], key=f"qtd_{emp['id']}")
                         nova_data = st.date_input("Data do Empenho", value=pd.to_datetime(emp["data_empenho"]), key=f"data_{emp['id']}")
                         nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
