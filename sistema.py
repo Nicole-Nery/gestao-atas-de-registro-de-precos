@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
+import plotly.express as px
 from supabase import create_client, Client
 
 # Conectar ao Supabase
@@ -564,6 +565,28 @@ with tabs[3]:
         if empenhos_filtrados:
             df_empenhos = pd.DataFrame(empenhos_filtrados)
             st.dataframe(df_empenhos)
+
+            st.markdown("## 📊 Análises e Gráficos")
+
+            # Converter data para datetime, se ainda não estiver
+            df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"], format="%d/%m/%Y")
+
+            # Total por Ata
+            total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
+            fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata", text_auto=True)
+            st.plotly_chart(fig_ata, use_container_width=True)
+
+            # Quantidade por mês
+            df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
+            quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
+            fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True, title="Quantidade Empenhada por Mês")
+            st.plotly_chart(fig_mensal, use_container_width=True)
+
+            # Top 5 equipamentos mais empenhados
+            top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
+            fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h", title="Top 5 Equipamentos Mais Empenhados", text_auto=True)
+            st.plotly_chart(fig_top_eq, use_container_width=True)
+
         else:
             st.info("Nenhum empenho encontrado com os filtros selecionados.")
     except Exception as e:
