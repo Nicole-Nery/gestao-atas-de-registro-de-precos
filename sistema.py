@@ -13,16 +13,15 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄")
 custom_css = """
     <style>
-        .appview-container .main .block-container {
-            max-width: 80% !important;
-            padding-left: 2rem;
-            padding-right: 2rem;
-            margin-left: auto;
-            margin-right: auto;
+        /* Define o tamanho máximo do container principal */
+        section.main > div {
+            max-width: 90% !important;
+            margin: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
     </style>
 """
-
 st.markdown(custom_css, unsafe_allow_html=True)
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
