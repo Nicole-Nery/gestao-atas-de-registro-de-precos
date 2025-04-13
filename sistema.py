@@ -10,7 +10,19 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon= "📄")
+                   page_icon= "📄",
+                  layout = "wide")
+custom_css = """
+    <style>
+        .main .block-container {
+            max-width: 80%;
+            margin: auto;
+        }
+    </style>
+"""
+
+st.markdown(custom_css, unsafe_allow_html=True)
+
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
 
