@@ -576,30 +576,46 @@ with tabs[3]:
 
             col1, col2, col3 = st.columns(3)
 
+            modo_tema = st.get_option("theme.base")
+
+            # Cores para light e dark
+            if modo_tema == "dark":
+                bg_color = "#1e1e1e"
+                text_color = "#f0f0f0"
+                number_color = "#4fc3f7"  # Azul clarinho
+            else:
+                bg_color = "#f0f2f6"
+                text_color = "#333333"
+                number_color = "#004aad"  # Azul escuro
+
+            col1, col2, col3 = st.columns(3)
+
             with col1:
                 st.markdown(f"""
-                    <div style="background-color:#f0f2f6;padding:20px;border-radius:15px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h4 style="margin:0;color:#333;">Total de Empenhos</h4>
-                        <h2 style="margin:0;color:#004aad;">{total_empenhos}</h2>
+                    <div style="background-color:{bg_color};padding:20px;border-radius:15px;
+                                text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
+                        <h4 style="margin:0;color:{text_color};">Total de Empenhos</h4>
+                        <h2 style="margin:0;color:{number_color};">{total_empenhos}</h2>
                     </div>
                 """, unsafe_allow_html=True)
 
             with col2:
                 st.markdown(f"""
-                    <div style="background-color:#f0f2f6;padding:20px;border-radius:15px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h4 style="margin:0;color:#333;">Quantidade Total Empenhada</h4>
-                        <h2 style="margin:0;color:#004aad;">{quantidade_total}</h2>
+                    <div style="background-color:{bg_color};padding:20px;border-radius:15px;
+                                text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
+                        <h4 style="margin:0;color:{text_color};">Quantidade Total Empenhada</h4>
+                        <h2 style="margin:0;color:{number_color};">{quantidade_total}</h2>
                     </div>
                 """, unsafe_allow_html=True)
 
             with col3:
                 st.markdown(f"""
-                    <div style="background-color:#f0f2f6;padding:20px;border-radius:15px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h4 style="margin:0;color:#333;">Atas Envolvidas</h4>
-                        <h2 style="margin:0;color:#004aad;">{total_atas}</h2>
+                    <div style="background-color:{bg_color};padding:20px;border-radius:15px;
+                                text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
+                        <h4 style="margin:0;color:{text_color};">Atas Envolvidas</h4>
+                        <h2 style="margin:0;color:{number_color};">{total_atas}</h2>
                     </div>
                 """, unsafe_allow_html=True)
-
 
 
             aba1, aba2, aba3 = st.tabs(["📊 Por Ata", "📈 Por Mês", "🔧 Por Equipamento"])
