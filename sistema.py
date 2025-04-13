@@ -15,7 +15,7 @@ custom_style = """
 <style>
     /* Força o ajuste de largura via JavaScript após o carregamento */
     .reportview-container .main {
-        max-width: 85% !important;
+        max-width: 60% !important;
         padding-left: 2rem;
         padding-right: 2rem;
     }
