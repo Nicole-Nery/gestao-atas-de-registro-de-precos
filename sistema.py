@@ -11,16 +11,32 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "Gestão de ARP", 
                    page_icon= "📄")
-custom_css = """
-    <style>
-        /* Define o tamanho máximo do container principal */
-        section.main > div {
-            max-width: 90% !important;
-            margin: auto;
-            padding-left: 1rem;
-            padding-right: 1rem;
+custom_style = """
+<style>
+    /* Força o ajuste de largura via JavaScript após o carregamento */
+    .reportview-container .main {
+        max-width: 85% !important;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+</style>
+
+<script>
+    const interval = setInterval(() => {
+        const container = window.parent.document.querySelector('.main .block-container');
+        if (container) {
+            container.style.maxWidth = '85%';
+            container.style.margin = 'auto';
+            container.style.paddingLeft = '2rem';
+            container.style.paddingRight = '2rem';
+            clearInterval(interval);
         }
-    </style>
+    }, 100);
+</script>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 
