@@ -14,7 +14,7 @@ st.set_page_config(page_title= "Gestão de ARP",
 custom_css = """
     <style>
         .main .block-container {
-            max-width: 80%;
+            max-width: 80% !important;
             margin: auto;
         }
     </style>
