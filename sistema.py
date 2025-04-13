@@ -13,9 +13,12 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄")
 custom_css = """
     <style>
-        .main .block-container {
+        .appview-container .main .block-container {
             max-width: 80% !important;
-            margin: auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 """
