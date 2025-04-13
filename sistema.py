@@ -5,41 +5,25 @@ from supabase import create_client, Client
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon= "📄", layout="wide")
+                   page_icon= "📄", 
+                   layout = "wide")
+
+
+custom_css = """
+    <style>
+        .main .block-container {
+            max-width: 80%;
+            margin: auto;
+        }
+    </style>
+"""
+
+st.markdown(custom_css, unsafe_allow_html=True)
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c3R1bmdlaXR6Y2l6Y3lzdXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNjAxNTUsImV4cCI6MjA1OTYzNjE1NX0.L1KZfGO_9Cq7iOGtdDVD4bGp02955s65fjcK2I1jntc"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-custom_style = """
-<style>
-    /* Força o ajuste de largura via JavaScript após o carregamento */
-    .reportview-container .main {
-        max-width: 60% !important;
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-    .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-    }
-</style>
-
-<script>
-    const interval = setInterval(() => {
-        const container = window.parent.document.querySelector('.main .block-container');
-        if (container) {
-            container.style.maxWidth = '85%';
-            container.style.margin = 'auto';
-            container.style.paddingLeft = '2rem';
-            container.style.paddingRight = '2rem';
-            clearInterval(interval);
-        }
-    }, 100);
-</script>
-"""
-st.markdown(custom_style, unsafe_allow_html=True)
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
