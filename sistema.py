@@ -520,7 +520,6 @@ with tabs[3]:
         equipamentos_dict = {eq["id"]: eq for eq in equipamentos_data}
 
         # Buscar todos os empenhos
-        st.subheader("Todos os empenhos registrados")
         empenhos_response = supabase.table("empenhos").select("*").order("data_empenho", desc=True).execute()
         empenhos_data = empenhos_response.data
 
