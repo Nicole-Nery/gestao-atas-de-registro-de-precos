@@ -351,7 +351,7 @@ with tabs[1]:
 
             # Buscar equipamentos vinculados à Ata
             st.subheader("Equipamentos desta Ata")
-            st.write("Clique no equipamento que deseja atualizar ou excluir.")
+            st.write("Clique no equipamento que deseja editar ou excluir.")
         
             response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
             equipamentos = response_equip.data
@@ -466,15 +466,34 @@ with tabs[2]:
             empenhos = response.data
 
             if empenhos:
-                df_empenhos = pd.DataFrame(empenhos)
-                df_empenhos = df_empenhos.rename(columns={
-                    "especificacao": "Equipamento",
-                    "quantidade_empenhada": "Quantidade",
-                    "data_empenho": "Data",
-                    "observacao": "Observação"
-                })
-                df_empenhos["Data"] = pd.to_datetime(df_empenhos["Data"]).dt.strftime('%d/%m/%Y')
-                st.dataframe(df_empenhos)
+                for emp in empenhos:
+                    with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {emp['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
+                        nova_quantidade = st.number_input("Quantidade", min_value=1, value=emp["quantidade_empenhada"], key=f"qtd_{emp['id']}")
+                        nova_data = st.date_input("Data do Empenho", value=pd.to_datetime(emp["data_empenho"]), key=f"data_{emp['id']}")
+                        nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
+
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            if st.button("Atualizar Empenho", key=f"atualizar_{emp['id']}"):
+                                try:
+                                    supabase.table("empenhos").update({
+                                        "quantidade_empenhada": nova_quantidade,
+                                        "data_empenho": nova_data.isoformat(),
+                                        "observacao": nova_obs
+                                    }).eq("id", emp["id"]).execute()
+                                    st.success("Empenho atualizado com sucesso.")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao atualizar empenho: {e}")
+                        with col2:
+                            if st.button("Excluir Empenho", key=f"excluir_{emp['id']}"):
+                                try:
+                                    supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
+                                    st.success("Empenho excluído com sucesso.")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao excluir empenho: {e}")
+
             else:
                 st.info("Nenhum empenho registrado para esta Ata.")
         except Exception as e:
