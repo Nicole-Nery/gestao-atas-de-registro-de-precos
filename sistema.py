@@ -13,6 +13,7 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
+
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
 
@@ -349,6 +350,7 @@ with tabs[1]:
             
 
             # Buscar equipamentos vinculados à Ata
+            st.subheader("Equipamentos desta Ata")
             response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
             equipamentos = response_equip.data
 
