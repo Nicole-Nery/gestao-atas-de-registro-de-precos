@@ -10,12 +10,11 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon= "📄",
-                  layout = "wide")
+                   page_icon= "📄")
 custom_css = """
     <style>
         .main .block-container {
-            max-width: 50%;
+            max-width: 80%;
             margin: auto;
         }
     </style>
