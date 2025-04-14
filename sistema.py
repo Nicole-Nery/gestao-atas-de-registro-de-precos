@@ -15,12 +15,14 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-
 st.title("Sistema de Gestão de Atas de Registro de Preços")
-st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade e gerar relatórios.")
+st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios"])
+
+# Identificando o tema
+modo_tema = st.get_option("theme.base")
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
@@ -228,7 +230,7 @@ with tabs[1]:
                 st.warning("Preencha todos os campos obrigatórios.")
 
     # Visualização dos dados cadastrados na Ata selecionada
-    st.subheader("Visualizar Atas Cadastradas")
+    st.header("Visualizar Atas Cadastradas")
 
     try:
         # Buscar todas as atas com nome do fornecedor
@@ -411,6 +413,7 @@ with tabs[2]:
         atas_result = response.data
         atas_dict = {a["nome"]: a["id"] for a in atas_result}
         atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+
     except Exception as e:
         st.error(f"Erro ao buscar atas: {e}")
         atas_cadastradas = ["Selecione"]
@@ -508,29 +511,26 @@ with tabs[3]:
     st.header("Histórico de Empenhos")
 
     try:
-        # Buscar atas
+        # Filtrar por ata
         atas_response = supabase.table("atas").select("id, nome").order("nome").execute()
         atas_data = atas_response.data
         atas_dict = {ata["nome"]: ata["id"] for ata in atas_data}
         atas_opcoes = ["Todas"] + list(atas_dict.keys())
-
         ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
-        # Buscar todos os equipamentos
+        # Filtrar por equipamento
         equipamentos_response = supabase.table("equipamentos").select("id, especificacao, ata_id").execute()
         equipamentos_data = equipamentos_response.data
         equipamentos_dict = {eq["id"]: eq for eq in equipamentos_data}
-
-        # Opções de equipamentos para filtro
         equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_data)))
         equipamento_filtro = st.selectbox("Filtrar por Equipamento", equipamentos_opcoes, key="filtro_equipamento")
 
         # Filtro de data
         col1, col2 = st.columns(2)
         with col1:
-            data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2023-01-01"), key="data_inicio")
+            data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2023-01-01"), format= 'DD/MM/YYYY', key="data_inicio")
         with col2:
-            data_fim = st.date_input("Data final", value=pd.to_datetime("today"), key="data_fim")
+            data_fim = st.date_input("Data final", value=pd.to_datetime("today"), format= 'DD/MM/YYYY', key="data_fim")
 
         # Buscar empenhos
         empenhos_response = supabase.table("empenhos").select("*").order("data_empenho", desc=True).execute()
@@ -575,8 +575,6 @@ with tabs[3]:
             total_atas = df_empenhos["Ata"].nunique()
 
             col1, col2, col3 = st.columns(3)
-
-            modo_tema = st.get_option("theme.base")
 
             # Cores para light e dark
             if modo_tema == "dark":
