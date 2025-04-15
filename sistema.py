@@ -37,7 +37,7 @@ st.markdown("""
     .button-custom {
         background-color: #f8f8f8;
         color: #003366;
-        box-shadow:0 4px 8px rgba(0,0,0,0.05)
+        box-shadow:0 4px 8px rgba(0,0,0,0.05);
         padding: 0.5rem 1rem;
         margin-bottom: 0.5rem;
         width: 100%;
@@ -57,6 +57,10 @@ with tabs[0]:
     st.header("Gestão de Fornecedores")
 
     col1, col2 = st.columns([1, 2])  # 1/3 e 2/3 da tela
+
+    # Sessão de estado para armazenar aba ativa
+    if "aba_fornecedores" not in st.session_state:
+        st.session_state.aba_fornecedores = "Cadastrar"
 
     with col1:
         st.markdown('<div class="button-custom">Cadastrar</div>', unsafe_allow_html=True)
