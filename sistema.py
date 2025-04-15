@@ -62,16 +62,21 @@ with tabs[0]:
     if "aba_fornecedores" not in st.session_state:
         st.session_state.aba_fornecedores = "Cadastrar"
 
+    botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+    for b in botoes:
+            if st.button(b):
+                st.session_state.aba_fornecedores = b
+
     with col1:
         st.markdown('<div class="button-custom">Cadastrar</div>', unsafe_allow_html=True)
         st.markdown('<div class="button-custom">Consultar</div>', unsafe_allow_html=True)
         st.markdown('<div class="button-custom">Atualizar</div>', unsafe_allow_html=True)
         st.markdown('<div class="button-custom">Excluir</div>', unsafe_allow_html=True)
 
-        acao = st.radio("Escolha uma ação", ["Cadastrar", "Consultar", "Atualizar", "Excluir"], label_visibility="collapsed")
-
     with col2:
-        if acao == "Cadastrar":
+        aba = st.session_state.aba_fornecedores
+
+        if aba == "Cadastrar":
             st.subheader("Cadastro de Fornecedores")
             with st.form("novo_fornecedor", clear_on_submit=True):
                 nome_fornecedor = st.text_input("Nome do Fornecedor")
@@ -96,7 +101,7 @@ with tabs[0]:
             elif submit:
                 st.warning("Preencha os campos obrigatórios.")
 
-        elif acao == "Consultar":
+        elif aba == "Consultar":
             st.subheader("Fornecedores Cadastrados")
             try:
                 response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
@@ -112,7 +117,7 @@ with tabs[0]:
             except Exception as e:
                 st.error(f"Erro ao buscar fornecedores: {e}")
 
-        elif acao == "Atualizar":
+        elif aba == "Atualizar":
             st.subheader("Atualizar Fornecedor")
             try:
                 response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
@@ -149,7 +154,7 @@ with tabs[0]:
             except Exception as e:
                 st.error(f"Erro ao carregar fornecedores: {e}")
 
-        elif acao == "Excluir":
+        elif aba == "Excluir":
             st.subheader("Excluir Fornecedor")
             try:
                 response = supabase.table("fornecedores").select("*").order("nome").execute()
