@@ -624,20 +624,27 @@ with tabs[3]:
                 st.plotly_chart(fig_ata, use_container_width=True)
 
             with aba2:
-                # Usa datetime para agrupar corretamente
+                # Garante que é datetime pra gerar o AnoMes
                 df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"])
-                st.write(df_empenhos)
-                # Cria coluna AnoMes pro gráfico
-                df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
-                st.write(df_empenhos)
-                # Depois disso, se quiser, pode tirar a hora pra exibir no DataFrame
-                df_empenhos["Data do Empenho"] = df_empenhos["Data do Empenho"].dt.date
-                st.write(df_empenhos)
 
+                # Cria coluna formatada tipo 'Abr/2025'
+                df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.strftime('%b/%Y')
+
+                # Agrupa por essa nova coluna
                 quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
-                fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True,
-                                    title="Quantidade Empenhada por Mês")
+
+                # Cria gráfico com eixo categórico
+                fig_mensal = px.line(
+                    quantidade_mensal,
+                    x="AnoMes",
+                    y="Quantidade",
+                    markers=True,
+                    title="Quantidade Empenhada por Mês"
+                )
+
+                fig_mensal.update_xaxes(type="category")  # 👈 força o eixo a ser categórico
                 st.plotly_chart(fig_mensal, use_container_width=True)
+
 
             with aba3:
                 top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
