@@ -63,7 +63,7 @@ with tabs[0]:
 
     with col1:
         def botao(nome):
-            selected = st.session_state.aba_fornecedor == nome
+            selected = st.session_state.aba_fornecedores == nome
             estilo = "custom-button selected" if selected else "custom-button"
             if st.button(nome, key=nome):
                 st.session_state.aba_fornecedor = nome
