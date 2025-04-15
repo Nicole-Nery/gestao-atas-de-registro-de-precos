@@ -25,147 +25,167 @@ tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "R
 modo_tema = st.get_option("theme.base")
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
+# Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
-    subtabs_fornecedores = st.tabs(["Cadastrar", "Consultar", "Atualizar", "Excluir"])
+    st.header("Gestão de Fornecedores")
 
-    with subtabs_fornecedores[0]:
-        st.header("Cadastro de Fornecedores")
+    col1, col2 = st.columns([1, 2])
 
-        with st.form("novo_fornecedor", clear_on_submit=True):
-            nome_fornecedor = st.text_input("Nome do Fornecedor")
-            cnpj = st.text_input("CNPJ")
-            email = st.text_input("E-mail")
-            endereco = st.text_input("Endereço")
-            telefone = st.text_input("Telefone")
-            submit_fornecedor = st.form_submit_button("Cadastrar Fornecedor")
+    # Sessão de estado para armazenar aba ativa
+    if "aba_fornecedores" not in st.session_state:
+        st.session_state.aba_fornecedores = "Cadastrar"
 
-        if submit_fornecedor and nome_fornecedor and cnpj:
+    with col1:
+        st.markdown("### Ações")
+        botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+        estilo_botao = """
+            <style>
+            .stButton > button {
+                width: 100%;
+                background-color: #f2f2f2;
+                color: #005aa7;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                padding: 0.8em;
+                margin-bottom: 0.5em;
+                font-weight: 600;
+            }
+            .stButton > button:hover {
+                background-color: #e0e0e0;
+            }
+            </style>
+        """
+        st.markdown(estilo_botao, unsafe_allow_html=True)
+
+        for b in botoes:
+            if st.button(b):
+                st.session_state.aba_fornecedores = b
+
+    with col2:
+        aba = st.session_state.aba_fornecedores
+
+        if aba == "Cadastrar":
+            st.subheader("Cadastro de Fornecedores")
+            with st.form("novo_fornecedor", clear_on_submit=True):
+                nome_fornecedor = st.text_input("Nome do Fornecedor")
+                cnpj = st.text_input("CNPJ")
+                email = st.text_input("E-mail")
+                endereco = st.text_input("Endereço")
+                telefone = st.text_input("Telefone")
+                submit = st.form_submit_button("Cadastrar Fornecedor")
+
+            if submit:
+                if nome_fornecedor and cnpj:
+                    try:
+                        supabase.table("fornecedores").insert({
+                            "nome": nome_fornecedor,
+                            "cnpj": cnpj,
+                            "email": email,
+                            "endereco": endereco,
+                            "telefone": telefone
+                        }).execute()
+                        st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
+                    except Exception as e:
+                        st.error(f"Erro ao cadastrar fornecedor: {e}")
+                else:
+                    st.warning("Preencha todos os campos obrigatórios.")
+
+        elif aba == "Consultar":
+            st.subheader("Fornecedores Cadastrados")
             try:
-                response = supabase.table("fornecedores").insert({
-                    "nome": nome_fornecedor,
-                    "cnpj": cnpj,
-                    "email": email,
-                    "endereco": endereco,
-                    "telefone": telefone
-                }).execute()
-                st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
-            
+                response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
+                fornecedores_result = response.data
+
+                df_fornecedores = pd.DataFrame(fornecedores_result)
+                df_fornecedores = df_fornecedores.rename(columns={
+                    "nome": "Nome",
+                    "cnpj": "CNPJ",
+                    "email": "E-mail",
+                    "endereco": "Endereço",
+                    "telefone": "Telefone"
+                })
+                st.dataframe(df_fornecedores)
             except Exception as e:
-                st.error(f"Erro ao cadastrar fornecedor: {e}.")
+                st.error(f"Erro ao buscar fornecedor: {e}")
 
-        else:
-            st.warning("Preencha todos os campos obrigatórios.")
+        elif aba == "Atualizar":
+            st.subheader("Atualizar Fornecedor")
+            try:
+                response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
+                fornecedores_data = response.data
+                fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
+                fornecedores_nomes = ["Selecione"] + list(fornecedores_dict.keys())
 
-    
-    with subtabs_fornecedores[1]:
-        st.header("Fornecedores cadastrados")
-        try:
-            response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
-            fornecedores_result = response.data # Devolve um dicionário
-            
-            df_fornecedores = pd.DataFrame(fornecedores_result)
-            df_fornecedores = df_fornecedores.rename(columns={
-                "nome": "Nome",
-                "cnpj": "CNPJ",
-                "email": "E-mail",
-                "endereco": "Endereço",
-                "telefone": "Telefone"
-            })
-            st.dataframe(df_fornecedores)
+                fornecedor_selecionado = st.selectbox("Escolha um fornecedor", fornecedores_nomes)
 
-        except Exception as e:
-            st.error(f"Erro ao buscar fornecedor: {e}.")
-    
-    with subtabs_fornecedores[2]:
-        st.header("Atualizar Fornecedor")
+                if fornecedor_selecionado != "Selecione":
+                    fornecedor_id = fornecedores_dict[fornecedor_selecionado]
+                    fornecedor_info_response = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+                    fornecedor_info = fornecedor_info_response.data
 
-        try:
-            response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
-            fornecedores_data = response.data
-            fornecedores_dict = {f["nome"]:f["id"] for f in fornecedores_data}
-            fornecedores_nomes =  ["Selecione"] + list(fornecedores_dict.keys())
+                    with st.form("form_editar_fornecedor"):
+                        novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
+                        novo_cnpj = st.text_input("CNPJ", value=fornecedor_info["cnpj"])
+                        novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
+                        novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
+                        novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
 
-            fornecedor_selecionado = st.selectbox("Escolha um fornecedor para atualizar", fornecedores_nomes)
+                        atualizar = st.form_submit_button("Atualizar Fornecedor")
 
-            if fornecedor_selecionado != "Selecione":
-                fornecedor_id = fornecedores_dict[fornecedor_selecionado]
+                        if atualizar:
+                            try:
+                                supabase.table("fornecedores").update({
+                                    "nome": novo_nome,
+                                    "cnpj": novo_cnpj,
+                                    "email": novo_email,
+                                    "endereco": novo_endereco,
+                                    "telefone": novo_telefone
+                                }).eq("id", fornecedor_id).execute()
 
-                fornecedor_info_response = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
-                fornecedor_info = fornecedor_info_response.data
+                                st.success(f"Fornecedor {novo_nome} atualizado com sucesso!")
+                                st.experimental_rerun()
+                            except Exception as e:
+                                st.error(f"Erro ao atualizar fornecedor: {e}")
+            except Exception as e:
+                st.error(f"Erro ao carregar fornecedores: {e}")
 
-                with st.form("form_editar_fornecedor"):
-                    novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
-                    novo_cnpj = st.text_input("CNPJ", value=fornecedor_info["cnpj"])
-                    novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
-                    novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
-                    novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
- 
-                    atualizar = st.form_submit_button("Atualizar Fornecedor", icon=":material/edit:")
-                    
-                    if atualizar:
-                        try:
-                            supabase.table("fornecedores").update({
-                                "nome": novo_nome,
-                                "cnpj": novo_cnpj,
-                                "email": novo_email,
-                                "endereco": novo_endereco,
-                                "telefone": novo_telefone
-                            }).eq("id", fornecedor_id).execute()
+        elif aba == "Excluir":
+            st.subheader("Excluir Fornecedor")
+            try:
+                response = supabase.table("fornecedores").select("*").order("nome").execute()
+                fornecedores_data = response.data
+                fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
+                fornecedores_nomes = ["Selecione"] + list(fornecedores_dict.keys())
 
-                            st.success(f"Fornecedor {novo_nome} atualizado com sucesso!")
-                            st.experimental_rerun()
-                        except Exception as e:
-                            st.error(f"Erro ao atualizar fornecedor: {e}")
-     
-        except Exception as e:
-            st.error(f"Erro ao carregar fornecedores: {e}")
+                fornecedor_selecionado = st.selectbox("Escolha um fornecedor", fornecedores_nomes)
 
-    with subtabs_fornecedores[3]:
+                if fornecedor_selecionado != "Selecione":
+                    fornecedor_id = fornecedores_dict[fornecedor_selecionado]
+                    fornecedor_info = next((f for f in fornecedores_data if f["id"] == fornecedor_id), None)
 
-        st.header("Excluir Fornecedor")
+                    if fornecedor_info:
+                        fornecedor_df = pd.DataFrame([fornecedor_info]).drop(columns=["id"])
+                        fornecedor_df = fornecedor_df.rename(columns={
+                            "nome": "Nome",
+                            "cnpj": "CNPJ",
+                            "email": "E-mail",
+                            "endereco": "Endereço",
+                            "telefone": "Telefone"
+                        })
+                        st.dataframe(fornecedor_df)
 
-        try:
-            response = supabase.table("fornecedores").select("*").order("nome").execute()
-            fornecedores_data = response.data
-            fornecedores_dict = {f["nome"]:f["id"] for f in fornecedores_data}
-            fornecedores_nomes =  ["Selecione"] + list(fornecedores_dict.keys())
-
-            fornecedor_selecionado = st.selectbox("Escolha um fornecedor para excluir", fornecedores_nomes)
-
-            if fornecedor_selecionado != "Selecione":
-                fornecedor_id = fornecedores_dict[fornecedor_selecionado]
-
-                fornecedor_info = next((f for f in fornecedores_data if f["id"] == fornecedor_id), None)
-                
-                if fornecedor_info:
-                    fornecedor_df = pd.DataFrame([fornecedor_info]).drop(columns=["id"])
-                    fornecedor_df = fornecedor_df.rename(columns={
-                        "nome": "Nome",
-                        "cnpj": "CNPJ",
-                        "email": "E-mail",
-                        "endereco": "Endereço",
-                        "telefone": "Telefone"
-                    })
-                    st.dataframe(fornecedor_df)
- 
-                excluir = st.button("Excluir Fornecedor", icon=":material/delete:")
-                
-                if excluir:
-                    confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
-                    
-                    if confirmar:
-                        try:
-                            supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
-                            st.sucess("Fornecedor excluído com sucesso!")
-                            st.experimental_rerun()
-
-                        except Exception as e:
-                            st.error(f"Erro ao excluir fornecedor: {e}")
-                    else:
-                        st.warning("Marque a caixa de confirmação para excluir o fornecedor.")
-        
-        except Exception as e:
-            st.error(f"Erro ao carregar fornecedores: {e}")
+                        confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
+                        if confirmar:
+                            excluir = st.button("Excluir Fornecedor")
+                            if excluir:
+                                try:
+                                    supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
+                                    st.success("Fornecedor excluído com sucesso!")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao excluir fornecedor: {e}")
+            except Exception as e:
+                st.error(f"Erro ao carregar fornecedores: {e}")
 
 
 
