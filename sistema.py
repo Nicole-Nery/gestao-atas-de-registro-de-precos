@@ -624,9 +624,15 @@ with tabs[3]:
                 st.plotly_chart(fig_ata, use_container_width=True)
 
             with aba2:
-                df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"]).dt.date
-                st.write(df_empenhos)
+                # Usa datetime para agrupar corretamente
+                df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"])
+
+                # Cria coluna AnoMes pro gráfico
                 df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
+
+                # Depois disso, se quiser, pode tirar a hora pra exibir no DataFrame
+                df_empenhos["Data do Empenho"] = df_empenhos["Data do Empenho"].dt.date
+
                 quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
                 fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True,
                                     title="Quantidade Empenhada por Mês")
