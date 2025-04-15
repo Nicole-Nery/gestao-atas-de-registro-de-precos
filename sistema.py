@@ -10,6 +10,12 @@ SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c3R1bmdlaXR6Y2l6Y3lzdXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNjAxNTUsImV4cCI6MjA1OTYzNjE1NX0.L1KZfGO_9Cq7iOGtdDVD4bGp02955s65fjcK2I1jntc"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Alterando o nome da página e o ícone
+st.set_page_config(page_title= "Gestão de ARP", 
+                   page_icon= "📄", 
+                   layout = "wide")
+
+
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
@@ -22,10 +28,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Alterando o nome da página e o ícone
-st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon= "📄", 
-                   layout = "wide")
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
