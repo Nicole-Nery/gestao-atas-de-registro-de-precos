@@ -21,7 +21,7 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
     html, body, [class*="css"]  {
-        font-family: 'Rawline', sans-serif;
+        font-family: 'Roboto', sans-serif;
         color: #071D41;
     }
 
