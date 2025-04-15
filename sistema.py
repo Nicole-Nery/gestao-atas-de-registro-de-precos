@@ -45,8 +45,6 @@ if "aba_fornecedores" not in st.session_state:
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
-    st.header("Gestão de Fornecedores")
-
     col1, col2 = st.columns([1, 2])
 
     # Sessão de estado para armazenar aba ativa
@@ -67,6 +65,8 @@ with tabs[0]:
                 text-align: center;
                 font-weight: bold;
                 cursor: pointer;
+                outline: none !important;
+                border: none !important;
             }
             .stButton > button:hover {
                 background-color: #dbe8fb;
