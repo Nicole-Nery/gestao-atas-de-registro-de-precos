@@ -15,16 +15,8 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
-    html, body, [class*="css"]  {
-        font-family: 'Roboto', sans-serif;
-    }
-
-    </style>
-""", unsafe_allow_html=True)
+with open( "estilo.css" ) as css:
+    st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
