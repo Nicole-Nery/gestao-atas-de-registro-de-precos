@@ -17,10 +17,10 @@ st.set_page_config(page_title= "Gestão de ARP",
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap'); 
+    @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap'); 
 
     html, body, .stApp  {
-        font-family: 'Special Gothic Expanded One', sans-serif !important;
+        font-family: 'UnifrakturCook', cursive !important !important;
         font-size: 18px !important;
         font-weight: 500 !important;
         color: #101723 !important;
