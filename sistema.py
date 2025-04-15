@@ -625,6 +625,7 @@ with tabs[3]:
 
             with aba2:
                 df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"], format="%d/%m/%Y")
+                print(df_empenhos)
                 df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
                 quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
                 fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True,
