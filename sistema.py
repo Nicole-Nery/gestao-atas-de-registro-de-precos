@@ -24,10 +24,13 @@ tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "R
 # Identificando o tema
 modo_tema = st.get_option("theme.base")
 
-
+# Sessão de estado para armazenar aba ativa
+if "aba_fornecedores" not in st.session_state:
+    st.session_state.aba_fornecedores = "Cadastrar"
+    
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
     html, body, [class*="css"]  {
         font-family: 'Rawline', sans-serif;
@@ -38,7 +41,7 @@ st.markdown("""
         background-color: #f8f8f8;
         color: #003366;
         box-shadow:0 4px 8px rgba(0,0,0,0.05);
-        padding: 0.5rem 1rem;
+        padding: 1rem 1rem;
         margin-bottom: 0.5rem;
         width: 100%;
         text-align: center;
@@ -58,20 +61,18 @@ with tabs[0]:
 
     col1, col2 = st.columns([1, 2])  # 1/3 e 2/3 da tela
 
-    # Sessão de estado para armazenar aba ativa
-    if "aba_fornecedores" not in st.session_state:
-        st.session_state.aba_fornecedores = "Cadastrar"
-
-    botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
-    for b in botoes:
-            if st.button(b):
-                st.session_state.aba_fornecedores = b
-
     with col1:
-        st.markdown('<div class="button-custom">Cadastrar</div>', unsafe_allow_html=True)
-        st.markdown('<div class="button-custom">Consultar</div>', unsafe_allow_html=True)
-        st.markdown('<div class="button-custom">Atualizar</div>', unsafe_allow_html=True)
-        st.markdown('<div class="button-custom">Excluir</div>', unsafe_allow_html=True)
+        def botao(nome):
+            selected = st.session_state.aba_fornecedor == nome
+            estilo = "custom-button selected" if selected else "custom-button"
+            if st.button(nome, key=nome):
+                st.session_state.aba_fornecedor = nome
+            st.markdown(f"""<div class="{estilo}">{nome}</div>""", unsafe_allow_html=True)
+
+            botao("Cadastrar")
+            botao("Consultar")
+            botao("Atualizar")
+            botao("Excluir")
 
     with col2:
         aba = st.session_state.aba_fornecedores
