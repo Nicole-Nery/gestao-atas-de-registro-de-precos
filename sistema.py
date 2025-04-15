@@ -17,12 +17,12 @@ st.set_page_config(page_title= "Gestão de ARP",
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap'); 
+    @import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap'); 
 
     html, body, [class*="css"] {
-        font-family: 'Roboto', sans-serif; 
-        font-size: 18px;
-        font-weight: 500;
+        font-family: "Special Gothic Expanded One", sans-serif;
+        font-weight: 400;
+        font-style: normal;
         color: #101723;
     }
     </style>
