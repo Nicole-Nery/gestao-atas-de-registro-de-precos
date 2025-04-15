@@ -70,12 +70,9 @@ with tabs[0]:
             }
             .stButton > button:hover {
                 background-color: #dbe8fb;
-            }
-            .stButton > button:focus {
                 outline: none !important;
-                box-shadow: none !important;
                 border: none !important;
-            }
+                }
             </style>
         """
         st.markdown(estilo_botao, unsafe_allow_html=True)
