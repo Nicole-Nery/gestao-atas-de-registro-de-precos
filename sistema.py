@@ -37,21 +37,6 @@ st.markdown("""
         color: #071D41;
     }
 
-    .button-custom {
-        background-color: #f8f8f8;
-        color: #003366;
-        box-shadow:0 4px 8px rgba(0,0,0,0.05);
-        padding: 1rem 1rem;
-        margin-bottom: 0.5rem;
-        width: 100%;
-        text-align: center;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .button-custom:hover {
-        background-color: #dbe8fb;
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -59,20 +44,38 @@ st.markdown("""
 with tabs[0]:
     st.header("Gestão de Fornecedores")
 
-    col1, col2 = st.columns([1, 2])  # 1/3 e 2/3 da tela
+    col1, col2 = st.columns([1, 2])
+
+    # Sessão de estado para armazenar aba ativa
+    if "aba_fornecedores" not in st.session_state:
+        st.session_state.aba_fornecedores = "Cadastrar"
 
     with col1:
-        def botao(nome):
-            selected = st.session_state.aba_fornecedores == nome
-            estilo = "custom-button selected" if selected else "custom-button"
-            if st.button(nome, key=nome):
-                st.session_state.aba_fornecedor = nome
-            st.markdown(f"""<div class="{estilo}">{nome}</div>""", unsafe_allow_html=True)
+        st.markdown("### Ações")
+        botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+        estilo_botao = """
+            <style>
+            .stButton > button {
+                background-color: #f8f8f8;
+                color: #003366;
+                box-shadow:0 4px 8px rgba(0,0,0,0.05);
+                padding: 1rem 1rem;
+                margin-bottom: 0.5rem;
+                width: 100%;
+                text-align: center;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .stButton > button:hover {
+                background-color: #dbe8fb;
+            }
+            </style>
+        """
+        st.markdown(estilo_botao, unsafe_allow_html=True)
 
-        botao("Cadastrar")
-        botao("Consultar")
-        botao("Atualizar")
-        botao("Excluir")
+        for b in botoes:
+            if st.button(b):
+                st.session_state.aba_fornecedores = b
 
     with col2:
         aba = st.session_state.aba_fornecedores
@@ -87,36 +90,39 @@ with tabs[0]:
                 telefone = st.text_input("Telefone")
                 submit = st.form_submit_button("Cadastrar Fornecedor")
 
-            if submit and nome_fornecedor and cnpj:
-                try:
-                    supabase.table("fornecedores").insert({
-                        "nome": nome_fornecedor,
-                        "cnpj": cnpj,
-                        "email": email,
-                        "endereco": endereco,
-                        "telefone": telefone
-                    }).execute()
-                    st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
-                except Exception as e:
-                    st.error(f"Erro ao cadastrar fornecedor: {e}")
-            elif submit:
-                st.warning("Preencha os campos obrigatórios.")
+            if submit:
+                if nome_fornecedor and cnpj:
+                    try:
+                        supabase.table("fornecedores").insert({
+                            "nome": nome_fornecedor,
+                            "cnpj": cnpj,
+                            "email": email,
+                            "endereco": endereco,
+                            "telefone": telefone
+                        }).execute()
+                        st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
+                    except Exception as e:
+                        st.error(f"Erro ao cadastrar fornecedor: {e}")
+                else:
+                    st.warning("Preencha todos os campos obrigatórios.")
 
         elif aba == "Consultar":
             st.subheader("Fornecedores Cadastrados")
             try:
                 response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
-                df = pd.DataFrame(response.data)
-                df = df.rename(columns={
+                fornecedores_result = response.data
+
+                df_fornecedores = pd.DataFrame(fornecedores_result)
+                df_fornecedores = df_fornecedores.rename(columns={
                     "nome": "Nome",
                     "cnpj": "CNPJ",
                     "email": "E-mail",
                     "endereco": "Endereço",
                     "telefone": "Telefone"
                 })
-                st.dataframe(df)
+                st.dataframe(df_fornecedores)
             except Exception as e:
-                st.error(f"Erro ao buscar fornecedores: {e}")
+                st.error(f"Erro ao buscar fornecedor: {e}")
 
         elif aba == "Atualizar":
             st.subheader("Atualizar Fornecedor")
@@ -124,20 +130,23 @@ with tabs[0]:
                 response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
                 fornecedores_data = response.data
                 fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
-                nomes = ["Selecione"] + list(fornecedores_dict.keys())
+                fornecedores_nomes = ["Selecione"] + list(fornecedores_dict.keys())
 
-                escolhido = st.selectbox("Escolha um fornecedor para atualizar", nomes)
-                if escolhido != "Selecione":
-                    id_fornecedor = fornecedores_dict[escolhido]
-                    info = supabase.table("fornecedores").select("*").eq("id", id_fornecedor).single().execute().data
+                fornecedor_selecionado = st.selectbox("Escolha um fornecedor", fornecedores_nomes)
+
+                if fornecedor_selecionado != "Selecione":
+                    fornecedor_id = fornecedores_dict[fornecedor_selecionado]
+                    fornecedor_info_response = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+                    fornecedor_info = fornecedor_info_response.data
 
                     with st.form("form_editar_fornecedor"):
-                        novo_nome = st.text_input("Nome", value=info["nome"])
-                        novo_cnpj = st.text_input("CNPJ", value=info["cnpj"])
-                        novo_email = st.text_input("E-mail", value=info["email"])
-                        novo_endereco = st.text_input("Endereço", value=info["endereco"])
-                        novo_telefone = st.text_input("Telefone", value=info["telefone"])
-                        atualizar = st.form_submit_button("Atualizar")
+                        novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
+                        novo_cnpj = st.text_input("CNPJ", value=fornecedor_info["cnpj"])
+                        novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
+                        novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
+                        novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
+
+                        atualizar = st.form_submit_button("Atualizar Fornecedor")
 
                         if atualizar:
                             try:
@@ -147,11 +156,12 @@ with tabs[0]:
                                     "email": novo_email,
                                     "endereco": novo_endereco,
                                     "telefone": novo_telefone
-                                }).eq("id", id_fornecedor).execute()
-                                st.success("Fornecedor atualizado com sucesso!")
+                                }).eq("id", fornecedor_id).execute()
+
+                                st.success(f"Fornecedor {novo_nome} atualizado com sucesso!")
                                 st.experimental_rerun()
                             except Exception as e:
-                                st.error(f"Erro ao atualizar: {e}")
+                                st.error(f"Erro ao atualizar fornecedor: {e}")
             except Exception as e:
                 st.error(f"Erro ao carregar fornecedores: {e}")
 
@@ -159,39 +169,40 @@ with tabs[0]:
             st.subheader("Excluir Fornecedor")
             try:
                 response = supabase.table("fornecedores").select("*").order("nome").execute()
-                data = response.data
-                fornecedores_dict = {f["nome"]: f["id"] for f in data}
-                nomes = ["Selecione"] + list(fornecedores_dict.keys())
+                fornecedores_data = response.data
+                fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
+                fornecedores_nomes = ["Selecione"] + list(fornecedores_dict.keys())
 
-                escolhido = st.selectbox("Escolha um fornecedor para excluir", nomes)
-                if escolhido != "Selecione":
-                    id_fornecedor = fornecedores_dict[escolhido]
-                    info = next((f for f in data if f["id"] == id_fornecedor), None)
+                fornecedor_selecionado = st.selectbox("Escolha um fornecedor", fornecedores_nomes)
 
-                    if info:
-                        df = pd.DataFrame([info]).drop(columns=["id"]).rename(columns={
+                if fornecedor_selecionado != "Selecione":
+                    fornecedor_id = fornecedores_dict[fornecedor_selecionado]
+                    fornecedor_info = next((f for f in fornecedores_data if f["id"] == fornecedor_id), None)
+
+                    if fornecedor_info:
+                        fornecedor_df = pd.DataFrame([fornecedor_info]).drop(columns=["id"])
+                        fornecedor_df = fornecedor_df.rename(columns={
                             "nome": "Nome",
                             "cnpj": "CNPJ",
                             "email": "E-mail",
                             "endereco": "Endereço",
                             "telefone": "Telefone"
                         })
-                        st.dataframe(df)
+                        st.dataframe(fornecedor_df)
 
-                    excluir = st.button("Excluir Fornecedor")
-                    if excluir:
                         confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
                         if confirmar:
-                            try:
-                                supabase.table("fornecedores").delete().eq("id", id_fornecedor).execute()
-                                st.success("Fornecedor excluído com sucesso!")
-                                st.experimental_rerun()
-                            except Exception as e:
-                                st.error(f"Erro ao excluir: {e}")
-                        else:
-                            st.warning("Marque a caixa de confirmação.")
+                            excluir = st.button("Excluir Fornecedor")
+                            if excluir:
+                                try:
+                                    supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
+                                    st.success("Fornecedor excluído com sucesso!")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao excluir fornecedor: {e}")
             except Exception as e:
                 st.error(f"Erro ao carregar fornecedores: {e}")
+
 
 # Atas -----------------------------------------------------------------------------------------------------------------------
 with tabs[1]:
