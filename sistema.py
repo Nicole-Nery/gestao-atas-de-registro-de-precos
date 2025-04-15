@@ -62,7 +62,7 @@ with tabs[0]:
                 box-shadow:0 4px 8px rgba(0,0,0,0.1);
                 padding: 1rem 1rem;
                 margin-bottom: 0.5rem;
-                width: 80%;
+                width: 100%;
                 text-align: center;
                 font-weight: bold;
                 cursor: pointer;
@@ -73,6 +73,7 @@ with tabs[0]:
                 background-color: #dbe8fb;
                 outline: none !important;
                 border: none !important;
+                color: #003366 !important;
                 }
             </style>
         """
