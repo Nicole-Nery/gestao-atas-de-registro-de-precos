@@ -125,7 +125,7 @@ with tabs[0]:
         st.header("Excluir Fornecedor")
 
         try:
-            response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
+            response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
             fornecedores_data = response.data
             fornecedores_dict = {f["nome"]:f["id"] for f in fornecedores_data}
             fornecedores_nomes =  ["Selecione"] + list(fornecedores_dict.keys())
@@ -138,7 +138,7 @@ with tabs[0]:
                 fornecedor_info_response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").eq("id", fornecedor_id).single().execute()
                 fornecedor_info = fornecedor_info_response.data
 
-                fornecedor_df = pd.DataFrame(fornecedor_info)
+                fornecedor_df = pd.DataFrame([fornecedor_info])
                 fornecedor_df = fornecedor_df.rename(columns={
                     "nome": "Nome",
                     "cnpj": "CNPJ",
