@@ -125,7 +125,7 @@ with tabs[0]:
         st.header("Excluir Fornecedor")
 
         try:
-            response = supabase.table("fornecedores").select("nome, id").order("nome").execute()
+            response = supabase.table("fornecedores").select("*").order("nome").execute()
             fornecedores_data = response.data
             fornecedores_dict = {f["nome"]:f["id"] for f in fornecedores_data}
             fornecedores_nomes =  ["Selecione"] + list(fornecedores_dict.keys())
@@ -135,20 +135,20 @@ with tabs[0]:
             if fornecedor_selecionado != "Selecione":
                 fornecedor_id = fornecedores_dict[fornecedor_selecionado]
 
-                fornecedor_info_response = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
-                fornecedor_info = fornecedor_info_response.data
-
-                fornecedor_df = pd.DataFrame([fornecedor_info])
-                fornecedor_df = fornecedor_df.rename(columns={
-                    "nome": "Nome",
-                    "cnpj": "CNPJ",
-                    "email": "E-mail",
-                    "endereco": "Endereço",
-                    "telefone": "Telefone"
-                })
-                st.dataframe(fornecedor_df)
+                fornecedor_info = next((f for f in fornecedores_data if f["id"] == fornecedor_id), None)
+                
+                if fornecedor_info:
+                    fornecedor_df = pd.DataFrame([fornecedor_info]).drop(columns=["id"])
+                    fornecedor_df = fornecedor_df.rename(columns={
+                        "nome": "Nome",
+                        "cnpj": "CNPJ",
+                        "email": "E-mail",
+                        "endereco": "Endereço",
+                        "telefone": "Telefone"
+                    })
+                    st.dataframe(fornecedor_df)
  
-                excluir = st.form_submit_button("Excluir Fornecedor", icon=":material/delete:")
+                excluir = st.button("Excluir Fornecedor", icon=":material/delete:")
                 
                 if excluir:
                     confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
