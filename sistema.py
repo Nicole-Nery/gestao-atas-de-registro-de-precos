@@ -25,6 +25,13 @@ st.markdown("""
         font-style: normal;
         color: #101723;
     }
+            
+    .stElementContainer  {
+        font-family: "Special Gothic Expanded One", sans-serif !important;
+        font-weight: 400;
+        font-style: normal;
+        color: #101723;
+    }
     </style>
 """, unsafe_allow_html=True)
 
