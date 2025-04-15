@@ -10,6 +10,18 @@ SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c3R1bmdlaXR6Y2l6Y3lzdXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNjAxNTUsImV4cCI6MjA1OTYzNjE1NX0.L1KZfGO_9Cq7iOGtdDVD4bGp02955s65fjcK2I1jntc"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Rawline', sans-serif;
+        color: #071D41;
+    }
+
+    </style>
+""", unsafe_allow_html=True)
+
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "Gestão de ARP", 
                    page_icon= "📄", 
@@ -27,18 +39,7 @@ modo_tema = st.get_option("theme.base")
 # Sessão de estado para armazenar aba ativa
 if "aba_fornecedores" not in st.session_state:
     st.session_state.aba_fornecedores = "Cadastrar"
-    
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-    html, body, [class*="css"]  {
-        font-family: 'Rawline', sans-serif;
-        color: #071D41;
-    }
-
-    </style>
-""", unsafe_allow_html=True)
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
@@ -51,7 +52,6 @@ with tabs[0]:
         st.session_state.aba_fornecedores = "Cadastrar"
 
     with col1:
-        st.markdown("### Ações")
         botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
         estilo_botao = """
             <style>
@@ -68,6 +68,11 @@ with tabs[0]:
             }
             .stButton > button:hover {
                 background-color: #dbe8fb;
+            }
+            .stButton > button:focus {
+                outline: none !important;
+                box-shadow: none !important;
+                border: none !important;
             }
             </style>
         """
