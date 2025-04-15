@@ -69,10 +69,10 @@ with tabs[0]:
                 st.session_state.aba_fornecedor = nome
             st.markdown(f"""<div class="{estilo}">{nome}</div>""", unsafe_allow_html=True)
 
-            botao("Cadastrar")
-            botao("Consultar")
-            botao("Atualizar")
-            botao("Excluir")
+        botao("Cadastrar")
+        botao("Consultar")
+        botao("Atualizar")
+        botao("Excluir")
 
     with col2:
         aba = st.session_state.aba_fornecedores
