@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+@import url('https://fonts.cdnfonts.com/css/rawline');
 
 html, body, .stApp * {
-    font-family: 'Roboto', sans-serif !important;
-    font-size: 18px !important;
-    font-weight: 400 !important;
+    font-family: 'Rawline', sans-serif !important;
     color: #101723 !important;
 }
