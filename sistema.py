@@ -20,7 +20,7 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap'); 
 
     html, body, [class*="css"] {
-        font-family: "Special Gothic Expanded One", sans-serif;
+        font-family: "Special Gothic Expanded One", sans-serif !important;
         font-weight: 400;
         font-style: normal;
         color: #101723;
