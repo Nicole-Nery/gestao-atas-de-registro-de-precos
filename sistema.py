@@ -626,12 +626,13 @@ with tabs[3]:
             with aba2:
                 # Usa datetime para agrupar corretamente
                 df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"])
-
+                st.write(df_empenhos)
                 # Cria coluna AnoMes pro gráfico
                 df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
-
+                st.write(df_empenhos)
                 # Depois disso, se quiser, pode tirar a hora pra exibir no DataFrame
                 df_empenhos["Data do Empenho"] = df_empenhos["Data do Empenho"].dt.date
+                st.write(df_empenhos)
 
                 quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
                 fig_mensal = px.line(quantidade_mensal, x="AnoMes", y="Quantidade", markers=True,
