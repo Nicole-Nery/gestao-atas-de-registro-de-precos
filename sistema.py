@@ -15,19 +15,11 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap'); 
+with open("estilo.css") as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-    html, body, .stApp  {
-        font-family: 'UnifrakturCook', cursive !important !important;
-        font-size: 18px !important;
-        font-weight: 500 !important;
-        color: #101723 !important;
-    };
-    </style>
-""", unsafe_allow_html=True)
-
+st.title("Teste de fonte")
+st.write("Se isso aqui estiver em Roboto, deu certo.")
 
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
