@@ -19,19 +19,12 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap'); 
 
-    .stApp  {
-        font-family: "Special Gothic Expanded One", sans-serif !important;
-        font-weight: 400;
-        font-style: normal;
-        color: #101723;
-    }
-            
-    .stElementContainer  {
-        font-family: "Special Gothic Expanded One", sans-serif !important;
-        font-weight: 400;
-        font-style: normal;
-        color: #101723;
-    }
+    html, body, .stApp  {
+        font-family: 'Special Gothic Expanded One', sans-serif !important;
+        font-size: 18px !important;
+        font-weight: 500 !important;
+        color: #101723 !important;
+    };
     </style>
 """, unsafe_allow_html=True)
 
