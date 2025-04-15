@@ -624,7 +624,7 @@ with tabs[3]:
                 st.plotly_chart(fig_ata, use_container_width=True)
 
             with aba2:
-                df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"], format="%d/%m/%Y").dt.date
+                df_empenhos["Data do Empenho"] = pd.to_datetime(df_empenhos["Data do Empenho"]).dt.date
                 st.write(df_empenhos)
                 df_empenhos["AnoMes"] = df_empenhos["Data do Empenho"].dt.to_period("M").astype(str)
                 quantidade_mensal = df_empenhos.groupby("AnoMes")["Quantidade"].sum().reset_index()
