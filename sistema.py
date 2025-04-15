@@ -135,11 +135,18 @@ with tabs[0]:
             if fornecedor_selecionado != "Selecione":
                 fornecedor_id = fornecedores_dict[fornecedor_selecionado]
 
-                fornecedor_info_response = supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute()
+                fornecedor_info_response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").eq("id", fornecedor_id).single().execute()
                 fornecedor_info = fornecedor_info_response.data
 
                 fornecedor_df = pd.DataFrame(fornecedor_info)
-                fornecedor_df
+                fornecedor_df = fornecedor_df.rename(columns={
+                    "nome": "Nome",
+                    "cnpj": "CNPJ",
+                    "email": "E-mail",
+                    "endereco": "Endereço",
+                    "telefone": "Telefone"
+                })
+                st.dataframe(fornecedor_df)
  
                 excluir = st.form_submit_button("Excluir Fornecedor", icon=":material/delete:")
                 
