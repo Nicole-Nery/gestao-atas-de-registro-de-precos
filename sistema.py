@@ -1,38 +1,27 @@
-@import url('https://fonts.cdnfonts.com/css/rawline');
+st.markdown("""
+    <style>
+    :root {
+        --primary-color: #1E90FF;
+        --primary-color-light: #63B3ED;
+    }
 
-html, body, .stApp * {
-    font-family: 'Rawline', sans-serif !important;
-    color: #333333;
-}
+    .stButton>button {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        border: none !important;
+    }
 
-/* Cor principal personalizada */
-:root {
-    --primary-color: #1E90FF; /* azul Dodger Blue */
-    --primary-color-light: #63B3ED; /* azul claro para hover */
-}
+    .stButton>button:hover {
+        background-color: var(--primary-color-light) !important;
+        color: white !important;
+    }
 
-/* Aplicar nos elementos principais */
-.stButton>button {
-    background-color: var(--primary-color) !important;
-    color: white !important;
-    border: none !important;
-}
+    .stSlider > div[data-baseweb="slider"] {
+        color: var(--primary-color) !important;
+    }
 
-.stButton>button:hover {
-    background-color: var(--primary-color-light) !important;
-    color: white !important;
-}
-
-/* Slider */
-.css-1cpxqw2 .stSlider .st-cg {
-    background-color: var(--primary-color) !important;
-}
-
-.css-1cpxqw2 .stSlider .st-cg:hover {
-    background-color: var(--primary-color-light) !important;
-}
-
-/* Checkbox marcada */
-input:checked + div:after {
-    background-color: var(--primary-color) !important;
-}
+    input:checked + div:after {
+        background-color: var(--primary-color) !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
