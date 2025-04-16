@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import plotly.express as px
 import streamlit.components.v1 as components
 from supabase import create_client, Client
+import os
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
@@ -15,8 +16,12 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-with open("style/main.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+caminho_css = "styles/main.css"
+if os.path.exists(caminho_css):
+    with open(caminho_css) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+else:
+    st.error(f"Arquivo CSS não encontrado em: {caminho_css}")
 
 st.image("assets/logos.png", width=300)
 
