@@ -9,6 +9,10 @@ html, body, .stApp * {
     margin-top: 0em !important;
 }
 
+.stAtppHeader {
+    margin-bottom: 0em !important;
+}
+
 .stButton > button {
     border-radius: 0;
     background-color: #f8f8f8;
