@@ -18,7 +18,7 @@ st.set_page_config(page_title= "Gestão de ARP",
 with open("estilo.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("logos.png", width=300)
+st.image("logos.png", width=400)
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
