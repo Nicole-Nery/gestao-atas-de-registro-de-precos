@@ -15,18 +15,10 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+with open("estilo.css") as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-    html, body, [class*="css"]  {
-        font-family: 'Roboto', sans-serif;
-        color: #071D41;
-    }
-
-    </style>
-""", unsafe_allow_html=True)
-
+st.image("logos.png", width=300)
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
@@ -57,7 +49,7 @@ with tabs[0]:
             .stButton > button {
                 border-radius: 0;
                 background-color: #f8f8f8;
-                color: #003366;
+                color: #003366 !important;
                 box-shadow:0 4px 8px rgba(0,0,0,0.1);
                 padding: 1rem 1rem;
                 margin-bottom: 0.5rem;
