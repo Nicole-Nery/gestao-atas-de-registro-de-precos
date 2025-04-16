@@ -5,8 +5,8 @@ html, body, .stApp * {
     color: #333333;
 }
 
-.stMainBlockContainer {
-    padding-top: 1rem !important;
+.stElementContainer {
+    margin-top: 1em !important;
 }
 
 .stButton > button {
