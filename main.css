@@ -1,0 +1,29 @@
+@import url('https://fonts.cdnfonts.com/css/rawline');
+
+html, body, .stApp * {
+    font-family: 'Rawline', sans-serif !important;
+    color: #333333;
+    padding-top: 0rem !important;
+    margin-top: 0rem !important;
+}
+
+.stButton > button {
+    border-radius: 0;
+    background-color: #f8f8f8;
+    color: #003366 !important;
+    box-shadow:0 4px 8px rgba(0,0,0,0.1);
+    padding: 1rem 2rem;
+    margin-bottom: 0.7rem;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none !important;
+    border: none !important;
+}
+.stButton > button:hover {
+    background-color: #dbe8fb;
+    outline: none !important;
+    border: none !important;
+    color: #003366 !important;
+    }
