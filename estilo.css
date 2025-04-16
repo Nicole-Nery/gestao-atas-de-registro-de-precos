@@ -4,9 +4,3 @@ html, body, .stApp * {
     font-family: 'Rawline', sans-serif !important;
     color: #333333;
 }
-
-/* Cor principal personalizada */
-:root {
-    --primary-color: #1E90FF; /* azul Dodger Blue */
-    --primary-color-light: #63B3ED; /* azul claro para hover */
-}
