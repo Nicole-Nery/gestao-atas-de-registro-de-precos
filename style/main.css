@@ -3,8 +3,8 @@
 html, body, .stApp * {
     font-family: 'Rawline', sans-serif !important;
     color: #333333;
-    padding-top: 0rem !important;
-    margin-top: 0rem !important;
+    /*padding-top: 0rem !important;
+    margin-top: 0rem !important;*/
 }
 
 .stButton > button {
