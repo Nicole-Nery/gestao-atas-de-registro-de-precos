@@ -1,6 +1,11 @@
-st.markdown("""
-    <style>
-    :root {
+@import url('https://fonts.cdnfonts.com/css/rawline');
+
+html, body, .stApp * {
+    font-family: 'Rawline', sans-serif !important;
+    color: #333333;
+}
+
+:root {
         --primary-color: #1E90FF;
         --primary-color-light: #63B3ED;
     }
@@ -23,5 +28,3 @@ st.markdown("""
     input:checked + div:after {
         background-color: var(--primary-color) !important;
     }
-    </style>
-""", unsafe_allow_html=True)
