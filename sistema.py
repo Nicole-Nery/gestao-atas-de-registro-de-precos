@@ -52,7 +52,7 @@ with tabs[0]:
                 color: #003366 !important;
                 box-shadow:0 4px 8px rgba(0,0,0,0.1);
                 padding: 1rem 2rem;
-                margin-bottom: 0.5rem;
+                margin-bottom: 1rem;
                 width: 100%;
                 text-align: center;
                 font-weight: bold;
