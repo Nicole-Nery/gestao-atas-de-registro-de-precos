@@ -16,12 +16,8 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-caminho_css = "style/main.css"
-if os.path.exists(caminho_css):
-    with open(caminho_css) as f:
+with open("style/css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-else:
-    st.error(f"Arquivo CSS não encontrado em: {caminho_css}")
 
 st.image("assets/logos.png", width=300)
 
