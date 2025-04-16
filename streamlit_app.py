@@ -16,7 +16,7 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-caminho_css = "styles/main.css"
+caminho_css = "style/main.css"
 
 with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
