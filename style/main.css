@@ -5,6 +5,10 @@ html, body, .stApp * {
     color: #333333;
 }
 
+.stMainBlockContainer {
+    padding-top: 0.1em !important;
+}
+
 .stButton > button {
     border-radius: 0;
     background-color: #f8f8f8;
