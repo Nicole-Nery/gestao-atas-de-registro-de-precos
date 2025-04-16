@@ -22,17 +22,3 @@ html, body, .stApp * {
     background-color: var(--primary-color-light) !important;
     color: white !important;
 }
-
-/* Slider */
-.css-1cpxqw2 .stSlider .st-cg {
-    background-color: var(--primary-color) !important;
-}
-
-.css-1cpxqw2 .stSlider .st-cg:hover {
-    background-color: var(--primary-color-light) !important;
-}
-
-/* Checkbox marcada */
-input:checked + div:after {
-    background-color: var(--primary-color) !important;
-}
