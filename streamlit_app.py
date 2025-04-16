@@ -15,10 +15,10 @@ st.set_page_config(page_title= "Gestão de ARP",
                    page_icon= "📄", 
                    layout = "wide")
 
-with open("estilo.css") as f:
+with open("style/main.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("logos.png", width=300)
+st.image("assets/logos.png", width=300)
 
 st.title("Sistema de Gestão de Atas de Registro de Preços")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
@@ -33,7 +33,6 @@ modo_tema = st.get_option("theme.base")
 if "aba_fornecedores" not in st.session_state:
     st.session_state.aba_fornecedores = "Cadastrar"
 
-
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
     col1, col2 = st.columns([1, 4])
@@ -44,32 +43,6 @@ with tabs[0]:
 
     with col1:
         botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
-        estilo_botao = """
-            <style>
-            .stButton > button {
-                border-radius: 0;
-                background-color: #f8f8f8;
-                color: #003366 !important;
-                box-shadow:0 4px 8px rgba(0,0,0,0.1);
-                padding: 1rem 2rem;
-                margin-bottom: 0.7rem;
-                width: 100%;
-                text-align: center;
-                font-weight: bold;
-                cursor: pointer;
-                outline: none !important;
-                border: none !important;
-            }
-            .stButton > button:hover {
-                background-color: #dbe8fb;
-                outline: none !important;
-                border: none !important;
-                color: #003366 !important;
-                }
-            </style>
-        """
-        st.markdown(estilo_botao, unsafe_allow_html=True)
-
         for b in botoes:
             if st.button(b):
                 st.session_state.aba_fornecedores = b
