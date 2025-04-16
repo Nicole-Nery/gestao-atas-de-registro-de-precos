@@ -51,7 +51,7 @@ with tabs[0]:
                 background-color: #f8f8f8;
                 color: #003366 !important;
                 box-shadow:0 4px 8px rgba(0,0,0,0.1);
-                padding: 1rem 1rem;
+                padding: 1rem 2rem;
                 margin-bottom: 0.5rem;
                 width: 100%;
                 text-align: center;
