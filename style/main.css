@@ -6,7 +6,7 @@ html, body, .stApp * {
 }
 
 .stElementContainer {
-    margin-top: 0.4em !important;
+    margin-top: 0em !important;
 }
 
 .stButton > button {
