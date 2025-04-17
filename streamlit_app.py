@@ -27,7 +27,7 @@ with col1:
     st.image('assets/logo-sigah.png', width=300)
 with col2:
     st.markdown("<h2><b>Sistema Integrado de Gestão de Atas Hospitalares</b></h2>", unsafe_allow_html=True)
-st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
+st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios"])
