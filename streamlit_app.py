@@ -573,17 +573,17 @@ with tabs[2]:
             if ata_nome != "Selecione":
                 ata_id = atas_dict[ata_nome]
 
-                print("ola")
+                st.write("ola")
                 try:
-                    print("oi")
+                    st.write("oi")
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
-                    print("oi")
+                    st.write("oi")
                     empenhos = response.data
 
                     if empenhos: 
                         
                         empenhos_df = pd.DataFrame([empenhos])
-                        print(empenhos_df)
+                        st.write(empenhos_df)
                         empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).strftime('%d/%m/%Y')
                         
                         empenhos_df = empenhos_df.rename(columns={
