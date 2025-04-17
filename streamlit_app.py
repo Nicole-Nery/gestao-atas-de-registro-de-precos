@@ -529,7 +529,8 @@ with tabs[2]:
                             data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
                             observacao = st.text_input("Observação (opcional)")
 
-                            if st.button("Registrar Empenho"):
+                            registrar_empenho = st.form_submit_button("Registrar Empenho")    
+                            if registrar_empenho:
                                 try:
                                     # Inserir empenho
                                     supabase.table("empenhos").insert({
