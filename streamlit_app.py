@@ -47,7 +47,7 @@ with tabs[0]:
     with col1:
         botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
         for b in botoes:
-            if st.button(b):
+            if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
 
     with col2:
@@ -188,7 +188,7 @@ with tabs[1]:
     with col1:
         botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
         for b in botoes:
-            if st.button(b):
+            if st.button(b, key=f"botao_{b}_ata"):
                 st.session_state.aba_atas = b
     
     with col2:
