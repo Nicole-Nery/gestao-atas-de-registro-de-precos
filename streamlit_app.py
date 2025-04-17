@@ -23,7 +23,6 @@ with open(caminho_css) as f:
 
 col1, col2 = st.columns([1,5])
 with col1:
-    st.text("")
     st.image('assets/logo-sigah.svg', width=300)
 with col2:
     st.html("<div class='header-title'>Sistema Integrado de Gestão de Atas Hospitalares</div>")
