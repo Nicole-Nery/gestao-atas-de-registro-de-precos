@@ -477,8 +477,6 @@ with tabs[1]:
                         
 # Empenhos -----------------------------------------------------------------------------------------------------------------                
 with tabs[2]:
-    st.subheader("Registro de Empenhos")
-
     col1, col2 = st.columns([1, 4])
 
     # Sessão de estado para armazenar aba ativa
@@ -493,6 +491,7 @@ with tabs[2]:
                 st.session_state.aba_empenhos = b
     
     with col2:
+        st.subheader("Registro de Empenhos")
         aba = st.session_state.aba_empenhos
 
         if aba == "Cadastrar":
