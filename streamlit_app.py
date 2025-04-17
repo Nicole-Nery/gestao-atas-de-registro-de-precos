@@ -34,7 +34,7 @@ modo_tema = st.get_option("theme.base")
 botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
-with tabs[0]:
+'''with tabs[0]:
     col1, col2 = st.columns([1, 4])
 
     # Sessão de estado para armazenar aba ativa
@@ -170,7 +170,7 @@ with tabs[0]:
                                 except Exception as e:
                                     st.error(f"Erro ao excluir fornecedor: {e}")
             except Exception as e:
-                st.error(f"Erro ao carregar fornecedores: {e}")
+                st.error(f"Erro ao carregar fornecedores: {e}")'''
 
 
 # Atas -----------------------------------------------------------------------------------------------------------------------
