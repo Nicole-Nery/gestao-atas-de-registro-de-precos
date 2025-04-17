@@ -12,23 +12,6 @@ html, body, .stApp * {
     padding-bottom: 5%;
 }
 
-.header-container {
-    display: flex;
-    align-items: left;
-    gap:1em;
-}
-
-.header-logo {
-    width: 300;
-    margin: 0;
-}
-
-.header-title {
-    font-size: 2em;
-    font-weight: bold;
-    margin: 0;
-}
-
 .stButton > button {
     border-radius: 0;
     background-color: #f8f8f8;
