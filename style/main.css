@@ -6,7 +6,10 @@ html, body, .stApp * {
 }
 
 .stMainBlockContainer {
-    padding-top:0%;
+    padding-top:10%;
+    padding-left: 30%;
+    padding-right: 30%;
+    padding-bottom: 10%;
 }
 
 
