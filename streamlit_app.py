@@ -443,7 +443,7 @@ with tabs[1]:
                 atas_dict = {a["nome"]: a["id"] for a in atas_data}
                 atas_nomes = ["Selecione"] + list(atas_dict.keys())
 
-                ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_nomes)
+                ata_selecionada = st.selectbox("Selecione uma Ata para excluir", atas_nomes)
 
                 if ata_selecionada != "Selecione":
                     ata_id = atas_dict[ata_selecionada]
@@ -474,111 +474,127 @@ with tabs[1]:
             except Exception as e:
                 st.error(f"Erro ao carregar atas: {e}")
 
-            
-
                         
 # Empenhos -----------------------------------------------------------------------------------------------------------------                
 with tabs[2]:
-    st.header("Registro de Empenhos")
+    st.subheader("Registro de Empenhos")
 
-    try:
-        # Buscar atas cadastradas
-        response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
-        atas_result = response.data
-        atas_dict = {a["nome"]: a["id"] for a in atas_result}
-        atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+    col1, col2 = st.columns([1, 4])
 
-    except Exception as e:
-        st.error(f"Erro ao buscar atas: {e}")
-        atas_cadastradas = ["Selecione"]
-        atas_dict = {}
+    # Sessão de estado para armazenar aba ativa
+    if "aba_empenhos" not in st.session_state:
+        st.session_state.aba_empenhos = "Cadastrar"
 
-    ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome_empenho")
+    with col1:
+        st.image("assets/logos.svg", width=300)
+        botoes_empenhos = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+        for b in botoes_empenhos:
+            if st.button(b, key=f"botao_{b}_empenhos"):
+                st.session_state.aba_empenhos = b
+    
+    with col2:
+        aba = st.session_state.aba_empenhos
 
-    if ata_nome != "Selecione":
-        ata_id = atas_dict[ata_nome]
+        if aba == "Cadastrar":
 
-        try:
-            # Buscar equipamentos com saldo > 0
-            response = supabase.table("equipamentos").select("id, especificacao, saldo_disponivel").eq("ata_id", ata_id).gt("saldo_disponivel", 0).execute()
-            equipamentos_result = response.data
+            try:
+                response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
+                atas_result = response.data
+                atas_dict = {a["nome"]: a["id"] for a in atas_result}
+                atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
-            if equipamentos_result:
-                equipamentos_dict = {e["especificacao"]: (e["id"], e["saldo_disponivel"]) for e in equipamentos_result}
-                equip_opcoes = ["Selecione"] + list(equipamentos_dict.keys())
+            except Exception as e:
+                st.error(f"Erro ao buscar atas: {e}")
+                atas_cadastradas = ["Selecione"]
+                atas_dict = {}
 
-                equipamento_nome = st.selectbox("Selecione o Equipamento", equip_opcoes, key="selecione_equipamento_nome")
+            ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome_empenho")
 
-                if equipamento_nome != "Selecione":
-                    equipamento_id, saldo_disp = equipamentos_dict[equipamento_nome]
-                    quantidade = st.number_input("Quantidade empenhada", min_value=1, max_value=saldo_disp, step=1)
-                    data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
-                    observacao = st.text_input("Observação (opcional)")
+            if ata_nome != "Selecione":
+                ata_id = atas_dict[ata_nome]
 
-                    if st.button("Registrar Empenho"):
-                        try:
-                            # Inserir empenho
-                            supabase.table("empenhos").insert({
-                                "equipamento_id": equipamento_id,
-                                "quantidade_empenhada": quantidade,
-                                "data_empenho": data_empenho.isoformat(),
-                                "observacao": observacao
-                            }).execute()
+                try:
+                    # Buscar equipamentos com saldo > 0
+                    response = supabase.table("equipamentos").select("id, especificacao, saldo_disponivel").eq("ata_id", ata_id).gt("saldo_disponivel", 0).execute()
+                    equipamentos_result = response.data
 
-                            # Atualizar saldo do equipamento
-                            supabase.table("equipamentos").update({
-                                "saldo_disponivel": saldo_disp - quantidade
-                            }).eq("id", equipamento_id).execute()
+                    if equipamentos_result:
+                        equipamentos_dict = {e["especificacao"]: (e["id"], e["saldo_disponivel"]) for e in equipamentos_result}
+                        equip_opcoes = ["Selecione"] + list(equipamentos_dict.keys())
 
-                            st.success("Empenho registrado com sucesso!")
-                        except Exception as e:
-                            st.error(f"Erro ao registrar empenho: {e}")
-            else:
-                st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
-        except Exception as e:
-            st.error(f"Erro ao buscar equipamentos: {e}")
+                        equipamento_nome = st.selectbox("Selecione o Equipamento", equip_opcoes, key="selecione_equipamento_nome")
 
-        # Exibir empenhos registrados
-        st.subheader("Empenhos Registrados para esta Ata")
-        try:
-            response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
-            empenhos = response.data
+                        if equipamento_nome != "Selecione":
+                            equipamento_id, saldo_disp = equipamentos_dict[equipamento_nome]
+                            quantidade = st.number_input("Quantidade empenhada", min_value=1, max_value=saldo_disp, step=1)
+                            data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
+                            observacao = st.text_input("Observação (opcional)")
 
-            if empenhos:
-                for emp in empenhos:
-                    with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {emp['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
-                        with st.form(f"form_emp_{emp['id']}"):
-                            nova_quantidade = st.number_input("Quantidade", min_value=1, value=emp["quantidade_empenhada"], key=f"qtd_{emp['id']}")
-                            nova_data = st.date_input("Data do Empenho", format="DD/MM/YYYY",value=pd.to_datetime(emp["data_empenho"]).date(), key=f"data_{emp['id']}")
-                            nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
+                            if st.button("Registrar Empenho"):
+                                try:
+                                    # Inserir empenho
+                                    supabase.table("empenhos").insert({
+                                        "equipamento_id": equipamento_id,
+                                        "quantidade_empenhada": quantidade,
+                                        "data_empenho": data_empenho.isoformat(),
+                                        "observacao": observacao
+                                    }).execute()
 
-                            col1, col2 = st.columns(2)
-                            atualizar = col1.form_submit_button("Editar Empenho", icon=":material/edit:")
-                            excluir = col2.form_submit_button("Excluir Empenho", icon=":material/delete:")
+                                    # Atualizar saldo do equipamento
+                                    supabase.table("equipamentos").update({
+                                        "saldo_disponivel": saldo_disp - quantidade
+                                    }).eq("id", equipamento_id).execute()
 
-                        if atualizar:
-                            try:
-                                supabase.table("empenhos").update({
-                                    "quantidade_empenhada": nova_quantidade,
-                                    "data_empenho": nova_data.isoformat(),
-                                    "observacao": nova_obs
-                                }).eq("id", emp["id"]).execute()
-                                st.success("Empenho atualizado com sucesso.")
-                                st.experimental_rerun()
-                            except Exception as e:
-                                st.error(f"Erro ao atualizar empenho: {e}")
-                        if excluir:
-                            try:
-                                supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
-                                st.success("Empenho excluído com sucesso.")
-                                st.experimental_rerun()
-                            except Exception as e:
-                                st.error(f"Erro ao excluir empenho: {e}")
+                                    st.success("Empenho registrado com sucesso!")
+                                except Exception as e:
+                                    st.error(f"Erro ao registrar empenho: {e}")
+                    else:
+                        st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
+                except Exception as e:
+                    st.error(f"Erro ao buscar equipamentos: {e}")
+       
+        elif aba == "Consultar":
+            # Exibir empenhos registrados
+            st.subheader("Empenhos registrados para esta Ata")
+            try:
+                response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
+                empenhos = response.data
 
-            else:
-                st.info("Nenhum empenho registrado para esta Ata.")
-        except Exception as e:
-            st.error(f"Erro ao buscar empenhos: {e}")
+                if empenhos:
+                    for emp in empenhos:
+                        with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {emp['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
+                            with st.form(f"form_emp_{emp['id']}"):
+                                nova_quantidade = st.number_input("Quantidade", min_value=1, value=emp["quantidade_empenhada"], key=f"qtd_{emp['id']}")
+                                nova_data = st.date_input("Data do Empenho", format="DD/MM/YYYY",value=pd.to_datetime(emp["data_empenho"]).date(), key=f"data_{emp['id']}")
+                                nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
+
+                                col1, col2 = st.columns(2)
+                                atualizar = col1.form_submit_button("Editar Empenho", icon=":material/edit:")
+                                excluir = col2.form_submit_button("Excluir Empenho", icon=":material/delete:")
+
+                            if atualizar:
+                                try:
+                                    supabase.table("empenhos").update({
+                                        "quantidade_empenhada": nova_quantidade,
+                                        "data_empenho": nova_data.isoformat(),
+                                        "observacao": nova_obs
+                                    }).eq("id", emp["id"]).execute()
+                                    st.success("Empenho atualizado com sucesso.")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao atualizar empenho: {e}")
+                            if excluir:
+                                try:
+                                    supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
+                                    st.success("Empenho excluído com sucesso.")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao excluir empenho: {e}")
+
+                else:
+                    st.info("Nenhum empenho registrado para esta Ata.")
+            except Exception as e:
+                st.error(f"Erro ao buscar empenhos: {e}")
 
 # Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
 with tabs[3]:
