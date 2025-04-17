@@ -12,8 +12,11 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "SIGAH", 
-                   page_icon= "assets/icon.svg", 
+                   page_icon= st.image("assets/icon.svg"), 
                    layout = "wide")
+
+
+st.logo("assets/logos.svg", width=300)
 
 caminho_css = "style/main.css"
 
@@ -22,7 +25,7 @@ with open(caminho_css) as f:
 
 col1, col2 = st.columns([1,5])
 with col1:
-    st.image('assets/logo-sigah.png', width=300)
+    st.image('assets/logo-sigah.svg', width=300)
 with col2:
     st.markdown("<h2><b>Sistema Integrado de Gestão de Atas Hospitalares</b></h2>", unsafe_allow_html=True)
 st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
@@ -43,7 +46,6 @@ with tabs[0]:
 
     botoes_fornecedores = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
     with col1:
-        st.image("assets/logos.png", width=300)
         for b in botoes_fornecedores:
             if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
