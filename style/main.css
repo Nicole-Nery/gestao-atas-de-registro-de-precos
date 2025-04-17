@@ -5,13 +5,10 @@ html, body, .stApp * {
     color: #333333;
 }
 
-.stElementContainer {
-    margin-top: 0em !important;
+.stMainBlockContainer {
+    padding-top:0%;
 }
 
-.stAtppHeader {
-    margin-bottom: 0em !important;
-}
 
 .stButton > button {
     border-radius: 0;
