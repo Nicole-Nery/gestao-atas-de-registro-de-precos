@@ -27,7 +27,7 @@ st.markdown(
         <img src="assets/logo-sigah.svg", class="header-logo">
         <div class="header-title">Sistema Integrado de Gestão de Atas Hospitalares</div>
     </div>
-    """
+    """, unsafe_allow_html=True
 )
 
 '''
