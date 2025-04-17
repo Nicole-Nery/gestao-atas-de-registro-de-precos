@@ -347,7 +347,7 @@ with tabs[1]:
                         st.error(f"Erro ao buscar equipamentos: {e}")
 
         if aba == "Atualizar":
-            st.header("Atualizar Ata/Equipamento")
+            st.subheader("Atualizar dados de uma Ata")
 
             try:
                 response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
