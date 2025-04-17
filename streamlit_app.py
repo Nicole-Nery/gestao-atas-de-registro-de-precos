@@ -574,6 +574,45 @@ with tabs[2]:
                 ata_id = atas_dict[ata_nome]
 
                 try:
+                    response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).order('data_empenho').execute()
+                    empenhos = response.data
+
+                    if empenhos: 
+                        empenhos_df = pd.DataFrame([empenhos])
+                        empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).strftime('%d/%m/%Y')
+                        
+                        empenhos_df = empenhos_df.rename(columns={
+                            'data_empenho': 'Data do Empenho',
+                            'especificacao': 'Especificação',
+                            'quantidade_empenhada': 'Quantidade Empenhada',
+                            'observacao':'Observação'
+                        })
+
+                    else:
+                        st.info("Nenhum empenho registrado para esta Ata.")
+                except Exception as e:
+                    st.error(f"Erro ao buscar empenhos: {e}")
+
+        if aba == "Atualizar":
+            st.subheader("Consultar Empenhos cadastrados")
+
+            try:
+                response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
+                atas_result = response.data
+                atas_dict = {a["nome"]: a["id"] for a in atas_result}
+                atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+
+            except Exception as e:
+                st.error(f"Erro ao buscar atas: {e}")
+                atas_cadastradas = ["Selecione"]
+                atas_dict = {}
+
+            ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
+
+            if ata_nome != "Selecione":
+                ata_id = atas_dict[ata_nome]
+
+                try:
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
                     empenhos = response.data
 
