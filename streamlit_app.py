@@ -34,15 +34,16 @@ modo_tema = st.get_option("theme.base")
 botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
-'''with tabs[0]:
+with tabs[0]:
     col1, col2 = st.columns([1, 4])
 
     # Sessão de estado para armazenar aba ativa
     if "aba_fornecedores" not in st.session_state:
         st.session_state.aba_fornecedores = "Cadastrar"
 
+    botoes_fornecedores = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
     with col1:
-        for b in botoes:
+        for b in botoes_fornecedores:
             if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
 
@@ -170,7 +171,7 @@ botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
                                 except Exception as e:
                                     st.error(f"Erro ao excluir fornecedor: {e}")
             except Exception as e:
-                st.error(f"Erro ao carregar fornecedores: {e}")'''
+                st.error(f"Erro ao carregar fornecedores: {e}")
 
 
 # Atas -----------------------------------------------------------------------------------------------------------------------
@@ -182,7 +183,8 @@ with tabs[1]:
         st.session_state.aba_atas = "Cadastrar"
 
     with col1:
-        for b in botoes:
+        botoes_atas = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+        for b in botoes_atas:
             if st.button(b, key=f"botao_{b}_ata"):
                 st.session_state.aba_atas = b
     
