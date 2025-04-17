@@ -43,8 +43,7 @@ with tabs[0]:
 
     botoes_fornecedores = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
     with col1:
-      st.image("assets/logos.svg", width=300)
-
+        st.image("assets/logos.svg", width=300)
         for b in botoes_fornecedores:
             if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
