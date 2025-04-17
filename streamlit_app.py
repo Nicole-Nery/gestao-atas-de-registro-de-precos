@@ -11,8 +11,8 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
-st.set_page_config(page_title= "Gestão de ARP", 
-                   page_icon= "📄", 
+st.set_page_config(page_title= "SIGAH", 
+                   page_icon= "assets/icon.svg", 
                    layout = "wide")
 
 caminho_css = "style/main.css"
