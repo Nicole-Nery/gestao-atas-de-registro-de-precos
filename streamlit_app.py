@@ -349,93 +349,91 @@ with tabs[1]:
         if aba == "Atualizar":
             st.subheader("Atualizar dados de uma Ata")
 
-            try:
-                response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
-                atas_data = response_atas.data
-                atas_dict = {a["nome"]: a["id"] for a in atas_data}
-                atas_nomes = ["Selecione"] + list(atas_dict.keys())
+            
+            response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
+            atas_data = response_atas.data
+            atas_dict = {a["nome"]: a["id"] for a in atas_data}
+            atas_nomes = ["Selecione"] + list(atas_dict.keys())
 
-                ata_selecionada = st.selectbox("Selecione a Ata", atas_nomes)
+            ata_selecionada = st.selectbox("Selecione a Ata", atas_nomes)
 
-                if ata_selecionada != "Selecione":
-                    ata_id = atas_dict[ata_selecionada]
-                    ata_info_response = supabase.table("atas").select("*").eq("id", ata_id).single().execute()
-                    ata_info = ata_info_response.data
+            if ata_selecionada != "Selecione":
+                ata_id = atas_dict[ata_selecionada]
+                ata_info_response = supabase.table("atas").select("*").eq("id", ata_id).single().execute()
+                ata_info = ata_info_response.data
 
-                    response_fornecedores = supabase.table("fornecedores").select("id,nome").order("nome").execute()
-                    fornecedores_data = response_fornecedores.data
-                    fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
-                    fornecedores_nomes = list(fornecedores_dict.keys())
+                response_fornecedores = supabase.table("fornecedores").select("id,nome").order("nome").execute()
+                fornecedores_data = response_fornecedores.data
+                fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
+                fornecedores_nomes = list(fornecedores_dict.keys())
 
-                    nome_fornecedor_atual = next((nome for nome, id_ in fornecedores_dict.items() if id_ == ata_info["fornecedor_id"]), None)
+                nome_fornecedor_atual = next((nome for nome, id_ in fornecedores_dict.items() if id_ == ata_info["fornecedor_id"]), None)
 
-                    with st.form("form_editar_ata"):
-                        novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
-                        nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
-                        nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
-                        novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
-                        novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
+                with st.form("form_editar_ata"):
+                    novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
+                    nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
+                    nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
+                    novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
+                    novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
 
-                        atualizar = st.button("Editar Ata", icon=":material/edit:")
+                    atualizar = st.button("Editar Ata", icon=":material/edit:")
 
-                    if atualizar:
-                        try:
-                            novo_fornecedor_id = fornecedores_dict[novo_fornecedor_nome]
+                if atualizar:
+                    try:
+                        novo_fornecedor_id = fornecedores_dict[novo_fornecedor_nome]
 
-                            supabase.table("atas").update({
-                                "nome": novo_nome,
-                                "data_inicio": nova_data.isoformat(),
-                                "data_validade": nova_validade_ata.isoformat(),
-                                "fornecedor_id": novo_fornecedor_id,
-                                "link_ata": novo_link_ata
-                            }).eq("id", ata_id).execute()
+                        supabase.table("atas").update({
+                            "nome": novo_nome,
+                            "data_inicio": nova_data.isoformat(),
+                            "data_validade": nova_validade_ata.isoformat(),
+                            "fornecedor_id": novo_fornecedor_id,
+                            "link_ata": novo_link_ata
+                        }).eq("id", ata_id).execute()
 
-                            st.success("Ata atualizada com sucesso!")
-                        except Exception as e:
-                            st.error(f"Erro ao atualizar a Ata: {e}")
+                        st.success("Ata atualizada com sucesso!")
+                    except Exception as e:
+                        st.error(f"Erro ao atualizar a Ata: {e}")
 
-            except Exception as e:
-                st.error(f"Erro ao carregar equipamentos: {e}")
         
-    
-            # Buscar equipamentos vinculados à Ata
-            st.subheader("Equipamentos desta Ata")
-            st.write("Clique no equipamento que deseja editar ou excluir.")
-        
-            response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
-            equipamentos = response_equip.data
+                # Buscar equipamentos vinculados à Ata
+                st.subheader("Equipamentos desta Ata")
+                st.write("Clique no equipamento que deseja editar ou excluir.")
+            
+                response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
+                equipamentos = response_equip.data
 
-            if not equipamentos:
-                st.info("Nenhum equipamento cadastrado para essa Ata.")
-            else:
-                for equipamento in equipamentos:
-                    with st.expander(f"Equipamento: {equipamento['especificacao']}"):
-                        with st.form(f"form_equip_{equipamento['id']}"):
-                            nova_especificacao = st.text_input("Especificação", value=equipamento["especificacao"])
-                            nova_marca_modelo = st.text_input("Marca/Modelo", value=equipamento["marca_modelo"])
-                            nova_qtd = st.number_input("Quantidade", value=equipamento["quantidade"], step=1)
-                            novo_saldo = st.number_input("Saldo Disponível", value=equipamento["saldo_disponivel"], step=1)
-                            novo_valor_unit = st.number_input("Valor Unitário (R$)", value=float(equipamento["valor_unitario"]), step=0.01, format="%.2f")
-                            
-                            # Valor total calculado automaticamente
-                            valor_total = nova_qtd * novo_valor_unit
-                            st.text(f"Valor Total: R$ {valor_total:.2f}")
+                if not equipamentos:
+                    st.info("Nenhum equipamento cadastrado para essa Ata.")
+                else:
+                    for equipamento in equipamentos:
+                        with st.expander(f"Equipamento: {equipamento['especificacao']}"):
+                            with st.form(f"form_equip_{equipamento['id']}"):
+                                nova_especificacao = st.text_input("Especificação", value=equipamento["especificacao"])
+                                nova_marca_modelo = st.text_input("Marca/Modelo", value=equipamento["marca_modelo"])
+                                nova_qtd = st.number_input("Quantidade", value=equipamento["quantidade"], step=1)
+                                novo_saldo = st.number_input("Saldo Disponível", value=equipamento["saldo_disponivel"], step=1)
+                                novo_valor_unit = st.number_input("Valor Unitário (R$)", value=float(equipamento["valor_unitario"]), step=0.01, format="%.2f")
+                                
+                                # Valor total calculado automaticamente
+                                valor_total = nova_qtd * novo_valor_unit
+                                st.text(f"Valor Total: R$ {valor_total:.2f}")
 
-                            atualizar = st.button("Editar Equipamento", icon=":material/edit:")
+                                atualizar = st.button("Editar Equipamento", icon=":material/edit:")
 
-                        if atualizar:
-                            try:
-                                supabase.table("equipamentos").update({
-                                    "especificacao": nova_especificacao,
-                                    "marca_modelo": nova_marca_modelo,
-                                    "quantidade": nova_qtd,
-                                    "saldo_disponivel": novo_saldo,
-                                    "valor_unitario": novo_valor_unit,
-                                    "valor_total": valor_total
-                                }).eq("id", equipamento["id"]).execute()
-                                st.success(f"Equipamento '{nova_especificacao}' atualizado com sucesso!")
-                            except Exception as e:
-                                st.error(f"Erro ao atualizar equipamento: {e}")
+                            if atualizar:
+                                try:
+                                    supabase.table("equipamentos").update({
+                                        "especificacao": nova_especificacao,
+                                        "marca_modelo": nova_marca_modelo,
+                                        "quantidade": nova_qtd,
+                                        "saldo_disponivel": novo_saldo,
+                                        "valor_unitario": novo_valor_unit,
+                                        "valor_total": valor_total
+                                    }).eq("id", equipamento["id"]).execute()
+                                    st.success(f"Equipamento '{nova_especificacao}' atualizado com sucesso!")
+                                except Exception as e:
+                                    st.error(f"Erro ao atualizar equipamento: {e}")
+            
 
                         
 # Empenhos -----------------------------------------------------------------------------------------------------------------                
