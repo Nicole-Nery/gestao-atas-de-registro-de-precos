@@ -580,6 +580,7 @@ with tabs[2]:
                     if empenhos: 
                         
                         empenhos_df = pd.DataFrame([empenhos])
+                        print(empenhos_df)
                         empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).strftime('%d/%m/%Y')
                         
                         empenhos_df = empenhos_df.rename(columns={
