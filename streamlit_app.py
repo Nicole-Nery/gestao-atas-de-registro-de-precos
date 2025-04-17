@@ -21,9 +21,13 @@ with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
-st.html(
-    "<div class='header-container'><img src='assets/logo-sigah.svg', class='header-logo'><div class='header-title'>Sistema Integrado de Gestão de Atas Hospitalares</div></div>"
-)
+col1, col2 = st.columns([1,5])
+with col1:
+    st.text("")
+    st.image('assets/logo-sigah.svg', width=300)
+with col2:
+    st.markdown("## Sistema Integrado de Gestão de Atas Hospitalares", unsafe_allow_html=True)
+
 
 st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
