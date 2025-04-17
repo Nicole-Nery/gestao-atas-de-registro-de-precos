@@ -197,7 +197,7 @@ with tabs[1]:
         aba = st.session_state.aba_atas
 
         if aba == "Cadastrar":
-            st.subheader("Registro de Atas")
+            st.subheader("Cadastro de Atas")
             try:
                 response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
                 fornecedores_result = response.data
@@ -239,9 +239,7 @@ with tabs[1]:
                         st.warning("Preencha todos os campos obrigatórios.")
                 
 
-            # Adicionando Equipamentos à Ata
-
-            st.subheader("Cadastro de Equipamentos para Ata")
+            st.subheader("Adicionar Equipamento à Ata")
 
             try:
                 response = supabase.table("atas").select("id, nome").order("nome").execute()
@@ -260,8 +258,6 @@ with tabs[1]:
                 ata_id = atas_dict[ata_nome]
 
                 with st.form("novo_equipamento", clear_on_submit=True):
-                    st.subheader("Adicionar Equipamento")
-
                     especificacao = st.text_input("Especificação")
                     marca_modelo = st.text_input("Marca/Modelo")
                     quantidade = st.number_input("Quantidade", min_value=1, step=1)
