@@ -21,13 +21,8 @@ with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
-st.markdown(
-    """
-    <div class="header-container"> 
-        <img src="assets/logo-sigah.svg", class="header-logo">
-        <div class="header-title">Sistema Integrado de Gestão de Atas Hospitalares</div>
-    </div>
-    """, unsafe_allow_html=True
+st.html(
+    "<div class='header-container'><img src='assets/logo-sigah.svg', class='header-logo'><div class='header-title'>Sistema Integrado de Gestão de Atas Hospitalares</div></div>"
 )
 
 '''
