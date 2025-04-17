@@ -525,29 +525,31 @@ with tabs[2]:
 
                         if equipamento_nome != "Selecione":
                             equipamento_id, saldo_disp = equipamentos_dict[equipamento_nome]
-                            quantidade = st.number_input("Quantidade empenhada", min_value=1, max_value=saldo_disp, step=1)
-                            data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
-                            observacao = st.text_input("Observação (opcional)")
+                            
+                            with st.form("form_registrar_empenho"):
+                                quantidade = st.number_input("Quantidade empenhada", min_value=1, max_value=saldo_disp, step=1)
+                                data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
+                                observacao = st.text_input("Observação (opcional)")
 
-                            registrar_empenho = st.form_submit_button("Registrar Empenho")    
-                            if registrar_empenho:
-                                try:
-                                    # Inserir empenho
-                                    supabase.table("empenhos").insert({
-                                        "equipamento_id": equipamento_id,
-                                        "quantidade_empenhada": quantidade,
-                                        "data_empenho": data_empenho.isoformat(),
-                                        "observacao": observacao
-                                    }).execute()
+                                registrar_empenho = st.form_submit_button("Registrar Empenho")    
+                                if registrar_empenho:
+                                    try:
+                                        # Inserir empenho
+                                        supabase.table("empenhos").insert({
+                                            "equipamento_id": equipamento_id,
+                                            "quantidade_empenhada": quantidade,
+                                            "data_empenho": data_empenho.isoformat(),
+                                            "observacao": observacao
+                                        }).execute()
 
-                                    # Atualizar saldo do equipamento
-                                    supabase.table("equipamentos").update({
-                                        "saldo_disponivel": saldo_disp - quantidade
-                                    }).eq("id", equipamento_id).execute()
+                                        # Atualizar saldo do equipamento
+                                        supabase.table("equipamentos").update({
+                                            "saldo_disponivel": saldo_disp - quantidade
+                                        }).eq("id", equipamento_id).execute()
 
-                                    st.success("Empenho registrado com sucesso!")
-                                except Exception as e:
-                                    st.error(f"Erro ao registrar empenho: {e}")
+                                        st.success("Empenho registrado com sucesso!")
+                                    except Exception as e:
+                                        st.error(f"Erro ao registrar empenho: {e}")
                     else:
                         st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
                 except Exception as e:
