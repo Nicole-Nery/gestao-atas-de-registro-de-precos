@@ -574,7 +574,9 @@ with tabs[2]:
                 ata_id = atas_dict[ata_nome]
 
                 try:
+                    print("oi")
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
+                    print("oi")
                     empenhos = response.data
 
                     if empenhos: 
