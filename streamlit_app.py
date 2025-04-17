@@ -578,9 +578,8 @@ with tabs[2]:
                     empenhos = response.data
 
                     if empenhos: 
-                        empenhos_df = pd.DataFrame(empenhos)
-                        st.write(empenhos_df)
-                        empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).strftime('%d/%m/%Y')
+                        empenhos_df = pd.DataFrame(empenhos).drop(columns=['id'])
+                        empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).date()
                         
                         empenhos_df = empenhos_df.rename(columns={
                             'data_empenho': 'Data do Empenho',
