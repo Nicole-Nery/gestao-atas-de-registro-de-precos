@@ -31,8 +31,6 @@ tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "R
 # Identificando o tema
 modo_tema = st.get_option("theme.base")
 
-botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
-
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
     col1, col2 = st.columns([1, 4])
