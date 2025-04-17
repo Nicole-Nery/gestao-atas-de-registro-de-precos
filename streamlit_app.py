@@ -164,10 +164,11 @@ with tabs[0]:
                         })
                         st.dataframe(fornecedor_df)
 
-                        confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
-                        if confirmar:
-                            excluir = st.button("Excluir Fornecedor")
-                            if excluir:
+                        excluir = st.button("Excluir Fornecedor")
+
+                        if excluir:
+                            confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
+                            if confirmar:
                                 try:
                                     supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
                                     st.success("Fornecedor excluído com sucesso!")
@@ -284,7 +285,7 @@ with tabs[1]:
                     else:
                         st.warning("Preencha todos os campos obrigatórios.")
 
-        if aba == "Consultar":
+        elif aba == "Consultar":
             st.subheader("Consultar Atas Cadastradas")
 
             try:
@@ -346,7 +347,7 @@ with tabs[1]:
                     except Exception as e:
                         st.error(f"Erro ao buscar equipamentos: {e}")
 
-        if aba == "Atualizar":
+        elif aba == "Atualizar":
             st.subheader("Atualizar dados de uma Ata")
 
             
@@ -433,6 +434,46 @@ with tabs[1]:
                                     st.success(f"Equipamento '{nova_especificacao}' atualizado com sucesso!")
                                 except Exception as e:
                                     st.error(f"Erro ao atualizar equipamento: {e}")
+
+        elif aba == "Excluir":
+            st.subheader("Excluir Ata")
+            try:
+                response_atas = supabase.table("atas").select("id, nome, data_inicio, data_validade, fornecedores(nome), link_ata").order("nome").execute() 
+                atas_data = response_atas.data
+                atas_dict = {a["nome"]: a["id"] for a in atas_data}
+                atas_nomes = ["Selecione"] + list(atas_dict.keys())
+
+                ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_nomes)
+
+                if ata_selecionada != "Selecione":
+                    ata_id = atas_dict[ata_selecionada]
+                    ata_info = next((a for a in atas_data if a["id"] == ata_id), None)
+
+                    if ata_info:
+                        ata_df = pd.DataFrame([ata_info]).drop(columns=["id"])
+                        ata_df = ata_df.rename(columns={
+                            "nome": "Nome",
+                            "data_inicio": "Data de início",
+                            "data_validade": "Data de validade",
+                            "fornecedores(nome)": "Fornecedor",
+                            "link_ata": "Link da ata"
+                        })
+                        st.dataframe(ata_df)
+
+                        excluir = st.button("Excluir Ata")
+
+                        if excluir:
+                            confirmar = st.checkbox("Confirmo que desejo excluir esta ata.")
+                            if confirmar:
+                                try:
+                                    supabase.table("atas").delete().eq("id", ata_id).execute()
+                                    st.success("Ata excluída com sucesso!")
+                                    st.experimental_rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao excluir ata: {e}")
+            except Exception as e:
+                st.error(f"Erro ao carregar atas: {e}")
+
             
 
                         
