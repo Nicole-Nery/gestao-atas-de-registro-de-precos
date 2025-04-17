@@ -12,7 +12,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "SIGAH", 
-                   page_icon= st.image("assets/icon.svg"), 
+                   page_icon= ("assets/icon.svg"), 
                    layout = "wide")
 
 
