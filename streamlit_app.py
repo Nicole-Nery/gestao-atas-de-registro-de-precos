@@ -578,7 +578,7 @@ with tabs[2]:
                     empenhos = response.data
 
                     if empenhos: 
-                        '''empenhos_ordenados = sorted(empenhos, key=lambda x: x["data_empenho"], reverse=True)'''
+                        
                         empenhos_df = pd.DataFrame([empenhos])
                         empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).strftime('%d/%m/%Y')
                         
