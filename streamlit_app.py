@@ -574,11 +574,12 @@ with tabs[2]:
                 ata_id = atas_dict[ata_nome]
 
                 try:
-                    response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).order('data_empenho').execute()
+                    response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
                     empenhos = response.data
 
                     if empenhos: 
-                        empenhos_df = pd.DataFrame([empenhos])
+                        empenhos_ordenados = sorted(empenhos, key=lambda x: x["data_empenho"], reverse=True)
+                        empenhos_df = pd.DataFrame([empenhos_ordenados])
                         empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).strftime('%d/%m/%Y')
                         
                         empenhos_df = empenhos_df.rename(columns={
