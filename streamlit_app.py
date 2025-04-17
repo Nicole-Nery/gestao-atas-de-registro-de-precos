@@ -328,7 +328,7 @@ with tabs[1]:
                         ).eq("ata_id", ata_id).execute()
                         equipamentos = response.data
 
-                        st.subheader("Equipamentos Cadastrados")
+                        st.subheader("Equipamentos desta Ata")
 
                         if equipamentos:
                             df_equip = pd.DataFrame(equipamentos)
