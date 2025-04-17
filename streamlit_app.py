@@ -285,7 +285,7 @@ with tabs[1]:
                         st.warning("Preencha todos os campos obrigatórios.")
 
         if aba == "Consultar":
-            st.header("Consultar Atas Cadastradas")
+            st.subheader("Consultar Atas Cadastradas")
 
             try:
                 # Buscar todas as atas com nome do fornecedor
@@ -299,7 +299,7 @@ with tabs[1]:
                 atas_opcoes = ["Selecione"]
                 atas_dict = {}
 
-            ata_visualizar = st.selectbox("Selecione uma Ata para visualizar", atas_opcoes, key="selecione_ata_visualizar")
+            ata_visualizar = st.selectbox("Selecione uma Ata para consultar", atas_opcoes, key="selecione_ata_visualizar")
 
             if ata_visualizar != "Selecione":
                 ata_id = atas_dict[ata_visualizar]
