@@ -491,11 +491,10 @@ with tabs[2]:
                 st.session_state.aba_empenhos = b
     
     with col2:
-        st.subheader("Registro de Empenhos")
         aba = st.session_state.aba_empenhos
 
         if aba == "Cadastrar":
-
+            st.subheader("Registro de Empenhos")
             try:
                 response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
                 atas_result = response.data
@@ -525,7 +524,7 @@ with tabs[2]:
 
                         if equipamento_nome != "Selecione":
                             equipamento_id, saldo_disp = equipamentos_dict[equipamento_nome]
-                            
+
                             with st.form("form_registrar_empenho"):
                                 quantidade = st.number_input("Quantidade empenhada", min_value=1, max_value=saldo_disp, step=1)
                                 data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
@@ -555,9 +554,9 @@ with tabs[2]:
                 except Exception as e:
                     st.error(f"Erro ao buscar equipamentos: {e}")
        
-        elif aba == "Consultar":
-            # Exibir empenhos registrados
+
             st.subheader("Empenhos registrados para esta Ata")
+
             try:
                 response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
                 empenhos = response.data
