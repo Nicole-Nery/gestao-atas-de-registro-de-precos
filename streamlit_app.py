@@ -197,7 +197,7 @@ with tabs[1]:
         aba = st.session_state.aba_atas
 
         if aba == "Cadastrar":
-            st.header("Registro de Atas")
+            st.subheader("Registro de Atas")
             try:
                 response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
                 fornecedores_result = response.data
