@@ -184,6 +184,7 @@ with tabs[1]:
         st.session_state.aba_atas = "Cadastrar"
 
     with col1:
+        st.image("assets/logos.svg", width=300)
         botoes_atas = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
         for b in botoes_atas:
             if st.button(b, key=f"botao_{b}_ata"):
