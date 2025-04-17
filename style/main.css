@@ -12,6 +12,12 @@ html, body, .stApp * {
     padding-bottom: 5%;
 }
 
+.header-title {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+
 .stButton > button {
     border-radius: 0;
     background-color: #f8f8f8;
