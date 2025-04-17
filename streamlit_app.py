@@ -15,9 +15,6 @@ st.set_page_config(page_title= "SIGAH",
                    page_icon= ("assets/icon.png"), 
                    layout = "wide")
 
-
-st.image("assets/logos.svg", width=300)
-
 caminho_css = "style/main.css"
 
 with open(caminho_css) as f:
@@ -46,6 +43,8 @@ with tabs[0]:
 
     botoes_fornecedores = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
     with col1:
+      st.image("assets/logos.svg", width=300)
+
         for b in botoes_fornecedores:
             if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
