@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import plotly.express as px
 import streamlit.components.v1 as components
 from supabase import create_client, Client
-import os
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
@@ -32,9 +31,7 @@ tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "R
 # Identificando o tema
 modo_tema = st.get_option("theme.base")
 
-# Sessão de estado para armazenar aba ativa
-# if "aba_fornecedores" not in st.session_state:
-#    st.session_state.aba_fornecedores = "Cadastrar"
+botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
@@ -45,7 +42,6 @@ with tabs[0]:
         st.session_state.aba_fornecedores = "Cadastrar"
 
     with col1:
-        botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
         for b in botoes:
             if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
@@ -186,7 +182,6 @@ with tabs[1]:
         st.session_state.aba_atas = "Cadastrar"
 
     with col1:
-        botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
         for b in botoes:
             if st.button(b, key=f"botao_{b}_ata"):
                 st.session_state.aba_atas = b
