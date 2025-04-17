@@ -355,7 +355,7 @@ with tabs[1]:
             atas_dict = {a["nome"]: a["id"] for a in atas_data}
             atas_nomes = ["Selecione"] + list(atas_dict.keys())
 
-            ata_selecionada = st.selectbox("Selecione a Ata", atas_nomes)
+            ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_nomes)
 
             if ata_selecionada != "Selecione":
                 ata_id = atas_dict[ata_selecionada]
@@ -376,7 +376,7 @@ with tabs[1]:
                     novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
                     novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
 
-                    atualizar = st.button("Editar Ata", icon=":material/edit:")
+                    atualizar = st.form_submit_button("Atualizar Ata", icon=":material/edit:")
 
                 if atualizar:
                     try:
@@ -397,7 +397,7 @@ with tabs[1]:
         
                 # Buscar equipamentos vinculados à Ata
                 st.subheader("Equipamentos desta Ata")
-                st.write("Clique no equipamento que deseja editar ou excluir.")
+                st.write("Clique no equipamento que deseja atualizar informações")
             
                 response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
                 equipamentos = response_equip.data
@@ -418,7 +418,7 @@ with tabs[1]:
                                 valor_total = nova_qtd * novo_valor_unit
                                 st.text(f"Valor Total: R$ {valor_total:.2f}")
 
-                                atualizar = st.button("Editar Equipamento", icon=":material/edit:")
+                                atualizar = st.form_submit_button("Editar Equipamento", icon=":material/edit:")
 
                             if atualizar:
                                 try:
