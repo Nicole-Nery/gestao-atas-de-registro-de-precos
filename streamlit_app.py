@@ -572,7 +572,7 @@ with tabs[2]:
 
             if ata_nome != "Selecione":
                 ata_id = atas_dict[ata_nome]
-
+                st.write("teste")
                 try:
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
                     empenhos = response.data
