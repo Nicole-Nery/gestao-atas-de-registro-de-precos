@@ -24,9 +24,9 @@ st.image("assets/logos.png", width=300)
 
 col1, col2 = st.columns([1,4])
 with col1:
-    st.image('assets/logo-sigah.png', width=300)
+    st.image('assets/logo-sigah.png', width=200)
 with col2:
-    st.header("**Sistema Integrado de Gestão de Atas Hospitalares**", divider="gray")
+    st.header("Sistema Integrado de Gestão de Atas Hospitalares", divider="grey")
 st.write("Bem-vindo ao sistema de controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
 # Estabelecendo o layout com abas
