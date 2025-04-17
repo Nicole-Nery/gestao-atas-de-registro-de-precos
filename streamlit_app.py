@@ -20,8 +20,6 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("assets/logos.png", width=300)
-
 col1, col2 = st.columns([1,5])
 with col1:
     st.image('assets/logo-sigah.png', width=300)
@@ -45,6 +43,7 @@ with tabs[0]:
 
     botoes_fornecedores = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
     with col1:
+        st.image("assets/logos.png", width=300)
         for b in botoes_fornecedores:
             if st.button(b, key=f"botao_{b}_fornecedores"):
                 st.session_state.aba_fornecedores = b
