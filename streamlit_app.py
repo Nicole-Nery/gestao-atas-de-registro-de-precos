@@ -33,8 +33,8 @@ tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "R
 modo_tema = st.get_option("theme.base")
 
 # Sessão de estado para armazenar aba ativa
-if "aba_fornecedores" not in st.session_state:
-    st.session_state.aba_fornecedores = "Cadastrar"
+# if "aba_fornecedores" not in st.session_state:
+#    st.session_state.aba_fornecedores = "Cadastrar"
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
@@ -179,226 +179,227 @@ with tabs[0]:
 
 # Atas -----------------------------------------------------------------------------------------------------------------------
 with tabs[1]:
-    st.header("Registro de Atas")
+    col1, col2 = st.columns([1, 4])
 
-    try:
-        response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
-        fornecedores_result = response.data
-        fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_result}
-        fornecedores_cadastrados = ["Selecione"] + list(fornecedores_dict.keys())
+    # Sessão de estado para armazenar aba ativa
+    if "aba_atas" not in st.session_state:
+        st.session_state.aba_atas = "Cadastrar"
 
-    except Exception as e:
-        st.error(f"Erro ao buscar fornecedores: {e}")
-        fornecedores_cadastrados = ["Selecione"]
-        fornecedores_dict = {}
+    with col1:
+        botoes = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+        for b in botoes:
+            if st.button(b):
+                st.session_state.aba_atas = b
+    
+    with col2:
+        aba = st.session_state.aba_atas
 
-    # Formulário para cadastrar nova Ata
-    with st.form("nova_ata", clear_on_submit=True):
-        nome_ata = st.text_input("Nome da Ata")
-        data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
-        validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
-        fornecedor_nome = st.selectbox("Fornecedor", fornecedores_cadastrados,key="selecione_fornecedor_nome")
-        link_ata = st.text_input("Link para o PDF da Ata")
-
-        submit_ata = st.form_submit_button("Cadastrar Ata")
-
-        if submit_ata:
-            if nome_ata and data_ata and validade_ata and (fornecedor_nome != "Selecione"):
-                try:
-                    fornecedor_id = fornecedores_dict[fornecedor_nome]
-                    
-                    supabase.table("atas").insert({
-                        "nome": nome_ata,
-                        "data_inicio": data_ata.isoformat(),
-                        "data_validade": validade_ata.isoformat(),
-                        "fornecedor_id": fornecedor_id,
-                        "link_ata": link_ata
-                    }).execute()
-                    st.success(f"Ata '{nome_ata}' cadastrada com sucesso!")
-
-                except Exception as e:
-                    st.error(f"Erro ao cadastrar a Ata: {e}")
-            else:
-                st.warning("Preencha todos os campos obrigatórios.")
-            
-
-    # Adicionando Equipamentos à Ata
-
-    st.subheader("Cadastro de Equipamentos para Ata")
-
-    try:
-        response = supabase.table("atas").select("id, nome").order("nome").execute()
-        atas_result = response.data
-        atas_dict = {a["nome"]: a["id"] for a in atas_result}
-        atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
-
-    except Exception as e:
-        st.error(f"Erro ao buscar atas: {e}")
-        atas_cadastradas = ["Selecione"]
-        atas_dict = {}
-
-    ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome")
-
-    if ata_nome != "Selecione":
-        ata_id = atas_dict[ata_nome]
-
-        with st.form("novo_equipamento", clear_on_submit=True):
-            st.subheader("Adicionar Equipamento")
-
-            especificacao = st.text_input("Especificação")
-            marca_modelo = st.text_input("Marca/Modelo")
-            quantidade = st.number_input("Quantidade", min_value=1, step=1)
-            saldo_disponivel = st.number_input("Saldo disponível", min_value=0, step=1)
-            valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
-            valor_total = valor_unitario * quantidade
-
-            submit_equipamento = st.form_submit_button("Adicionar Equipamento")
-
-            if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
-                try:
-                    response = supabase.table("equipamentos").insert({
-                        "ata_id": ata_id,
-                        "especificacao": especificacao,
-                        "marca_modelo": marca_modelo,
-                        "quantidade": quantidade,
-                        "saldo_disponivel": saldo_disponivel,
-                        "valor_unitario": valor_unitario,
-                        "valor_total": valor_total
-                    }).execute()
-                    st.success(f"Equipamento '{especificacao}' cadastrado com sucesso na ata '{ata_nome}'!")
-                except Exception as e:
-                    st.error(f"Erro ao cadastrar equipamento: {e}")
-            else:
-                st.warning("Preencha todos os campos obrigatórios.")
-
-    # Visualização dos dados cadastrados na Ata selecionada
-    st.header("Visualizar Atas Cadastradas")
-
-    try:
-        # Buscar todas as atas com nome do fornecedor
-        response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, fornecedores(nome)").order("data_inicio", desc=True).execute()
-        atas_result = response.data
-        atas_dict = {a["nome"]: a["id"] for a in atas_result}
-        atas_opcoes = ["Selecione"] + list(atas_dict.keys())
-
-    except Exception as e:
-        st.error(f"Erro ao buscar atas: {e}")
-        atas_opcoes = ["Selecione"]
-        atas_dict = {}
-
-    ata_visualizar = st.selectbox("Selecione uma Ata para visualizar", atas_opcoes, key="selecione_ata_visualizar")
-
-    if ata_visualizar != "Selecione":
-        ata_id = atas_dict[ata_visualizar]
-
-        # Buscar os dados da Ata selecionada
-        ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
-
-        if ata_info:
-            nome = ata_info["nome"]
-            data_ata = ata_info["data_inicio"]
-            validade_ata = ata_info["data_validade"]
-            link_pdf = ata_info.get("link_ata", "")
-            fornecedor_nome = ata_info["fornecedores"]["nome"]
-
-            st.markdown(f"**Nome:** {nome}")
-            st.markdown(f"**Data da Ata:** {pd.to_datetime(data_ata).strftime('%d/%m/%Y')}")
-            st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
-            st.markdown(f"**Fornecedor:** {fornecedor_nome}")
-            if link_pdf:
-                st.markdown(f"[Abrir PDF da Ata]({link_pdf})", unsafe_allow_html=True)
-
-            # Buscar os equipamentos dessa ata
+        if aba == "Cadastrar":
+            st.header("Registro de Atas")
             try:
-                response = supabase.table("equipamentos").select(
-                    "especificacao, marca_modelo, quantidade, saldo_disponivel, valor_unitario, valor_total"
-                ).eq("ata_id", ata_id).execute()
-                equipamentos = response.data
+                response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
+                fornecedores_result = response.data
+                fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_result}
+                fornecedores_cadastrados = ["Selecione"] + list(fornecedores_dict.keys())
 
-                st.subheader("Equipamentos Cadastrados")
-
-                if equipamentos:
-                    df_equip = pd.DataFrame(equipamentos)
-                    df_equip = df_equip.rename(columns={
-                        "especificacao": "Especificação",
-                        "marca_modelo": "Marca/Modelo",
-                        "quantidade": "Quantidade",
-                        "saldo_disponivel": "Saldo Disponível",
-                        "valor_unitario": "Valor Unitário",
-                        "valor_total": "Valor Total"
-                    })
-                    st.dataframe(df_equip)
-                else:
-                    st.info("Nenhum equipamento cadastrado para esta Ata.")
             except Exception as e:
-                st.error(f"Erro ao buscar equipamentos: {e}")
+                st.error(f"Erro ao buscar fornecedores: {e}")
+                fornecedores_cadastrados = ["Selecione"]
+                fornecedores_dict = {}
 
-    # Editar ou Excluir Ata/Equipamento
-    st.header("Editar ou Excluir Ata")
+            # Formulário para cadastrar nova Ata
+            with st.form("nova_ata", clear_on_submit=True):
+                nome_ata = st.text_input("Nome da Ata")
+                data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
+                validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
+                fornecedor_nome = st.selectbox("Fornecedor", fornecedores_cadastrados,key="selecione_fornecedor_nome")
+                link_ata = st.text_input("Link para o PDF da Ata")
 
-    try:
-        response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
-        atas_data = response_atas.data
-        atas_dict = {a["nome"]: a["id"] for a in atas_data}
-        atas_nomes = ["Selecione"] + list(atas_dict.keys())
+                submit_ata = st.form_submit_button("Cadastrar Ata")
 
-        ata_selecionada = st.selectbox("Selecione a Ata", atas_nomes)
+                if submit_ata:
+                    if nome_ata and data_ata and validade_ata and (fornecedor_nome != "Selecione"):
+                        try:
+                            fornecedor_id = fornecedores_dict[fornecedor_nome]
+                            
+                            supabase.table("atas").insert({
+                                "nome": nome_ata,
+                                "data_inicio": data_ata.isoformat(),
+                                "data_validade": validade_ata.isoformat(),
+                                "fornecedor_id": fornecedor_id,
+                                "link_ata": link_ata
+                            }).execute()
+                            st.success(f"Ata '{nome_ata}' cadastrada com sucesso!")
 
-        if ata_selecionada != "Selecione":
-            ata_id = atas_dict[ata_selecionada]
-            ata_info_response = supabase.table("atas").select("*").eq("id", ata_id).single().execute()
-            ata_info = ata_info_response.data
-
-            response_fornecedores = supabase.table("fornecedores").select("id,nome").order("nome").execute()
-            fornecedores_data = response_fornecedores.data
-            fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
-            fornecedores_nomes = list(fornecedores_dict.keys())
-
-            nome_fornecedor_atual = next((nome for nome, id_ in fornecedores_dict.items() if id_ == ata_info["fornecedor_id"]), None)
-
-            with st.form("form_editar_ata"):
-                novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
+                        except Exception as e:
+                            st.error(f"Erro ao cadastrar a Ata: {e}")
+                    else:
+                        st.warning("Preencha todos os campos obrigatórios.")
                 
-                nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
 
-                nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
+            # Adicionando Equipamentos à Ata
 
-                novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
+            st.subheader("Cadastro de Equipamentos para Ata")
 
-                novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
+            try:
+                response = supabase.table("atas").select("id, nome").order("nome").execute()
+                atas_result = response.data
+                atas_dict = {a["nome"]: a["id"] for a in atas_result}
+                atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
-                col1, col2 = st.columns(2)
-                atualizar = col1.form_submit_button("Editar Ata", icon=":material/edit:")
-                excluir = col2.form_submit_button("Excluir Ata", icon=":material/delete:")
+            except Exception as e:
+                st.error(f"Erro ao buscar atas: {e}")
+                atas_cadastradas = ["Selecione"]
+                atas_dict = {}
 
-            if atualizar:
-                try:
-                    novo_fornecedor_id = fornecedores_dict[novo_fornecedor_nome]
+            ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome")
 
-                    supabase.table("atas").update({
-                        "nome": novo_nome,
-                        "data_inicio": nova_data.isoformat(),
-                        "data_validade": nova_validade_ata.isoformat(),
-                        "fornecedor_id": novo_fornecedor_id,
-                        "link_ata": novo_link_ata
-                    }).eq("id", ata_id).execute()
+            if ata_nome != "Selecione":
+                ata_id = atas_dict[ata_nome]
 
-                    st.success("Ata atualizada com sucesso!")
-                except Exception as e:
-                    st.error(f"Erro ao atualizar a Ata: {e}")
+                with st.form("novo_equipamento", clear_on_submit=True):
+                    st.subheader("Adicionar Equipamento")
 
-            if excluir:
-                confirmar_exclusao_ata = st.checkbox("Confirmo que desejo excluir esta Ata.")
-                if confirmar_exclusao_ata:
+                    especificacao = st.text_input("Especificação")
+                    marca_modelo = st.text_input("Marca/Modelo")
+                    quantidade = st.number_input("Quantidade", min_value=1, step=1)
+                    saldo_disponivel = st.number_input("Saldo disponível", min_value=0, step=1)
+                    valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
+                    valor_total = valor_unitario * quantidade
+
+                    submit_equipamento = st.form_submit_button("Adicionar Equipamento")
+
+                    if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
+                        try:
+                            response = supabase.table("equipamentos").insert({
+                                "ata_id": ata_id,
+                                "especificacao": especificacao,
+                                "marca_modelo": marca_modelo,
+                                "quantidade": quantidade,
+                                "saldo_disponivel": saldo_disponivel,
+                                "valor_unitario": valor_unitario,
+                                "valor_total": valor_total
+                            }).execute()
+                            st.success(f"Equipamento '{especificacao}' cadastrado com sucesso na ata '{ata_nome}'!")
+                        except Exception as e:
+                            st.error(f"Erro ao cadastrar equipamento: {e}")
+                    else:
+                        st.warning("Preencha todos os campos obrigatórios.")
+
+        if aba == "Consultar":
+            st.header("Consultar Atas Cadastradas")
+
+            try:
+                # Buscar todas as atas com nome do fornecedor
+                response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, fornecedores(nome)").order("data_inicio", desc=True).execute()
+                atas_result = response.data
+                atas_dict = {a["nome"]: a["id"] for a in atas_result}
+                atas_opcoes = ["Selecione"] + list(atas_dict.keys())
+
+            except Exception as e:
+                st.error(f"Erro ao buscar atas: {e}")
+                atas_opcoes = ["Selecione"]
+                atas_dict = {}
+
+            ata_visualizar = st.selectbox("Selecione uma Ata para visualizar", atas_opcoes, key="selecione_ata_visualizar")
+
+            if ata_visualizar != "Selecione":
+                ata_id = atas_dict[ata_visualizar]
+
+                # Buscar os dados da Ata selecionada
+                ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
+
+                if ata_info:
+                    nome = ata_info["nome"]
+                    data_ata = ata_info["data_inicio"]
+                    validade_ata = ata_info["data_validade"]
+                    link_pdf = ata_info.get("link_ata", "")
+                    fornecedor_nome = ata_info["fornecedores"]["nome"]
+
+                    st.markdown(f"**Nome:** {nome}")
+                    st.markdown(f"**Data da Ata:** {pd.to_datetime(data_ata).strftime('%d/%m/%Y')}")
+                    st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
+                    st.markdown(f"**Fornecedor:** {fornecedor_nome}")
+                    if link_pdf:
+                        st.markdown(f"[Abrir PDF da Ata]({link_pdf})", unsafe_allow_html=True)
+
+                    # Buscar os equipamentos dessa ata
                     try:
-                        supabase.table("atas").delete().eq("id", ata_id).execute()
-                        st.success("Ata excluída com sucesso!")
-                    except Exception as e:
-                        st.error(f"Erro ao excluir a Ata: {e}")
-            else:
-                st.warning("Marque a caixa de confirmação para excluir o fornecedor.")
-            
+                        response = supabase.table("equipamentos").select(
+                            "especificacao, marca_modelo, quantidade, saldo_disponivel, valor_unitario, valor_total"
+                        ).eq("ata_id", ata_id).execute()
+                        equipamentos = response.data
 
+                        st.subheader("Equipamentos Cadastrados")
+
+                        if equipamentos:
+                            df_equip = pd.DataFrame(equipamentos)
+                            df_equip = df_equip.rename(columns={
+                                "especificacao": "Especificação",
+                                "marca_modelo": "Marca/Modelo",
+                                "quantidade": "Quantidade",
+                                "saldo_disponivel": "Saldo Disponível",
+                                "valor_unitario": "Valor Unitário",
+                                "valor_total": "Valor Total"
+                            })
+                            st.dataframe(df_equip)
+                        else:
+                            st.info("Nenhum equipamento cadastrado para esta Ata.")
+                    except Exception as e:
+                        st.error(f"Erro ao buscar equipamentos: {e}")
+
+        if aba == "Atualizar":
+            st.header("Atualizar Ata/Equipamento")
+
+            try:
+                response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
+                atas_data = response_atas.data
+                atas_dict = {a["nome"]: a["id"] for a in atas_data}
+                atas_nomes = ["Selecione"] + list(atas_dict.keys())
+
+                ata_selecionada = st.selectbox("Selecione a Ata", atas_nomes)
+
+                if ata_selecionada != "Selecione":
+                    ata_id = atas_dict[ata_selecionada]
+                    ata_info_response = supabase.table("atas").select("*").eq("id", ata_id).single().execute()
+                    ata_info = ata_info_response.data
+
+                    response_fornecedores = supabase.table("fornecedores").select("id,nome").order("nome").execute()
+                    fornecedores_data = response_fornecedores.data
+                    fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
+                    fornecedores_nomes = list(fornecedores_dict.keys())
+
+                    nome_fornecedor_atual = next((nome for nome, id_ in fornecedores_dict.items() if id_ == ata_info["fornecedor_id"]), None)
+
+                    with st.form("form_editar_ata"):
+                        novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
+                        nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
+                        nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
+                        novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
+                        novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
+
+                        atualizar = st.button("Editar Ata", icon=":material/edit:")
+
+                    if atualizar:
+                        try:
+                            novo_fornecedor_id = fornecedores_dict[novo_fornecedor_nome]
+
+                            supabase.table("atas").update({
+                                "nome": novo_nome,
+                                "data_inicio": nova_data.isoformat(),
+                                "data_validade": nova_validade_ata.isoformat(),
+                                "fornecedor_id": novo_fornecedor_id,
+                                "link_ata": novo_link_ata
+                            }).eq("id", ata_id).execute()
+
+                            st.success("Ata atualizada com sucesso!")
+                        except Exception as e:
+                            st.error(f"Erro ao atualizar a Ata: {e}")
+
+            except Exception as e:
+                st.error(f"Erro ao carregar equipamentos: {e}")
+        
+    
             # Buscar equipamentos vinculados à Ata
             st.subheader("Equipamentos desta Ata")
             st.write("Clique no equipamento que deseja editar ou excluir.")
@@ -422,9 +423,7 @@ with tabs[1]:
                             valor_total = nova_qtd * novo_valor_unit
                             st.text(f"Valor Total: R$ {valor_total:.2f}")
 
-                            col1, col2 = st.columns(2)
-                            atualizar = col1.form_submit_button("Editar Equipamento", icon=":material/edit:")
-                            excluir = col2.form_submit_button("Excluir Equipamento", icon=":material/delete:")
+                            atualizar = st.button("Editar Equipamento", icon=":material/edit:")
 
                         if atualizar:
                             try:
@@ -440,19 +439,7 @@ with tabs[1]:
                             except Exception as e:
                                 st.error(f"Erro ao atualizar equipamento: {e}")
 
-                        if excluir:
-                            confirmar_exclusao_eq = st.checkbox("Confirmo que desejo excluir este Equipamento.")
-                            if confirmar_exclusao_eq:
-                                try:
-                                    supabase.table("equipamentos").delete().eq("id", equipamento["id"]).execute()
-                                    st.success(f"Equipamento '{equipamento['especificacao']}' excluído com sucesso!")
-                                except Exception as e:
-                                    st.error(f"Erro ao excluir equipamento: {e}")
-                            else:
-                                st.warning("Marque a caixa de confirmação para excluir o fornecedor.")
-    except Exception as e:
-        st.error(f"Erro ao carregar equipamentos: {e}")
-
+                        
 # Empenhos -----------------------------------------------------------------------------------------------------------------                
 with tabs[2]:
     st.header("Registro de Empenhos")
