@@ -580,15 +580,15 @@ with tabs[2]:
                     if empenhos: 
                         empenhos_df = pd.DataFrame(empenhos).drop(columns=['id'])
                         empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).dt.strftime('%d/%m/%Y')
-                        
-                        st.write(empenhos_df)
-                        
+
                         empenhos_df = empenhos_df.rename(columns={
                             'data_empenho': 'Data do Empenho',
                             'especificacao': 'Especificação',
                             'quantidade_empenhada': 'Quantidade Empenhada',
                             'observacao':'Observação'
                         })
+
+                        st.write(empenhos_df)
 
                     else:
                         st.info("Nenhum empenho registrado para esta Ata.")
