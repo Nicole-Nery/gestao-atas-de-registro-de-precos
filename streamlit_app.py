@@ -596,7 +596,7 @@ with tabs[2]:
                     st.error(f"Erro ao buscar empenhos: {e}")
 
         if aba == "Atualizar":
-            st.subheader("Consultar Empenhos cadastrados")
+            st.subheader("Atualizar Empenhos cadastrados")
 
             try:
                 response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
