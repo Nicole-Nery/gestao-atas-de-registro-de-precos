@@ -855,7 +855,7 @@ with tabs[3]:
 
 # Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
 with tabs[4]:
-    st.header("Relatórios de Consumo e Status")
+    st.subheader("Relatórios de Consumo e Status")
 
     try:
         # Buscar atas
