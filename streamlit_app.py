@@ -700,7 +700,7 @@ with tabs[2]:
 
 # Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
 with tabs[3]:
-    st.header("Histórico de Empenhos")
+    st.subheader("Histórico de Empenhos")
 
     try:
         # Filtrar por ata
