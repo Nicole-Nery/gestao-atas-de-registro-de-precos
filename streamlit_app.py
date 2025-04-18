@@ -626,9 +626,7 @@ with tabs[2]:
                                     nova_data = st.date_input("Data do Empenho", format="DD/MM/YYYY",value=pd.to_datetime(emp["data_empenho"]).date(), key=f"data_{emp['id']}")
                                     nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
 
-                                    col1, col2 = st.columns(2)
-                                    atualizar = col1.form_submit_button("Editar Empenho", icon=":material/edit:")
-                                    excluir = col2.form_submit_button("Excluir Empenho", icon=":material/delete:")
+                                    atualizar = st.form_submit_button("Atualizar Empenho")
 
                                 if atualizar:
                                     try:
@@ -641,13 +639,6 @@ with tabs[2]:
                                         st.experimental_rerun()
                                     except Exception as e:
                                         st.error(f"Erro ao atualizar empenho: {e}")
-                                if excluir:
-                                    try:
-                                        supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
-                                        st.success("Empenho excluído com sucesso.")
-                                        st.experimental_rerun()
-                                    except Exception as e:
-                                        st.error(f"Erro ao excluir empenho: {e}")
 
                     else:
                         st.info("Nenhum empenho registrado para esta Ata.")
