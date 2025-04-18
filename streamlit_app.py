@@ -786,7 +786,7 @@ with tabs[3]:
                 st.markdown(f"""
                     <div style="background-color:{bg_color};padding:20px;border-radius:15px;
                                 text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h4 style="margin:0;color:{text_color};">Total de Empenhos</h4>
+                        <h5 style="margin:0;color:{text_color};">Total de Empenhos</h5>
                         <h2 style="margin:0;color:{number_color};">{total_empenhos}</h2>
                     </div>
                 """, unsafe_allow_html=True)
@@ -795,7 +795,7 @@ with tabs[3]:
                 st.markdown(f"""
                     <div style="background-color:{bg_color};padding:20px;border-radius:15px;
                                 text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h4 style="margin:0;color:{text_color};">Quantidade Total Empenhada</h4>
+                        <h5 style="margin:0;color:{text_color};">Quantidade Total Empenhada</h5>
                         <h2 style="margin:0;color:{number_color};">{quantidade_total}</h2>
                     </div>
                 """, unsafe_allow_html=True)
@@ -804,7 +804,7 @@ with tabs[3]:
                 st.markdown(f"""
                     <div style="background-color:{bg_color};padding:20px;border-radius:15px;
                                 text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h4 style="margin:0;color:{text_color};">Atas Envolvidas</h4>
+                        <h5 style="margin:0;color:{text_color};">Atas Envolvidas</h5>
                         <h2 style="margin:0;color:{number_color};">{total_atas}</h2>
                     </div>
                 """, unsafe_allow_html=True)
