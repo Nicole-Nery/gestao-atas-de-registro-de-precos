@@ -17,22 +17,6 @@ html, body, .stApp * {
     font-weight: bold;
 }
 
-.fixed-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: white; /* ou a cor do seu header */
-    z-index: 999;
-    padding: 1rem;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Pra evitar que o conteúdo de baixo fique escondido atrás do header */
-.main > div {
-    padding-top: 150px; /* ajuste conforme a altura do seu header */
-}
-
 .stButton > button {
     border-radius: 0;
     background-color: #f8f8f8;
