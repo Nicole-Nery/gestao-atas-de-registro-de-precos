@@ -702,7 +702,7 @@ with tabs[2]:
 
 # Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
 with tabs[3]:
-    st.subheader("Histórico de Empenhos")
+    st.subheader("Histórico Geral de Empenhos")
 
     try:
         # Filtrar por ata
@@ -761,7 +761,7 @@ with tabs[3]:
             df_empenhos = pd.DataFrame(empenhos_filtrados)
             st.dataframe(df_empenhos)
 
-            st.markdown("## 📊 Análises e Gráficos")
+            st.subheader("📊 Análises e Gráficos")
 
             # Resumos
             total_empenhos = len(df_empenhos)
@@ -810,7 +810,7 @@ with tabs[3]:
                 """, unsafe_allow_html=True)
 
 
-            aba1, aba2, aba3 = st.tabs(["📊 Por Ata", "📈 Por Mês", "🔧 Por Equipamento"])
+            aba1, aba2, aba3 = st.tabs(["Por Ata", "Por Mês", "Por Equipamento"])
 
             with aba1:
                 total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
