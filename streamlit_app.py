@@ -659,7 +659,7 @@ with tabs[2]:
                 atas_cadastradas = ["Selecione"]
                 atas_dict = {}
 
-            ata_nome = st.selectbox("Selecione a Ata para excluir", atas_cadastradas, key="selecione_ata_nome_empenho_excluir")
+            ata_nome = st.selectbox("Selecione Ata para excluir empenho(s)", atas_cadastradas, key="selecione_ata_nome_empenho_excluir")
 
             if ata_nome != "Selecione":
                 ata_id = atas_dict[ata_nome]
