@@ -101,7 +101,7 @@ with tabs[0]:
                     "endereco": "Endereço",
                     "telefone": "Telefone"
                 })
-                st.dataframe(df_fornecedores, height=300)
+                st.dataframe(df_fornecedores, height=400)
             except Exception as e:
                 st.error(f"Erro ao buscar fornecedor: {e}")
 
@@ -352,7 +352,7 @@ with tabs[1]:
                                 "valor_unitario": "Valor Unitário",
                                 "valor_total": "Valor Total"
                             })
-                            st.dataframe(df_equip)
+                            st.dataframe(df_equip, height=200)
                         else:
                             st.info("Nenhum equipamento cadastrado para esta Ata.")
                     except Exception as e:
@@ -599,7 +599,7 @@ with tabs[2]:
                             'observacao':'Observação'
                         })
 
-                        st.dataframe(empenhos_df)
+                        st.dataframe(empenhos_df, height=400)
 
                     else:
                         st.info("Nenhum empenho registrado para esta Ata.")
@@ -774,7 +774,7 @@ with tabs[3]:
 
         if empenhos_filtrados:
             df_empenhos = pd.DataFrame(empenhos_filtrados)
-            st.dataframe(df_empenhos)
+            st.dataframe(df_empenhos, height=200)
 
             st.subheader("📊 Análises e Gráficos")
 
@@ -929,7 +929,7 @@ with tabs[4]:
             relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].map(lambda x: f"{x:.1f}%")
 
             # Exibir a tabela
-            st.dataframe(relatorio_df)
+            st.dataframe(relatorio_df, height=200)
 
         else:
             st.info("Nenhum consumo registrado ainda.")
