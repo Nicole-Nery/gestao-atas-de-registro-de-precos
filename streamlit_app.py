@@ -5,6 +5,7 @@ import plotly.express as px
 import streamlit.components.v1 as components
 from supabase import create_client, Client
 import textwrap
+import re
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
@@ -65,14 +66,20 @@ with tabs[0]:
             st.subheader("Cadastro de Fornecedores")
             with st.form("novo_fornecedor", clear_on_submit=True):
                 nome_fornecedor = st.text_input("Nome do Fornecedor")
-                cnpj = st.text_input("CNPJ")
+                cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
                 email = st.text_input("E-mail")
                 endereco = st.text_input("Endereço")
                 telefone = st.text_input("Telefone")
                 submit = st.form_submit_button("Cadastrar Fornecedor")
 
             if submit:
-                if nome_fornecedor and cnpj:
+                padrao_cnpj = r"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$"
+
+                if not nome_fornecedor or not cnpj:
+                    st.warning("Preencha todos os campos obrigatórios.")
+                elif not re.match(padrao_cnpj, cnpj):
+                    st.error("❌ CNPJ inválido. Use o formato 00.000.000/0000-00.")
+                else:
                     try:
                         supabase.table("fornecedores").insert({
                             "nome": nome_fornecedor,
@@ -84,8 +91,6 @@ with tabs[0]:
                         st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
                     except Exception as e:
                         st.error(f"Erro ao cadastrar fornecedor: {e}")
-                else:
-                    st.warning("Preencha todos os campos obrigatórios.")
 
         elif aba == "Consultar":
             st.subheader("Fornecedores Cadastrados")
