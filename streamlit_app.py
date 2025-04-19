@@ -894,9 +894,14 @@ with tabs[4]:
         else:
             st.info("Nenhum consumo registrado ainda.")
 
-        # Verificar vencimentos em até 7 dias
         hoje = datetime.today().date()
         data_limite = hoje + timedelta(days=30)
+
+        # Criar dicionário: ata_id -> saldo total disponível
+        saldo_por_ata = {}
+        for eq in equipamentos_data:
+            ata_id = eq["ata_id"]
+            saldo_por_ata[ata_id] = saldo_por_ata.get(ata_id, 0) + eq["saldo_disponivel"]
 
         atas_vencidas = [
             ata for ata in atas_data.values()
@@ -912,7 +917,10 @@ with tabs[4]:
             st.warning("🔔 Atas vencendo nos próximos 30 dias:")
             for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                saldo = saldo_por_ata.get(ata["id"], 0)
                 st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
+                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+
         else:
             st.info("Nenhuma Ata vencendo em 30 dias.")
 
@@ -920,7 +928,9 @@ with tabs[4]:
             st.error("⚠️ Atas vencidas:")
             for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                saldo = saldo_por_ata.get(ata["id"], 0)
                 st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
+                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
 
     except Exception as e:
         st.error(f"Erro ao gerar relatório: {e}")
