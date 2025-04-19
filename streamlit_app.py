@@ -900,12 +900,20 @@ with tabs[4]:
                     "Data de Validade": ata["data_validade"]
                 })
 
+            # Criar DataFrame
             relatorio_df = pd.DataFrame(relatorio_consumo)
+
+            # Transformar a data
             relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"]).dt.strftime('%d/%m/%Y')
 
+            # Garantir que '% Utilizado' esteja como float
+            relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].astype(str).str.replace('%', '').str.replace(',', '.').astype(float)
+
+            # Exibir tabela estilizada
             st.dataframe(
                 relatorio_df.style
                     .format({
+                        "% Utilizado": "{:.1f}%",
                         "Valor Total (R$)": "R$ {:,.2f}",
                         "Valor Utilizado (R$)": "R$ {:,.2f}",
                     })
