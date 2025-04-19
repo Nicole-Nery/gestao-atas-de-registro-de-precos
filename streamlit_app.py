@@ -185,7 +185,8 @@ with tabs[0]:
                         })
                         st.dataframe(fornecedor_df)
 
-                        excluir = st.button("Excluir Fornecedor")
+                        with st.form("botao_excluir_fornecedor"):
+                            excluir = st.form_submit_button("Excluir Fornecedor")
 
                         if excluir:
                             confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
