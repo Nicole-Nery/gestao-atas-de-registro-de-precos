@@ -218,9 +218,15 @@ with tabs[1]:
         if aba == "Cadastrar":
             st.subheader("Cadastro de Atas")
             try:
-                response = supabase.table("fornecedores").select("id, nome").order("nome").execute()
+                response = supabase.table("fornecedores").select("id, nome, cnpj").order("nome").execute()
                 fornecedores_result = response.data
-                fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_result}
+
+                # Exibir no selectbox como "Nome (CNPJ)"
+                fornecedores_dict = {
+                    f"{f['nome']} ({f['cnpj']})": f["id"]
+                    for f in fornecedores_result
+                }
+
                 fornecedores_cadastrados = ["Selecione"] + list(fornecedores_dict.keys())
 
             except Exception as e:
@@ -233,16 +239,16 @@ with tabs[1]:
                 nome_ata = st.text_input("Nome da Ata")
                 data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
                 validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
-                fornecedor_nome = st.selectbox("Fornecedor", fornecedores_cadastrados,key="selecione_fornecedor_nome")
+                fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome")
                 link_ata = st.text_input("Link para o PDF da Ata")
 
                 submit_ata = st.form_submit_button("Cadastrar Ata")
 
                 if submit_ata:
-                    if nome_ata and data_ata and validade_ata and (fornecedor_nome != "Selecione"):
+                    if nome_ata and data_ata and validade_ata and (fornecedor_exibido != "Selecione"):
                         try:
-                            fornecedor_id = fornecedores_dict[fornecedor_nome]
-                            
+                            fornecedor_id = fornecedores_dict[fornecedor_exibido]
+
                             supabase.table("atas").insert({
                                 "nome": nome_ata,
                                 "data_inicio": data_ata.isoformat(),
@@ -256,8 +262,8 @@ with tabs[1]:
                             st.error(f"Erro ao cadastrar a Ata: {e}")
                     else:
                         st.warning("Preencha todos os campos obrigatórios.")
-                
 
+                
             st.subheader("Adicionar Equipamento à Ata")
 
             try:
