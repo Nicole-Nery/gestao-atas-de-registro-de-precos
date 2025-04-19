@@ -722,9 +722,9 @@ with tabs[3]:
         # Filtro de data
         col1, col2 = st.columns(2)
         with col1:
-            data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2023-01-01"), format= 'DD/MM/YYYY', key="data_inicio")
+            data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2023-01-01"), format= 'DD/MM/YYYY', key="data_inicio_filtro")
         with col2:
-            data_fim = st.date_input("Data final", value=pd.to_datetime("today"), format= 'DD/MM/YYYY', key="data_fim")
+            data_fim = st.date_input("Data final", value=pd.to_datetime("today"), format= 'DD/MM/YYYY', key="data_fim_filtro")
 
         # Buscar empenhos
         empenhos_response = supabase.table("empenhos").select("*").order("data_empenho", desc=True).execute()
@@ -765,47 +765,37 @@ with tabs[3]:
 
             # Resumos
             total_empenhos = len(df_empenhos)
-            quantidade_total = df_empenhos["Quantidade"].sum()
-            total_atas = df_empenhos["Ata"].nunique()
-
-            col1, col2, col3 = st.columns(3)
-
-            # Cores para light e dark
-            if modo_tema == "dark":
-                bg_color = "#1e1e1e"
-                text_color = "#f0f0f0"
-                number_color = "#4fc3f7"  # Azul clarinho
-            else:
-                bg_color = "#f0f2f6"
-                text_color = "#333333"
-                number_color = "#004aad"  # Azul escuro
+            quantidade_total_empenhada = df_empenhos["Quantidade"].sum()
+            atas_envolvidas = df_empenhos["Ata"].nunique()
+            
+            bg_color = "#f0f2f6"
+            text_color = "#333333"
+            number_color = "#004aad"
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
                 st.markdown(f"""
-                    <div style="background-color:{bg_color};padding:20px;border-radius:15px;
-                                text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h5 style="margin:0;color:{text_color};">Total de Empenhos</h5>
-                        <h2 style="margin:0;color:{number_color};">{total_empenhos}</h2>
+                    <div class="metric-box" style="--bg-color:{bg_color}; --text-color:{text_color}; --number-color:{number_color};">
+                        <h5>Total de Empenhos</h5>
+                        <h2>{total_empenhos}</h2>
                     </div>
                 """, unsafe_allow_html=True)
 
+
             with col2:
                 st.markdown(f"""
-                    <div style="background-color:{bg_color};padding:20px;border-radius:15px;
-                                text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h5 style="margin:0;color:{text_color};">Quantidade Total Empenhada</h5>
-                        <h2 style="margin:0;color:{number_color};">{quantidade_total}</h2>
+                    <div class="metric-box" style="--bg-color:{bg_color}; --text-color:{text_color}; --number-color:{number_color};">
+                        <h5>Quantidade Total Empenhada</h5>
+                        <h2>{quantidade_total_empenhada}</h2>
                     </div>
                 """, unsafe_allow_html=True)
 
             with col3:
                 st.markdown(f"""
-                    <div style="background-color:{bg_color};padding:20px;border-radius:15px;
-                                text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.05);">
-                        <h5 style="margin:0;color:{text_color};">Atas Envolvidas</h5>
-                        <h2 style="margin:0;color:{number_color};">{total_atas}</h2>
+                    <div class="metric-box" style="--bg-color:{bg_color}; --text-color:{text_color}; --number-color:{number_color};">
+                        <h5>Atas Envolvidas</h5>
+                        <h2>{atas_envolvidas}</h2>
                     </div>
                 """, unsafe_allow_html=True)
 
