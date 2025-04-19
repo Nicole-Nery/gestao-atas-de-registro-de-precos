@@ -906,14 +906,16 @@ with tabs[4]:
             # Transformar a data
             relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"]).dt.strftime('%d/%m/%Y')
 
-            st.dataframe(
-                relatorio_df.style
-                    .format({
-                        "% Utilizado": "{:.1f}%",
-                        "Valor Total (R$)": "R$ {:,.2f}",
-                        "Valor Utilizado (R$)": "R$ {:,.2f}",
-                    })
-            )
+            def formatar_moeda(valor):
+                try:
+                    return f"R$ {valor:,.2f}".replace(",", "v").replace(".", ",").replace("v", ".")
+                except:
+                    return valor
+
+            relatorio_df["Valor Total (R$)"] = relatorio_df["Valor Total (R$)"].apply(formatar_moeda)
+            relatorio_df["Valor Utilizado (R$)"] = relatorio_df["Valor Utilizado (R$)"].apply(formatar_moeda)
+            relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].map(lambda x: f"{x:.1f}%")
+            st.dataframe(relatorio_df)
         else:
             st.info("Nenhum consumo registrado ainda.")
 
