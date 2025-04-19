@@ -31,9 +31,29 @@ html, body, .stApp * {
     outline: none !important;
     border: none !important;
 }
+
 .stButton > button:hover {
     background-color: #dbe8fb;
     outline: none !important;
     border: none !important;
     color: #003366 !important;
-    }
+}
+
+.metric-box {
+    background-color: var(--bg-color, #f8f9fa);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.metric-box h5 {
+    margin: 0;
+    color: var(--text-color, #6c757d);
+}
+
+.metric-box h2 {
+    margin: 0;
+    color: var(--number-color, #145fbe);
+}
+
