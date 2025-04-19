@@ -802,9 +802,9 @@ with tabs[3]:
             aba1, aba2, aba3 = st.tabs(["Por Ata", "Por Mês", "Por Equipamento"])
 
             with aba1:
-                st.write(df_empenhos)
                 total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
                 fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata", text_auto=True)
+                fig_ata.update_yaxes(dtick=1)
                 st.plotly_chart(fig_ata, use_container_width=True)
 
             with aba2:
@@ -826,14 +826,17 @@ with tabs[3]:
                     title="Quantidade Empenhada por Mês"
                 )
 
-                fig_mensal.update_xaxes(type="category")  # 👈 força o eixo a ser categórico
-                st.plotly_chart(fig_mensal, use_container_width=True)
+                fig_mensal.update_xaxes(type="category")
+                fig_mensal.update_yaxes(dtick=1)
 
+                st.plotly_chart(fig_mensal, use_container_width=True)
 
             with aba3:
                 top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
-                fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h",
-                                    title="Top 5 Equipamentos Mais Empenhados", text_auto=True)
+                fig_top_eq = px.bar(top_eq, x="Quantidade", y="", orientation="h",
+                                    title="Top 5 Equipamentos Mais Empenhados")
+                fig_top_eq.update_xaxes(dtick=1)
+
                 st.plotly_chart(fig_top_eq, use_container_width=True)
 
         else:
