@@ -101,7 +101,7 @@ with tabs[0]:
                     "endereco": "Endereço",
                     "telefone": "Telefone"
                 })
-                st.dataframe(df_fornecedores, height=400)
+                st.dataframe(df_fornecedores, height=300)
             except Exception as e:
                 st.error(f"Erro ao buscar fornecedor: {e}")
 
@@ -599,7 +599,7 @@ with tabs[2]:
                             'observacao':'Observação'
                         })
 
-                        st.dataframe(empenhos_df, height=400)
+                        st.dataframe(empenhos_df, height=300)
 
                     else:
                         st.info("Nenhum empenho registrado para esta Ata.")
