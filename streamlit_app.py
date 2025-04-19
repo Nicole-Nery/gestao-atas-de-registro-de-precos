@@ -81,14 +81,20 @@ with tabs[0]:
                     st.error("❌ CNPJ inválido. Use o formato 00.000.000/0000-00.")
                 else:
                     try:
-                        supabase.table("fornecedores").insert({
-                            "nome": nome_fornecedor,
-                            "cnpj": cnpj,
-                            "email": email,
-                            "endereco": endereco,
-                            "telefone": telefone
-                        }).execute()
-                        st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
+                        # Verificar se o CNPJ já está cadastrado
+                        resultado = supabase.table("fornecedores").select("id").eq("cnpj", cnpj).execute()
+                        if resultado.data:
+                            st.warning("⚠️ Já existe um fornecedor cadastrado com esse CNPJ.")
+                        else:
+                            # Inserir novo fornecedor
+                            supabase.table("fornecedores").insert({
+                                "nome": nome_fornecedor,
+                                "cnpj": cnpj,
+                                "email": email,
+                                "endereco": endereco,
+                                "telefone": telefone
+                            }).execute()
+                            st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
                     except Exception as e:
                         st.error(f"Erro ao cadastrar fornecedor: {e}")
 
