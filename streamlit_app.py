@@ -185,7 +185,7 @@ with tabs[0]:
                         })
                         st.dataframe(fornecedor_df)
 
-                        with st.form("botao_excluir_fornecedor"):
+                        with st.form("botao_excluir_fornecedor", border=False):
                             excluir = st.form_submit_button("Excluir Fornecedor")
 
                         if excluir:
@@ -494,7 +494,8 @@ with tabs[1]:
                         })
                         st.dataframe(ata_df)
 
-                        excluir = st.button("Excluir Ata")
+                        with st.form("botao_excluir_ata", border=False):
+                            excluir = st.form_submit_button("Excluir Ata")
 
                         if excluir:
                             confirmar = st.checkbox("Confirmo que desejo excluir esta ata.")
@@ -715,7 +716,8 @@ with tabs[2]:
 
                         st.dataframe(empenhos_df)
 
-                        excluir = st.button("Excluir Empenho")
+                        with st.form("botao_excluir_empenho", border=False):
+                            excluir = st.form_submit_button("Excluir Empenho")
 
                         if excluir:
                             try:
