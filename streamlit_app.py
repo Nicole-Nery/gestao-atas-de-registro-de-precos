@@ -535,7 +535,7 @@ with tabs[2]:
         aba = st.session_state.aba_empenhos
 
         if aba == "Cadastrar":
-            st.subheader("Registro de Empenhos")
+            st.subheader("Cadastro de Empenhos")
             try:
                 response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
                 atas_result = response.data
@@ -571,7 +571,7 @@ with tabs[2]:
                                 data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
                                 observacao = st.text_input("Observação (opcional)")
 
-                                registrar_empenho = st.form_submit_button("Registrar Empenho")    
+                                registrar_empenho = st.form_submit_button("Cadastrar Empenho")    
                                 if registrar_empenho:
                                     try:
                                         # Inserir empenho
@@ -587,9 +587,9 @@ with tabs[2]:
                                             "saldo_disponivel": saldo_disp - quantidade
                                         }).eq("id", equipamento_id).execute()
 
-                                        st.success("Empenho registrado com sucesso!")
+                                        st.success("Empenho cadastrado com sucesso!")
                                     except Exception as e:
-                                        st.error(f"Erro ao registrar empenho: {e}")
+                                        st.error(f"Erro ao cadastrar empenho: {e}")
                     else:
                         st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
                 except Exception as e:
@@ -632,7 +632,7 @@ with tabs[2]:
                         st.dataframe(empenhos_df, height=300)
 
                     else:
-                        st.info("Nenhum empenho registrado para esta Ata.")
+                        st.info("Nenhum empenho cadastrado para esta Ata.")
                 except Exception as e:
                     st.error(f"Erro ao buscar empenhos: {e}")
 
@@ -681,7 +681,7 @@ with tabs[2]:
                                         st.error(f"Erro ao atualizar empenho: {e}")
 
                     else:
-                        st.info("Nenhum empenho registrado para esta Ata.")
+                        st.info("Nenhum empenho cadastrado para esta Ata.")
                 except Exception as e:
                     st.error(f"Erro ao buscar empenhos: {e}")
         
@@ -736,7 +736,7 @@ with tabs[2]:
 
 
                     else:
-                        st.info("Nenhum empenho registrado para esta Ata.")
+                        st.info("Nenhum empenho cadastrado para esta Ata.")
                 except Exception as e:
                     st.error(f"Erro ao buscar empenhos: {e}")
 
@@ -965,7 +965,7 @@ with tabs[4]:
             st.dataframe(relatorio_df, height=200)
 
         else:
-            st.info("Nenhum consumo registrado ainda.")
+            st.info("Nenhum consumo cadastrado ainda.")
 
         hoje = datetime.today().date()
         data_limite = hoje + timedelta(days=30)
