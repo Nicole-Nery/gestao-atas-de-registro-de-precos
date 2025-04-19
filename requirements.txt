@@ -3,4 +3,3 @@ supabase
 pandas
 plotly
 matplotlib
-re
