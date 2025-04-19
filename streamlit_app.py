@@ -826,7 +826,7 @@ with tabs[3]:
                     title="Quantidade Empenhada por Mês"
                 )
 
-                fig_mensal.update_xaxes(type="category")
+                fig_mensal.update_xaxes(type="category", title_text="Ano/Mês")
                 fig_mensal.update_yaxes(dtick=1)
 
                 st.plotly_chart(fig_mensal, use_container_width=True)
