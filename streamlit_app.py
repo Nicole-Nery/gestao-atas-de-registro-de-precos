@@ -239,7 +239,7 @@ with tabs[1]:
                 nome_ata = st.text_input("Nome da Ata")
                 data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
                 validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
-                fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome")
+                fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome", help="Digite o nome ou CNPJ para localizar o fornecedor.")
                 link_ata = st.text_input("Link para o PDF da Ata")
 
                 submit_ata = st.form_submit_button("Cadastrar Ata")
