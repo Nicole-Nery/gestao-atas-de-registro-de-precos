@@ -870,21 +870,33 @@ with tabs[4]:
         atas_data = {ata["id"]: ata for ata in atas_response.data}
 
         # Buscar equipamentos
-        equipamentos_response = supabase.table("equipamentos").select("especificacao, quantidade, saldo_disponivel, ata_id").order("ata_id").execute()
+        equipamentos_response = supabase.table("equipamentos").select("especificacao, quantidade, saldo_disponivel, ata_id, valor_unitario").order("ata_id").execute()
         equipamentos_data = equipamentos_response.data
 
         if equipamentos_data:
             relatorio_consumo = []
             for eq in equipamentos_data:
                 ata = atas_data.get(eq["ata_id"])
+
                 if not ata:
                     continue
+
                 saldo_utilizado = eq["quantidade"] - eq["saldo_disponivel"]
+                valor_total = eq["quantidade"] * eq["valor_unitario"]
+                valor_utilizado = saldo_utilizado * eq["valor_unitario"]
+                percentual_utilizado = (saldo_utilizado / eq["quantidade"]) * 100 if eq["quantidade"] else 0
+                percentual_disponivel = 100 - percentual_utilizado
+
                 relatorio_consumo.append({
                     "Ata": ata["nome"],
                     "Equipamento": eq["especificacao"],
+                    "Qtd Total": eq["quantidade"],
                     "Saldo Utilizado": saldo_utilizado,
                     "Saldo Disponível": eq["saldo_disponivel"],
+                    "% Utilizado": f"{percentual_utilizado:.1f}%",
+                    "% Disponível": f"{percentual_disponivel:.1f}%",
+                    "Valor Total (R$)": valor_total,
+                    "Valor Utilizado (R$)": valor_utilizado,
                     "Data de Validade": ata["data_validade"]
                 })
 
