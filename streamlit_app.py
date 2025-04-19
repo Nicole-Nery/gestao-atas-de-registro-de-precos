@@ -154,7 +154,6 @@ with tabs[0]:
                                 }).eq("id", fornecedor_id).execute()
 
                                 st.success(f"Fornecedor {novo_nome_formatado} atualizado com sucesso!")
-                                st.experimental_rerun()
                             except Exception as e:
                                 st.error(f"Erro ao atualizar fornecedor: {e}")
             except Exception as e:
@@ -194,7 +193,6 @@ with tabs[0]:
                                 try:
                                     supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
                                     st.success("Fornecedor excluído com sucesso!")
-                                    st.experimental_rerun()
                                 except Exception as e:
                                     st.error(f"Erro ao excluir fornecedor: {e}")
             except Exception as e:
@@ -503,7 +501,6 @@ with tabs[1]:
                                 try:
                                     supabase.table("atas").delete().eq("id", ata_id).execute()
                                     st.success("Ata excluída com sucesso!")
-                                    st.experimental_rerun()
                                 except Exception as e:
                                     st.error(f"Erro ao excluir ata: {e}")
             except Exception as e:
@@ -671,7 +668,6 @@ with tabs[2]:
                                             "observacao": nova_obs
                                         }).eq("id", emp["id"]).execute()
                                         st.success("Empenho atualizado com sucesso.")
-                                        st.experimental_rerun()
                                     except Exception as e:
                                         st.error(f"Erro ao atualizar empenho: {e}")
 
@@ -723,7 +719,6 @@ with tabs[2]:
                             try:
                                 supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
                                 st.success("Empenho excluído com sucesso.")
-                                st.experimental_rerun()
                             except Exception as e:
                                 st.error(f"Erro ao excluir empenho: {e}")
 
