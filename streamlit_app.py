@@ -956,20 +956,26 @@ with tabs[4]:
 
         with st.container(border=True):
             st.warning("🔔 Atas vencendo nos próximos 30 dias:")
-            for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
-                validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
-                saldo = saldo_por_ata.get(ata["id"], 0)
-                st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
-                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+            if atas_vencendo:
+                for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
+                    validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                    saldo = saldo_por_ata.get(ata["id"], 0)
+                    st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
+                    st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+            else:
+                st.write("Não há atas vencendo nos próximos 30 dias.")
 
     
         with st.container(border=True):
             st.error("⚠️ Atas vencidas:")
-            for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
-                validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
-                saldo = saldo_por_ata.get(ata["id"], 0)
-                st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
-                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+            if atas_vencidas:
+                for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
+                    validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                    saldo = saldo_por_ata.get(ata["id"], 0)
+                    st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
+                    st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+            else:
+                st.write("Não há atas vencidas.")
 
     except Exception as e:
         st.error(f"Erro ao gerar relatório: {e}")
