@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import plotly.express as px
 import streamlit.components.v1 as components
 from supabase import create_client, Client
+import textwrap
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
@@ -833,6 +834,9 @@ with tabs[3]:
 
             with aba3:
                 top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
+                # Quebrar nomes longos em várias linhas, respeitando palavras
+                top_eq["Equipamento"] = top_eq["Equipamento"].apply(lambda x: '<br>'.join(textwrap.wrap(x, width=20)))
+
                 fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h",
                                     title="Top 5 Equipamentos Mais Empenhados")
                 fig_top_eq.update_xaxes(dtick=1)
