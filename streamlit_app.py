@@ -799,10 +799,10 @@ with tabs[3]:
                     </div>
                 """, unsafe_allow_html=True)
 
-
             aba1, aba2, aba3 = st.tabs(["Por Ata", "Por Mês", "Por Equipamento"])
 
             with aba1:
+                st.write(df_empenhos)
                 total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
                 fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata", text_auto=True)
                 st.plotly_chart(fig_ata, use_container_width=True)
