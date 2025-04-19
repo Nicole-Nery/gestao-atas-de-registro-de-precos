@@ -898,19 +898,29 @@ with tabs[4]:
         hoje = datetime.today().date()
         data_limite = hoje + timedelta(days=30)
 
-        atas_vencendo = [ata for ata in atas_data.values() if ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() <= data_limite]
-        atas_vencidas = [ata for ata in atas_data.values() if ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() < hoje]
+        atas_vencidas = [
+            ata for ata in atas_data.values()
+            if ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() < hoje
+        ]
+
+        atas_vencendo = [
+            ata for ata in atas_data.values()
+            if ata["data_validade"] and hoje < pd.to_datetime(ata["data_validade"]).date() <= data_limite
+        ]
 
         if atas_vencendo:
-            st.warning("🔔 Alertas de vencimento de atas nos próximos 30 dias:")
+            st.warning("🔔 Atas vencendo nos próximos 30 dias:")
             for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
                 st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
+        else:
+            st.info("Nenhuma Ata vencendo em 30 dias.")
 
         if atas_vencidas:
             st.error("⚠️ Atas vencidas:")
             for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
                 st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
+                
     except Exception as e:
         st.error(f"Erro ao gerar relatório: {e}")
