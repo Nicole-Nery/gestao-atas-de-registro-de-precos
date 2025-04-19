@@ -101,7 +101,7 @@ with tabs[0]:
                     "endereco": "Endereço",
                     "telefone": "Telefone"
                 })
-                st.dataframe(df_fornecedores)
+                st.dataframe(df_fornecedores, height=300)
             except Exception as e:
                 st.error(f"Erro ao buscar fornecedor: {e}")
 
