@@ -703,7 +703,13 @@ with tabs[2]:
 
 # Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
 with tabs[3]:
-    st.subheader("Histórico Geral de Empenhos")
+
+    col1, col2 = st.columns([1,4])
+
+    with col1:
+        st.image("assets/logos.svg", width=300)
+    with col2:
+        st.subheader("Histórico Geral de Empenhos")
 
     try:
         # Filtrar por ata
@@ -852,7 +858,13 @@ with tabs[3]:
 
 # Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
 with tabs[4]:
-    st.subheader("Relatórios de Consumo e Status")
+
+    col1, col2 = st.columns([1,4])
+
+    with col1:
+        st.image("assets/logos.svg", width=300)
+    with col2:
+        st.subheader("Relatórios de Consumo e Status")
 
     try:
         # Buscar atas
