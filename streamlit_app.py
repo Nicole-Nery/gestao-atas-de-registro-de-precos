@@ -81,6 +81,8 @@ with tabs[0]:
                     st.error("❌ CNPJ inválido. Use o formato 00.000.000/0000-00.")
                 else:
                     try:
+                        nome_fornecedor_formatado = ' '.join(nome_fornecedor.split()).upper()
+
                         # Verificar se o CNPJ já está cadastrado
                         resultado = supabase.table("fornecedores").select("id").eq("cnpj", cnpj).execute()
                         if resultado.data:
@@ -88,13 +90,13 @@ with tabs[0]:
                         else:
                             # Inserir novo fornecedor
                             supabase.table("fornecedores").insert({
-                                "nome": nome_fornecedor,
+                                "nome": nome_fornecedor_formatado,
                                 "cnpj": cnpj,
                                 "email": email,
                                 "endereco": endereco,
                                 "telefone": telefone
                             }).execute()
-                            st.success(f"Fornecedor '{nome_fornecedor}' cadastrado com sucesso!")
+                            st.success(f"Fornecedor '{nome_fornecedor_formatado}' cadastrado com sucesso!")
                     except Exception as e:
                         st.error(f"Erro ao cadastrar fornecedor: {e}")
 
@@ -142,15 +144,16 @@ with tabs[0]:
 
                         if atualizar:
                             try:
+                                novo_nome_formatado = ' '.join(novo_nome.split()).upper()
                                 supabase.table("fornecedores").update({
-                                    "nome": novo_nome,
+                                    "nome": novo_nome_formatado,
                                     "cnpj": novo_cnpj,
                                     "email": novo_email,
                                     "endereco": novo_endereco,
                                     "telefone": novo_telefone
                                 }).eq("id", fornecedor_id).execute()
 
-                                st.success(f"Fornecedor {novo_nome} atualizado com sucesso!")
+                                st.success(f"Fornecedor {novo_nome_formatado} atualizado com sucesso!")
                                 st.experimental_rerun()
                             except Exception as e:
                                 st.error(f"Erro ao atualizar fornecedor: {e}")
@@ -294,16 +297,17 @@ with tabs[1]:
 
                     if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
                         try:
+                            espeficicacao_formatada = ' '.join(especificacao.split()).upper()
                             response = supabase.table("equipamentos").insert({
                                 "ata_id": ata_id,
-                                "especificacao": especificacao,
+                                "especificacao": espeficicacao_formatada,
                                 "marca_modelo": marca_modelo,
                                 "quantidade": quantidade,
                                 "saldo_disponivel": saldo_disponivel,
                                 "valor_unitario": valor_unitario,
                                 "valor_total": valor_total
                             }).execute()
-                            st.success(f"Equipamento '{especificacao}' cadastrado com sucesso na ata '{ata_nome}'!")
+                            st.success(f"Equipamento '{espeficicacao_formatada}' cadastrado com sucesso na ata '{ata_nome}'!")
                         except Exception as e:
                             st.error(f"Erro ao cadastrar equipamento: {e}")
                     else:
@@ -451,15 +455,16 @@ with tabs[1]:
 
                             if atualizar:
                                 try:
+                                    nova_espeficicacao_formatada = ' '.join(nova_especificacao.split()).upper()
                                     supabase.table("equipamentos").update({
-                                        "especificacao": nova_especificacao,
+                                        "especificacao": nova_espeficicacao_formatada,
                                         "marca_modelo": nova_marca_modelo,
                                         "quantidade": nova_qtd,
                                         "saldo_disponivel": novo_saldo,
                                         "valor_unitario": novo_valor_unit,
                                         "valor_total": valor_total
                                     }).eq("id", equipamento["id"]).execute()
-                                    st.success(f"Equipamento '{nova_especificacao}' atualizado com sucesso!")
+                                    st.success(f"Equipamento '{nova_espeficicacao_formatada}' atualizado com sucesso!")
                                 except Exception as e:
                                     st.error(f"Erro ao atualizar equipamento: {e}")
 
