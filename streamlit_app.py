@@ -783,7 +783,6 @@ with tabs[3]:
                     </div>
                 """, unsafe_allow_html=True)
 
-
             with col2:
                 st.markdown(f"""
                     <div class="metric-box" style="--bg-color:{bg_color}; --text-color:{text_color}; --number-color:{number_color};">
@@ -804,7 +803,7 @@ with tabs[3]:
 
             with aba1:
                 total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
-                fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata", text_auto=True)
+                fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata")
                 fig_ata.update_yaxes(dtick=1)
                 st.plotly_chart(fig_ata, use_container_width=True)
 
@@ -834,6 +833,7 @@ with tabs[3]:
 
             with aba3:
                 top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
+
                 # Quebrar nomes longos em várias linhas, respeitando palavras
                 top_eq["Equipamento"] = top_eq["Equipamento"].apply(lambda x: '<br>'.join(textwrap.wrap(x, width=20)))
 
