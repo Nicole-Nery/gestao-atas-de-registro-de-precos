@@ -902,7 +902,15 @@ with tabs[4]:
 
             relatorio_df = pd.DataFrame(relatorio_consumo)
             relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"]).dt.strftime('%d/%m/%Y')
-            st.dataframe(relatorio_df)
+
+            st.dataframe(
+                relatorio_df.style
+                    .format({
+                        "Valor Total (R$)": "R$ {:,.2f}",
+                        "Valor Utilizado (R$)": "R$ {:,.2f}",
+                    })
+                    .background_gradient(subset=["% Utilizado"], cmap="Oranges")
+            )
         else:
             st.info("Nenhum consumo registrado ainda.")
 
