@@ -833,10 +833,10 @@ with tabs[3]:
 
             with aba3:
                 top_eq = df_empenhos.groupby("Equipamento")["Quantidade"].sum().nlargest(5).reset_index()
-                fig_top_eq = px.bar(top_eq, x="Quantidade", y="", orientation="h",
+                fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h",
                                     title="Top 5 Equipamentos Mais Empenhados")
                 fig_top_eq.update_xaxes(dtick=1)
-
+                fig_top_eq.update_yaxes(title_text="")
                 st.plotly_chart(fig_top_eq, use_container_width=True)
 
         else:
