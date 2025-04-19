@@ -857,9 +857,8 @@ with tabs[3]:
 
 
 # Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
-
 with tabs[4]:
-    col1, col2 = st.columns([1, 4])
+    col1, col2 = st.columns([1,4])
 
     with col1:
         st.image("assets/logos.svg", width=300)
@@ -867,15 +866,15 @@ with tabs[4]:
         st.subheader("Relatórios de Consumo e Status")
 
     try:
-        # Buscar dados
+        # Buscar atas
         atas_response = supabase.table("atas").select("id, nome, data_validade").execute()
         atas_data = {ata["id"]: ata for ata in atas_response.data}
 
+        # Buscar equipamentos
         equipamentos_response = supabase.table("equipamentos").select("especificacao, quantidade, saldo_disponivel, ata_id").order("ata_id").execute()
         equipamentos_data = equipamentos_response.data
 
         if equipamentos_data:
-            # Construir relatório
             relatorio_consumo = []
             for eq in equipamentos_data:
                 ata = atas_data.get(eq["ata_id"])
@@ -892,59 +891,22 @@ with tabs[4]:
 
             relatorio_df = pd.DataFrame(relatorio_consumo)
             relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"]).dt.strftime('%d/%m/%Y')
-
-            # Status de Consumo
-            def status_consumo(saldo):
-                if saldo == 0:
-                    return "Esgotado"
-                elif saldo < 3:
-                    return "Crítico"
-                else:
-                    return "OK"
-            relatorio_df["Status de Consumo"] = relatorio_df["Saldo Disponível"].apply(status_consumo)
-
-            # Filtro por Ata
-            atas_nomes = sorted(relatorio_df["Ata"].unique())
-            atas_selecionadas = st.multiselect("Filtrar por Ata:", atas_nomes, default=atas_nomes)
-
-            relatorio_filtrado = relatorio_df[relatorio_df["Ata"].isin(atas_selecionadas)]
-
-            # Mostrar tabela
-            st.dataframe(relatorio_filtrado, use_container_width=True)
-
-            # Botão de download
-            csv = relatorio_filtrado.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Baixar Relatório CSV", data=csv, file_name="relatorio_consumo.csv", mime="text/csv")
-
-            # Gráfico de barras
-            if not relatorio_filtrado.empty:
-                fig = px.bar(
-                    relatorio_filtrado,
-                    x="Equipamento",
-                    y="Saldo Utilizado",
-                    color="Ata",
-                    title="Consumo por Equipamento",
-                    text_auto=True
-                )
-                fig.update_layout(xaxis_tickangle=-45)
-                st.plotly_chart(fig, use_container_width=True)
-
+            st.dataframe(relatorio_df)
         else:
             st.info("Nenhum consumo registrado ainda.")
 
-        # Verificação de atas vencendo
+        # Verificar vencimentos em até 7 dias
         hoje = datetime.today().date()
-        data_limite = hoje + timedelta(days=7)
+        data_limite = hoje + timedelta(days=30)
 
         atas_vencendo = [ata for ata in atas_data.values() if ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() <= data_limite]
 
         if atas_vencendo:
-            st.warning("⚠️ Atas com vencimento nos próximos 7 dias:")
+            st.warning("🔔 Alertas de vencimento de atas nos próximos 30 dias:")
             for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
-                st.markdown(f"🔔 **{ata['nome']}** — <span style='color:red'><strong>{validade}</strong></span>", unsafe_allow_html=True)
+                st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
         else:
-            st.info("✅ Nenhuma Ata vencendo nos próximos 7 dias.")
-
+            st.info("Nenhuma Ata vencendo em 30 dias.")
     except Exception as e:
         st.error(f"Erro ao gerar relatório: {e}")
