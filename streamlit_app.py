@@ -185,16 +185,18 @@ with tabs[0]:
                         st.dataframe(fornecedor_df)
 
                         with st.form("botao_excluir_fornecedor", border=False):
+                            confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
                             excluir = st.form_submit_button("Excluir Fornecedor")
 
-                        if excluir:
-                            confirmar = st.checkbox("Confirmo que desejo excluir este fornecedor.")
-                            if confirmar:
-                                try:
-                                    supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
-                                    st.success("Fornecedor excluído com sucesso!")
-                                except Exception as e:
-                                    st.error(f"Erro ao excluir fornecedor: {e}")
+                        if excluir and confirmar:
+                            try:
+                                supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
+                                st.success("Fornecedor excluído com sucesso!")
+                            except Exception as e:
+                                st.error(f"Erro ao excluir fornecedor: {e}")
+                        elif excluir and not confirmar:
+                            st.warning("Você precisa confirmar antes de excluir.")
+
             except Exception as e:
                 st.error(f"Erro ao carregar fornecedores: {e}")
 
@@ -493,16 +495,18 @@ with tabs[1]:
                         st.dataframe(ata_df)
 
                         with st.form("botao_excluir_ata", border=False):
+                            confirmar = st.checkbox("Confirmo que desejo excluir esta ata.")
                             excluir = st.form_submit_button("Excluir Ata")
 
-                        if excluir:
-                            confirmar = st.checkbox("Confirmo que desejo excluir esta ata.")
-                            if confirmar:
-                                try:
-                                    supabase.table("atas").delete().eq("id", ata_id).execute()
-                                    st.success("Ata excluída com sucesso!")
-                                except Exception as e:
-                                    st.error(f"Erro ao excluir ata: {e}")
+                        if excluir and confirmar:
+                            try:
+                                supabase.table("atas").delete().eq("id", ata_id).execute()
+                                st.success("Ata excluída com sucesso!")
+                            except Exception as e:
+                                st.error(f"Erro ao excluir ata: {e}")
+                        elif excluir and not confirmar:
+                            st.warning("Você precisa confirmar antes de excluir.")
+
             except Exception as e:
                 st.error(f"Erro ao carregar atas: {e}")
 
@@ -713,14 +717,18 @@ with tabs[2]:
                         st.dataframe(empenhos_df)
 
                         with st.form("botao_excluir_empenho", border=False):
+                            confirmar = st.checkbox("Confirmo que desejo excluir este empenho.")
                             excluir = st.form_submit_button("Excluir Empenho")
 
-                        if excluir:
+                        if excluir and confirmar:
                             try:
                                 supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
                                 st.success("Empenho excluído com sucesso.")
                             except Exception as e:
                                 st.error(f"Erro ao excluir empenho: {e}")
+                        elif excluir and not confirmar:
+                            st.warning("Você precisa confirmar antes de excluir.")
+
 
                     else:
                         st.info("Nenhum empenho registrado para esta Ata.")
