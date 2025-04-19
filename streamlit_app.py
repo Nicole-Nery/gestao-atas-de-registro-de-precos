@@ -34,7 +34,7 @@ with st.container():
 st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
 # Estabelecendo o layout com abas
-tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios de Consumo"])
+tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
 
 # Identificando o tema
 modo_tema = st.get_option("theme.base")
@@ -921,6 +921,6 @@ with tabs[4]:
             for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
                 st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
-                
+
     except Exception as e:
         st.error(f"Erro ao gerar relatório: {e}")
