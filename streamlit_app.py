@@ -36,8 +36,12 @@ st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
 
-# Identificando o tema
-modo_tema = st.get_option("theme.base")
+def formatar_moeda(valor):
+    try:
+        valor_float = float(str(valor).replace(',', '.'))
+        return f"R$ {valor_float:,.2f}".replace(",", "v").replace(".", ",").replace("v", ".")
+    except:
+        return valor
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
@@ -336,6 +340,10 @@ with tabs[1]:
 
                         if equipamentos:
                             df_equip = pd.DataFrame(equipamentos)
+                            df_equip["valor_unitario"] = df_equip["valor_unitario"].apply(formatar_moeda)
+                            df_equip["valor_total"] = df_equip["valor_total"].apply(formatar_moeda)
+
+
                             df_equip = df_equip.rename(columns={
                                 "especificacao": "Especificação",
                                 "marca_modelo": "Marca/Modelo",
@@ -914,14 +922,6 @@ with tabs[4]:
                 .str.replace(',', '.')
                 .astype(float)
             )
-
-            # Função corrigida para moeda BR
-            def formatar_moeda(valor):
-                try:
-                    valor_float = float(str(valor).replace(',', '.'))
-                    return f"R$ {valor_float:,.2f}".replace(",", "v").replace(".", ",").replace("v", ".")
-                except:
-                    return valor
 
             # Aplicar formatações
             relatorio_df["Valor Total (R$)"] = relatorio_df["Valor Total (R$)"].apply(formatar_moeda)
