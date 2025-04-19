@@ -906,10 +906,6 @@ with tabs[4]:
             # Transformar a data
             relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"]).dt.strftime('%d/%m/%Y')
 
-            # Garantir que '% Utilizado' esteja como float
-            relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].astype(str).str.replace('%', '').str.replace(',', '.').astype(float)
-
-            # Exibir tabela estilizada
             st.dataframe(
                 relatorio_df.style
                     .format({
@@ -917,7 +913,6 @@ with tabs[4]:
                         "Valor Total (R$)": "R$ {:,.2f}",
                         "Valor Utilizado (R$)": "R$ {:,.2f}",
                     })
-                    .background_gradient(subset=["% Utilizado"], cmap="Oranges")
             )
         else:
             st.info("Nenhum consumo registrado ainda.")
