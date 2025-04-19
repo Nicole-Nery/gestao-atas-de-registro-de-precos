@@ -34,7 +34,7 @@ with st.container():
 st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
 # Estabelecendo o layout com abas
-tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios"])
+tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico de Empenhos", "Relatórios de Consumo"])
 
 # Identificando o tema
 modo_tema = st.get_option("theme.base")
