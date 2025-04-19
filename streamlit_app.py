@@ -484,15 +484,20 @@ with tabs[1]:
                     ata_info = next((a for a in atas_data if a["id"] == ata_id), None)
 
                     if ata_info:
-                        ata_df = pd.DataFrame([ata_info]).drop(columns=["id"])
-                        ata_df = ata_df.rename(columns={
-                            "nome": "Nome",
-                            "data_inicio": "Data de início",
-                            "data_validade": "Data de validade",
-                            "fornecedores(nome)": "Fornecedor",
-                            "link_ata": "Link da ata"
-                        })
+                        # Extrair o nome do fornecedor de dentro do dicionário
+                        fornecedor_nome = ata_info.get("fornecedores", {}).get("nome", "Não informado")
+
+                        # Construir DataFrame com os dados relevantes
+                        ata_df = pd.DataFrame([{
+                            "Nome": ata_info["nome"],
+                            "Data de início": ata_info["data_inicio"],
+                            "Data de validade": ata_info["data_validade"],
+                            "Fornecedor": fornecedor_nome,
+                            "Link da ata": ata_info["link_ata"]
+                        }])
+                        
                         st.dataframe(ata_df)
+
 
                         with st.form("botao_excluir_ata", border=False):
                             confirmar = st.checkbox("Confirmo que desejo excluir esta ata.")
