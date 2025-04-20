@@ -105,6 +105,7 @@ with tabs[0]:
                     try:
                         nome_fornecedor_formatado = ' '.join(nome_fornecedor.split()).upper()
                         telefone_formatado = formatar_telefone(telefone)
+                        endereco_formatado = ' '.join(endereco.split()).upper()
 
                         # Verificar se o CNPJ já está cadastrado
                         resultado = supabase.table("fornecedores").select("id").eq("cnpj", cnpj).execute()
@@ -116,7 +117,7 @@ with tabs[0]:
                                 "nome": nome_fornecedor_formatado,
                                 "cnpj": cnpj,
                                 "email": email,
-                                "endereco": endereco,
+                                "endereco": endereco_formatado,
                                 "telefone": telefone_formatado
                             }).execute()
                             st.success(f"Fornecedor '{nome_fornecedor_formatado}' cadastrado com sucesso!")
@@ -168,12 +169,15 @@ with tabs[0]:
                         if atualizar:
                             try:
                                 novo_nome_formatado = ' '.join(novo_nome.split()).upper()
+                                novo_telefone_formatado = formatar_telefone(novo_telefone)
+                                novo_endereco_formatado = ' '.join(novo_endereco.split()).upper()
+
                                 supabase.table("fornecedores").update({
                                     "nome": novo_nome_formatado,
                                     "cnpj": novo_cnpj,
                                     "email": novo_email,
-                                    "endereco": novo_endereco,
-                                    "telefone": novo_telefone
+                                    "endereco": novo_endereco_formatado,
+                                    "telefone": novo_telefone_formatado
                                 }).eq("id", fornecedor_id).execute()
 
                                 st.success(f"Fornecedor {novo_nome_formatado} atualizado com sucesso!")
