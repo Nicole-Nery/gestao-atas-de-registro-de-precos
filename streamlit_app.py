@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import plotly.express as px
 import streamlit.components.v1 as components
 from supabase import create_client, Client
@@ -576,9 +576,9 @@ with tabs[2]:
 
                                 registrar_empenho = st.form_submit_button("Cadastrar Empenho")    
                                 if registrar_empenho:
-                                    ata_validade_date = datetime.date.fromisoformat(ata_validade)
+                                    ata_validade_date = date.fromisoformat(ata_validade)
                                     if data_empenho > ata_validade_date:
-                                        ata_validade_formatada = datetime.date.fromisoformat(ata_validade).strftime("%d/%m/%Y")
+                                        ata_validade_formatada = date.fromisoformat(ata_validade).strftime("%d/%m/%Y")
                                         st.error(f"A data do empenho é posterior à validade da Ata (vencida em {ata_validade_formatada}). Cadastro não permitido.")
                                     else:
                                         try:
