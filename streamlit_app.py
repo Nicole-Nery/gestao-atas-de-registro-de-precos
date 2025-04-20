@@ -37,12 +37,34 @@ st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
 
+# Funções para formatação
 def formatar_moeda(valor):
     try:
         valor_float = float(str(valor).replace(',', '.'))
         return f"R$ {valor_float:,.2f}".replace(",", "v").replace(".", ",").replace("v", ".")
     except:
         return valor
+
+
+def formatar_telefone(numero: str) -> str:
+    """Formata um número de telefone brasileiro"""
+    numero_limpo = re.sub(r'\D', '', numero)  # Remove tudo que não for dígito
+
+    if len(numero_limpo) == 11:
+        # Com DDD + celular (ex: 34991234567)
+        return f"({numero_limpo[:2]}) {numero_limpo[2:7]}-{numero_limpo[7:]}"
+    elif len(numero_limpo) == 10:
+        # Com DDD + fixo (ex: 3421234567)
+        return f"({numero_limpo[:2]}) {numero_limpo[2:6]}-{numero_limpo[6:]}"
+    elif len(numero_limpo) == 9:
+        # Celular sem DDD (ex: 991234567)
+        return f"{numero_limpo[:5]}-{numero_limpo[5:]}"
+    elif len(numero_limpo) == 8:
+        # Fixo sem DDD (ex: 21234567)
+        return f"{numero_limpo[:4]}-{numero_limpo[4:]}"
+    else:
+        return numero  # Retorna como veio se não bater com formatos esperados
+
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
@@ -82,6 +104,7 @@ with tabs[0]:
                 else:
                     try:
                         nome_fornecedor_formatado = ' '.join(nome_fornecedor.split()).upper()
+                        telefone_formatado = formatar_telefone(telefone)
 
                         # Verificar se o CNPJ já está cadastrado
                         resultado = supabase.table("fornecedores").select("id").eq("cnpj", cnpj).execute()
@@ -94,7 +117,7 @@ with tabs[0]:
                                 "cnpj": cnpj,
                                 "email": email,
                                 "endereco": endereco,
-                                "telefone": telefone
+                                "telefone": telefone_formatado
                             }).execute()
                             st.success(f"Fornecedor '{nome_fornecedor_formatado}' cadastrado com sucesso!")
                     except Exception as e:
