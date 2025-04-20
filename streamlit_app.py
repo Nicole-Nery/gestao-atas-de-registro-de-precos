@@ -539,9 +539,9 @@ with tabs[2]:
         if aba == "Cadastrar":
             st.subheader("Cadastro de Empenhos")
             try:
-                response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
+                response = supabase.table("atas").select("id, nome, data_validade").order("nome", desc=False).execute()
                 atas_result = response.data
-                atas_dict = {a["nome"]: a["id"] for a in atas_result}
+                atas_dict = {a["nome"]: {"id": a["id"], "data_validade":a["data_validade"]} for a in atas_result}
                 atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
             except Exception as e:
@@ -552,7 +552,8 @@ with tabs[2]:
             ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome_empenho")
 
             if ata_nome != "Selecione":
-                ata_id = atas_dict[ata_nome]
+                ata_id = atas_dict[ata_nome]["id"]
+                ata_validade = atas_dict[ata_nome]["data_validade"]
 
                 try:
                     # Buscar equipamentos com saldo > 0
@@ -575,23 +576,28 @@ with tabs[2]:
 
                                 registrar_empenho = st.form_submit_button("Cadastrar Empenho")    
                                 if registrar_empenho:
-                                    try:
-                                        # Inserir empenho
-                                        supabase.table("empenhos").insert({
-                                            "equipamento_id": equipamento_id,
-                                            "quantidade_empenhada": quantidade,
-                                            "data_empenho": data_empenho.isoformat(),
-                                            "observacao": observacao
-                                        }).execute()
+                                    ata_validade_date = datetime.date.fromisoformat(ata_validade)
+                                    if data_empenho > ata_validade_date:
+                                        ata_validade_formatada = datetime.date.fromisoformat(ata_validade).strftime("%d/%m/%Y")
+                                        st.error(f"A data do empenho é posterior à validade da Ata (vencida em {ata_validade_formatada}). Cadastro não permitido.")
+                                    else:
+                                        try:
+                                            # Inserir empenho
+                                            supabase.table("empenhos").insert({
+                                                "equipamento_id": equipamento_id,
+                                                "quantidade_empenhada": quantidade,
+                                                "data_empenho": data_empenho.isoformat(),
+                                                "observacao": observacao
+                                            }).execute()
 
-                                        # Atualizar saldo do equipamento
-                                        supabase.table("equipamentos").update({
-                                            "saldo_disponivel": saldo_disp - quantidade
-                                        }).eq("id", equipamento_id).execute()
+                                            # Atualizar saldo do equipamento
+                                            supabase.table("equipamentos").update({
+                                                "saldo_disponivel": saldo_disp - quantidade
+                                            }).eq("id", equipamento_id).execute()
 
-                                        st.success("Empenho cadastrado com sucesso!")
-                                    except Exception as e:
-                                        st.error(f"Erro ao cadastrar empenho: {e}")
+                                            st.success("Empenho cadastrado com sucesso!")
+                                        except Exception as e:
+                                            st.error(f"Erro ao cadastrar empenho: {e}")
                     else:
                         st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
                 except Exception as e:
