@@ -662,7 +662,7 @@ with tabs[2]:
 
             if ata_nome != "Selecione":
                 ata_id = atas_dict[ata_nome]["id"]
-                ata_id = atas_dict[ata_nome]["data_validade"]
+                ata_validade = atas_dict[ata_nome]["data_validade"]
 
                 try:
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
