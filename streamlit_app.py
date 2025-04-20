@@ -506,17 +506,15 @@ with tabs[1]:
                 atas_dict = {a["nome"]: a["id"] for a in atas_data}
                 atas_nomes = ["Selecione"] + list(atas_dict.keys())
 
-                ata_selecionada = st.selectbox("Selecione uma Ata para excluir", atas_nomes)
+                ata_selecionada = st.selectbox("Selecione uma Ata para excluir", atas_nomes, key="selecionar_ata_exclusao")
 
                 if ata_selecionada != "Selecione":
                     ata_id = atas_dict[ata_selecionada]
                     ata_info = next((a for a in atas_data if a["id"] == ata_id), None)
 
                     if ata_info:
-                        # Extrair o nome do fornecedor de dentro do dicionário
                         fornecedor_nome = ata_info.get("fornecedores", {}).get("nome", "Não informado")
 
-                        # Construir DataFrame com os dados relevantes
                         ata_df = pd.DataFrame([{
                             "Número": ata_info["nome"],
                             "Data de início": ata_info["data_inicio"],
@@ -526,7 +524,6 @@ with tabs[1]:
                         }])
                         
                         st.dataframe(ata_df)
-
 
                         with st.form("botao_excluir_ata", border=False):
                             confirmar = st.checkbox("Confirmo que desejo excluir esta ata.")
@@ -540,6 +537,35 @@ with tabs[1]:
                                 st.error(f"Erro ao excluir ata: {e}")
                         elif excluir and not confirmar:
                             st.warning("Você precisa confirmar antes de excluir.")
+
+                        # Seção de exclusão de equipamentos
+                        st.markdown("---")
+                        st.subheader("Equipamentos desta Ata")
+
+                        try:
+                            response_eq = supabase.table("equipamentos").select("id, especificacao, saldo_disponivel").eq("ata_id", ata_id).execute()
+                            equipamentos_data = response_eq.data
+
+                            if equipamentos_data:
+                                for eq in equipamentos_data:
+                                    with st.expander(f"{eq['especificacao']} (Saldo: {eq['saldo_disponivel']})"):
+                                        with st.form(f"form_excluir_eq_{eq['id']}", border=False):
+                                            confirmar_eq = st.checkbox("Confirmo que desejo excluir este equipamento.", key=f"chk_{eq['id']}")
+                                            excluir_eq = st.form_submit_button("Excluir Equipamento")
+                                            
+                                            if excluir_eq and confirmar_eq:
+                                                try:
+                                                    supabase.table("equipamentos").delete().eq("id", eq["id"]).execute()
+                                                    st.success(f"Equipamento '{eq['especificacao']}' excluído com sucesso!")
+                                                except Exception as e:
+                                                    st.error(f"Erro ao excluir equipamento: {e}")
+                                            elif excluir_eq and not confirmar_eq:
+                                                st.warning("Você precisa confirmar antes de excluir.")
+                            else:
+                                st.info("Nenhum equipamento cadastrado nesta Ata.")
+
+                        except Exception as e:
+                            st.error(f"Erro ao carregar equipamentos: {e}")
 
             except Exception as e:
                 st.error(f"Erro ao carregar atas: {e}")
