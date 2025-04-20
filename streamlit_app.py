@@ -240,7 +240,7 @@ with tabs[1]:
 
             # Formulário para cadastrar nova Ata
             with st.form("nova_ata", clear_on_submit=True):
-                nome_ata = st.text_input("Nome da Ata")
+                nome_ata = st.text_input("Número da Ata")
                 data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
                 validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
                 fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome", help="Digite o nome ou CNPJ para localizar o fornecedor.")
@@ -299,10 +299,11 @@ with tabs[1]:
                     if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
                         try:
                             espeficicacao_formatada = ' '.join(especificacao.split()).upper()
+                            marca_modelo_formatada = ' '.join(marca_modelo.split()).upper()
                             response = supabase.table("equipamentos").insert({
                                 "ata_id": ata_id,
                                 "especificacao": espeficicacao_formatada,
-                                "marca_modelo": marca_modelo,
+                                "marca_modelo": marca_modelo_formatada,
                                 "quantidade": quantidade,
                                 "saldo_disponivel": saldo_disponivel,
                                 "valor_unitario": valor_unitario,
@@ -344,7 +345,7 @@ with tabs[1]:
                     link_pdf = ata_info.get("link_ata", "")
                     fornecedor_nome = ata_info["fornecedores"]["nome"]
 
-                    st.markdown(f"**Nome:** {nome}")
+                    st.markdown(f"**Número:** {nome}")
                     st.markdown(f"**Data da Ata:** {pd.to_datetime(data_ata).strftime('%d/%m/%Y')}")
                     st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
                     st.markdown(f"**Fornecedor:** {fornecedor_nome}")
@@ -457,9 +458,10 @@ with tabs[1]:
                             if atualizar:
                                 try:
                                     nova_espeficicacao_formatada = ' '.join(nova_especificacao.split()).upper()
+                                    nova_marca_modelo_formatada = ' '.join(nova_marca_modelo.split()).upper()
                                     supabase.table("equipamentos").update({
                                         "especificacao": nova_espeficicacao_formatada,
-                                        "marca_modelo": nova_marca_modelo,
+                                        "marca_modelo": nova_marca_modelo_formatada,
                                         "quantidade": nova_qtd,
                                         "saldo_disponivel": novo_saldo,
                                         "valor_unitario": novo_valor_unit,
@@ -489,7 +491,7 @@ with tabs[1]:
 
                         # Construir DataFrame com os dados relevantes
                         ata_df = pd.DataFrame([{
-                            "Nome": ata_info["nome"],
+                            "Número": ata_info["nome"],
                             "Data de início": ata_info["data_inicio"],
                             "Data de validade": ata_info["data_validade"],
                             "Fornecedor": fornecedor_nome,
