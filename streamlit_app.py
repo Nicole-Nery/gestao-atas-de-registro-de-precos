@@ -717,30 +717,43 @@ with tabs[2]:
                     empenhos = response.data
 
                     if empenhos: 
-                        empenhos_df = pd.DataFrame(empenhos).drop(columns=['id'])
-                        empenhos_df['data_empenho'] = pd.to_datetime(empenhos_df['data_empenho']).dt.strftime('%d/%m/%Y')
+                        # Cria descrições amigáveis para cada empenho
+                        opcoes_empenho = {
+                            f"{e['quantidade_empenhada']}x {e['especificacao']} - {pd.to_datetime(e['data_empenho']).strftime('%d/%m/%Y')}": e['id']
+                            for e in empenhos
+                        }
+                        opcoes_lista = ["Selecione"] + list(opcoes_empenho.keys())
 
-                        empenhos_df = empenhos_df.rename(columns={
-                            'data_empenho': 'Data do Empenho',
-                            'especificacao': 'Especificação',
-                            'quantidade_empenhada': 'Quantidade Empenhada',
-                            'observacao':'Observação'
-                        })
+                        empenho_escolhido = st.selectbox("Selecione o empenho que deseja excluir", opcoes_lista)
 
-                        st.dataframe(empenhos_df)
+                        if empenho_escolhido != "Selecione":
+                            empenho_id = opcoes_empenho[empenho_escolhido]
 
-                        with st.form("botao_excluir_empenho", border=False):
-                            confirmar = st.checkbox("Confirmo que desejo excluir este empenho.")
-                            excluir = st.form_submit_button("Excluir Empenho")
+                            # Mostra os detalhes antes de excluir
+                            empenho_info = next(e for e in empenhos if e['id'] == empenho_id)
+                            info_df = pd.DataFrame([empenho_info]).rename(columns={
+                                'data_empenho': 'Data do Empenho',
+                                'especificacao': 'Especificação',
+                                'quantidade_empenhada': 'Quantidade Empenhada',
+                                'observacao': 'Observação'
+                            }).drop(columns=['id'])
+                            info_df['Data do Empenho'] = pd.to_datetime(info_df['Data do Empenho']).dt.strftime('%d/%m/%Y')
+                            st.dataframe(info_df)
 
-                        if excluir and confirmar:
-                            try:
-                                supabase.table("empenhos").delete().eq("id", emp["id"]).execute()
-                                st.success("Empenho excluído com sucesso.")
-                            except Exception as e:
-                                st.error(f"Erro ao excluir empenho: {e}")
-                        elif excluir and not confirmar:
-                            st.warning("Você precisa confirmar antes de excluir.")
+                            # Confirmação e exclusão
+                            with st.form("botao_excluir_empenho", border=False):
+                                confirmar = st.checkbox("Confirmo que desejo excluir este empenho.")
+                                excluir = st.form_submit_button("Excluir Empenho")
+
+                            if excluir and confirmar:
+                                try:
+                                    supabase.table("empenhos").delete().eq("id", empenho_id).execute()
+                                    st.success("Empenho excluído com sucesso.")
+                                except Exception as e:
+                                    st.error(f"Erro ao excluir empenho: {e}")
+                            elif excluir and not confirmar:
+                                st.warning("Você precisa confirmar antes de excluir.")
+
 
 
                     else:
