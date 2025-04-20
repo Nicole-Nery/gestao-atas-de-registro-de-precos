@@ -499,7 +499,7 @@ with tabs[1]:
                                     st.error(f"Erro ao atualizar equipamento: {e}")
 
         elif aba == "Excluir":
-            st.subheader("Excluir Ata")
+            st.subheader("Excluir Ata/Equipamento(s) da Ata")
             try:
                 response_atas = supabase.table("atas").select("id, nome, data_inicio, data_validade, fornecedores(nome), link_ata").order("nome").execute() 
                 atas_data = response_atas.data
