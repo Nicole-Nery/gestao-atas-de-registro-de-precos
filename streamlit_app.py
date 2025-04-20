@@ -620,7 +620,7 @@ with tabs[2]:
             ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
 
             if ata_nome != "Selecione":
-                ata_id = atas_dict[ata_nome]
+                ata_id = atas_dict[ata_nome]["id"]
                 
                 try:
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
@@ -648,9 +648,9 @@ with tabs[2]:
             st.subheader("Atualizar Empenhos cadastrados")
 
             try:
-                response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
+                response = supabase.table("atas").select("id, nome, data_validade").order("nome", desc=False).execute()
                 atas_result = response.data
-                atas_dict = {a["nome"]: a["id"] for a in atas_result}
+                atas_dict = {a["nome"]: {"id": a["id"], "data_validade": a["data_validade"]} for a in atas_result}
                 atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
             except Exception as e:
@@ -658,10 +658,11 @@ with tabs[2]:
                 atas_cadastradas = ["Selecione"]
                 atas_dict = {}
 
-            ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
+            ata_nome = st.selectbox("Selecione a Ata para atualizar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_atualizar")
 
             if ata_nome != "Selecione":
-                ata_id = atas_dict[ata_nome]
+                ata_id = atas_dict[ata_nome]["id"]
+                ata_id = atas_dict[ata_nome]["data_validade"]
 
                 try:
                     response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
@@ -678,15 +679,20 @@ with tabs[2]:
                                     atualizar = st.form_submit_button("Atualizar Empenho")
 
                                 if atualizar:
-                                    try:
-                                        supabase.table("empenhos").update({
-                                            "quantidade_empenhada": nova_quantidade,
-                                            "data_empenho": nova_data.isoformat(),
-                                            "observacao": nova_obs
-                                        }).eq("id", emp["id"]).execute()
-                                        st.success("Empenho atualizado com sucesso.")
-                                    except Exception as e:
-                                        st.error(f"Erro ao atualizar empenho: {e}")
+                                   ata_validade_date = date.fromisoformat(ata_validade)
+                                   if nova_data > ata_validade_date:
+                                        ata_validade_formatada = date.fromisoformat(ata_validade).strftime("%d/%m/%Y")
+                                        st.error(f"A data do empenho é posterior à validade da Ata (vencida em {ata_validade_formatada}). Cadastro não permitido.")
+                                   else:
+                                        try:
+                                            supabase.table("empenhos").update({
+                                                "quantidade_empenhada": nova_quantidade,
+                                                "data_empenho": nova_data.isoformat(),
+                                                "observacao": nova_obs
+                                            }).eq("id", emp["id"]).execute()
+                                            st.success("Empenho atualizado com sucesso.")
+                                        except Exception as e:
+                                            st.error(f"Erro ao atualizar empenho: {e}")
 
                     else:
                         st.info("Nenhum empenho cadastrado para esta Ata.")
