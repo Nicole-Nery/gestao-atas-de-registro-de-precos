@@ -539,7 +539,6 @@ with tabs[1]:
                             st.warning("Você precisa confirmar antes de excluir.")
 
                         # Seção de exclusão de equipamentos
-                        st.markdown("---")
                         st.subheader("Equipamentos desta Ata")
 
                         try:
