@@ -91,16 +91,20 @@ with tabs[0]:
                 cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
                 email = st.text_input("E-mail")
                 endereco = st.text_input("Endereço")
+                cep = st.text_input("CEP (formato = 00000-000)", max_chars=9)
                 telefone = st.text_input("Telefone")
                 submit = st.form_submit_button("Cadastrar Fornecedor")
 
             if submit:
                 padrao_cnpj = r"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$"
+                padrao_cep = r"\d{5}-\d{3}"
 
                 if not nome_fornecedor or not cnpj:
                     st.warning("Preencha todos os campos obrigatórios.")
                 elif not re.match(padrao_cnpj, cnpj):
                     st.error("❌ CNPJ inválido. Use o formato 00.000.000/0000-00.")
+                elif cep and not re.fullmatch(padrao_cep, cep):
+                    st.error("❌ CEP inválido. Use o formato 00000-000.")
                 else:
                     try:
                         nome_fornecedor_formatado = ' '.join(nome_fornecedor.split()).upper()
@@ -118,6 +122,7 @@ with tabs[0]:
                                 "cnpj": cnpj,
                                 "email": email,
                                 "endereco": endereco_formatado,
+                                "cep": cep,
                                 "telefone": telefone_formatado
                             }).execute()
                             st.success(f"Fornecedor '{nome_fornecedor_formatado}' cadastrado com sucesso!")
@@ -127,7 +132,7 @@ with tabs[0]:
         elif aba == "Consultar":
             st.subheader("Fornecedores Cadastrados")
             try:
-                response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, telefone").order("nome").execute()
+                response = supabase.table("fornecedores").select("nome, cnpj, email, endereco, cep, telefone").order("nome").execute()
                 fornecedores_result = response.data
 
                 df_fornecedores = pd.DataFrame(fornecedores_result)
@@ -136,6 +141,7 @@ with tabs[0]:
                     "cnpj": "CNPJ",
                     "email": "E-mail",
                     "endereco": "Endereço",
+                    "cep": "CEP",
                     "telefone": "Telefone"
                 })
                 st.dataframe(df_fornecedores, height=300)
@@ -162,27 +168,39 @@ with tabs[0]:
                         novo_cnpj = st.text_input("CNPJ", value=fornecedor_info["cnpj"])
                         novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
                         novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
+                        novo_cep = st.text_input("CEP", value=fornecedor_info["cep"])
                         novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
 
                         atualizar = st.form_submit_button("Atualizar Fornecedor")
 
                         if atualizar:
-                            try:
-                                novo_nome_formatado = ' '.join(novo_nome.split()).upper()
-                                novo_telefone_formatado = formatar_telefone(novo_telefone)
-                                novo_endereco_formatado = ' '.join(novo_endereco.split()).upper()
+                            padrao_cnpj = r"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$"
+                            padrao_cep = r"\d{5}-\d{3}"
 
-                                supabase.table("fornecedores").update({
-                                    "nome": novo_nome_formatado,
-                                    "cnpj": novo_cnpj,
-                                    "email": novo_email,
-                                    "endereco": novo_endereco_formatado,
-                                    "telefone": novo_telefone_formatado
-                                }).eq("id", fornecedor_id).execute()
+                            if not novo_nome or not novo_cnpj:
+                                st.warning("Preencha todos os campos obrigatórios.")
+                            elif not re.match(padrao_cnpj, novo_cnpj):
+                                st.error("❌ CNPJ inválido. Use o formato 00.000.000/0000-00.")
+                            elif novo_cep and not re.fullmatch(padrao_cep, novo_cep):
+                                st.error("❌ CEP inválido. Use o formato 00000-000.")
+                            else:
+                                try:
+                                    novo_nome_formatado = ' '.join(novo_nome.split()).upper()
+                                    novo_telefone_formatado = formatar_telefone(novo_telefone)
+                                    novo_endereco_formatado = ' '.join(novo_endereco.split()).upper()
 
-                                st.success(f"Fornecedor {novo_nome_formatado} atualizado com sucesso!")
-                            except Exception as e:
-                                st.error(f"Erro ao atualizar fornecedor: {e}")
+                                    supabase.table("fornecedores").update({
+                                        "nome": novo_nome_formatado,
+                                        "cnpj": novo_cnpj,
+                                        "email": novo_email,
+                                        "endereco": novo_endereco_formatado,
+                                        "cep": novo_cep,
+                                        "telefone": novo_telefone_formatado
+                                    }).eq("id", fornecedor_id).execute()
+
+                                    st.success(f"Fornecedor {novo_nome_formatado} atualizado com sucesso!")
+                                except Exception as e:
+                                    st.error(f"Erro ao atualizar fornecedor: {e}")
             except Exception as e:
                 st.error(f"Erro ao carregar fornecedores: {e}")
 
@@ -207,6 +225,7 @@ with tabs[0]:
                             "cnpj": "CNPJ",
                             "email": "E-mail",
                             "endereco": "Endereço",
+                            "cep": "CEP",
                             "telefone": "Telefone"
                         })
                         st.dataframe(fornecedor_df)
