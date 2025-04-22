@@ -576,11 +576,11 @@ with tabs[2]:
 
     # Sessão de estado para armazenar aba ativa
     if "aba_empenhos" not in st.session_state:
-        st.session_state.aba_empenhos = "Cadastrar"
+        st.session_state.aba_empenhos = "Registrar"
 
     with col1:
         st.image("assets/logos.svg", width=300)
-        botoes_empenhos = ["Cadastrar", "Consultar", "Atualizar", "Excluir"]
+        botoes_empenhos = ["Registrar", "Consultar", "Atualizar", "Excluir"]
         for b in botoes_empenhos:
             if st.button(b, key=f"botao_{b}_empenhos"):
                 st.session_state.aba_empenhos = b
@@ -588,8 +588,8 @@ with tabs[2]:
     with col2:
         aba = st.session_state.aba_empenhos
 
-        if aba == "Cadastrar":
-            st.subheader("Cadastro de Empenhos")
+        if aba == "Registrar":
+            st.subheader("Registro de Empenhos")
             try:
                 response = supabase.table("atas").select("id, nome, data_validade").order("nome", desc=False).execute()
                 atas_result = response.data
