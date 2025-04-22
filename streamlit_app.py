@@ -951,7 +951,7 @@ with tabs[3]:
             with aba1:
                 total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
                 fig_ata = px.bar(total_por_ata, x="Ata", y="Quantidade", title="Total de Empenhos por Ata")
-                fig_ata.update_yaxes(dtick=1)
+                fig_ata.update_yaxes(dtick=5)
                 st.plotly_chart(fig_ata, use_container_width=True)
 
             with aba2:
@@ -974,7 +974,7 @@ with tabs[3]:
                 )
 
                 fig_mensal.update_xaxes(type="category", title_text="Ano/Mês")
-                fig_mensal.update_yaxes(dtick=1)
+                fig_mensal.update_yaxes(dtick=5)
 
                 st.plotly_chart(fig_mensal, use_container_width=True)
 
@@ -986,7 +986,7 @@ with tabs[3]:
 
                 fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h",
                                     title="Top 5 Equipamentos Mais Empenhados")
-                fig_top_eq.update_xaxes(dtick=1)
+                fig_top_eq.update_xaxes(dtick=5)
                 fig_top_eq.update_yaxes(title_text="")
                 st.plotly_chart(fig_top_eq, use_container_width=True)
 
