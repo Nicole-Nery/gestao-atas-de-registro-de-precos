@@ -267,30 +267,33 @@ with tabs[1]:
 
             # Formulário para cadastrar nova Ata
             with st.form("nova_ata", clear_on_submit=True):
-                nome_ata = st.text_input("Número da Ata")
+                num_ata = st.text_input("Número da Ata (ex: 12/2024, 1234/2025)")
                 data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
                 validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
                 fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome", help="Digite o nome ou CNPJ para localizar o fornecedor.")
-                link_ata = st.text_input("Link para o PDF da Ata")
+                link_ata = st.text_input("Número do Protocolo SEI")
 
                 submit_ata = st.form_submit_button("Cadastrar Ata")
 
                 if submit_ata:
-                    if nome_ata and data_ata and validade_ata and (fornecedor_exibido != "Selecione"):
-                        try:
-                            fornecedor_id = fornecedores_dict[fornecedor_exibido]
+                    if num_ata and data_ata and validade_ata and (fornecedor_exibido != "Selecione"):
+                        if re.fullmatch(r'\d{1,5}/\d{4}', num_ata):
+                            try:
+                                fornecedor_id = fornecedores_dict[fornecedor_exibido]
 
-                            supabase.table("atas").insert({
-                                "nome": nome_ata,
-                                "data_inicio": data_ata.isoformat(),
-                                "data_validade": validade_ata.isoformat(),
-                                "fornecedor_id": fornecedor_id,
-                                "link_ata": link_ata
-                            }).execute()
-                            st.success(f"Ata '{nome_ata}' cadastrada com sucesso!")
+                                supabase.table("atas").insert({
+                                    "nome": num_ata,
+                                    "data_inicio": data_ata.isoformat(),
+                                    "data_validade": validade_ata.isoformat(),
+                                    "fornecedor_id": fornecedor_id,
+                                    "link_ata": link_ata
+                                }).execute()
+                                st.success(f"Ata '{num_ata}' cadastrada com sucesso!")
 
-                        except Exception as e:
-                            st.error(f"Erro ao cadastrar a Ata: {e}")
+                            except Exception as e:
+                                st.error(f"Erro ao cadastrar a Ata: {e}")
+                        else:
+                            st.error("Formato inválido. Use o padrão: 1234/2024")   
                     else:
                         st.warning("Preencha todos os campos obrigatórios.")
 
@@ -369,15 +372,14 @@ with tabs[1]:
                     nome = ata_info["nome"]
                     data_ata = ata_info["data_inicio"]
                     validade_ata = ata_info["data_validade"]
-                    link_pdf = ata_info.get("link_ata", "")
+                    link_ata = ata_info.get("link_ata", "")
                     fornecedor_nome = ata_info["fornecedores"]["nome"]
 
                     st.markdown(f"**Número:** {nome}")
                     st.markdown(f"**Data da Ata:** {pd.to_datetime(data_ata).strftime('%d/%m/%Y')}")
                     st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
                     st.markdown(f"**Fornecedor:** {fornecedor_nome}")
-                    if link_pdf:
-                        st.markdown(f"[Abrir PDF da Ata]({link_pdf})", unsafe_allow_html=True)
+                    st.markdown(f"**N° Protocolo SEI:** {link_ata}")
 
                     # Buscar os equipamentos dessa ata
                     try:
@@ -436,7 +438,7 @@ with tabs[1]:
                     nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
                     nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
                     novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
-                    novo_link_ata = st.text_input("Link para o PDF da Ata", value=ata_info["link_ata"])
+                    novo_link_ata = st.text_input("Número do Protocolo SEI", value=ata_info["link_ata"])
 
                     atualizar = st.form_submit_button("Atualizar Ata")
 
@@ -520,7 +522,7 @@ with tabs[1]:
                             "Data de início": ata_info["data_inicio"],
                             "Data de validade": ata_info["data_validade"],
                             "Fornecedor": fornecedor_nome,
-                            "Link da ata": ata_info["link_ata"]
+                            "N° Protocolo SEI": ata_info["link_ata"]
                         }])
                         
                         st.dataframe(ata_df)
