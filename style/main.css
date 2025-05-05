@@ -5,6 +5,12 @@ html, body, .stApp * {
     color: #333333;
 }
 
+.logo-login {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
 .stMainBlockContainer {
     padding-top:3%;
     padding-left: 10%;
