@@ -32,11 +32,7 @@ def login():
                        layout="centered")
 
     # Centralizando a imagem com HTML
-    st.markdown(
-        """<div class="logo-login"><img src="assets/logo-sigah.png" width="300"></div>""",
-        unsafe_allow_html=True
-    )
-
+    st.image("assets/logo-sigah.svg", width=300)
     st.subheader("Login - Sistema Integrado de Gestão de Atas Hospitalares")
 
     email = st.text_input("E-mail")
