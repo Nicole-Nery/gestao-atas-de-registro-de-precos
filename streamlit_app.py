@@ -27,14 +27,21 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
-    st.set_page_config(page_title= "SIGAH - Login",
+    st.set_page_config(page_title="SIGAH - Login",
                        page_icon="🔐",
                        layout="centered")
 
-    
-    st.image('assets/logo-sigah.svg', width=500)
-    st.title("Login - Sistema Integrado de Gestão de Atas Hospitalares")
+    # Centralizando a imagem com HTML
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <img src="assets/logo-sigah.svg" width="300">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
+    st.subheader("Login - Sistema Integrado de Gestão de Atas Hospitalares")
 
     email = st.text_input("E-mail")
     senha = st.text_input("Senha", type="password")
@@ -44,7 +51,7 @@ def login():
         if not email or not senha:
             st.warning("Preencha todos os campos.")
         else:
-            usuario = autenticar_usuario(email,senha)
+            usuario = autenticar_usuario(email, senha)
             if usuario:
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = usuario
