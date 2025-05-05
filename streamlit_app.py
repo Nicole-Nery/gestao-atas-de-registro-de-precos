@@ -8,6 +8,9 @@ import textwrap
 import re
 import bcrypt
 
+st.set_page_config(page_title= "SIGAH", 
+                   page_icon= ("assets/icon.svg"), 
+                   layout = "wide")
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
@@ -15,7 +18,6 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 caminho_css = "style/main.css"
-
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
@@ -31,10 +33,6 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
-    st.set_page_config(page_title="SIGAH - Login",
-                       page_icon="🔐",
-                       layout="centered")
-
     # HTML para a caixinha de login
     st.markdown(
         """
@@ -67,23 +65,15 @@ def login():
                 st.error("E-mail ou senha inválidos.")
 
 
-
-# Proteção - só mostra o app se estiver logado
+# Fluxo principal -------
 if "usuario" not in st.session_state:
     login()
     st.stop()
 
+# Pág principal
+usuario = st.session_state.usuario
 
-# Alterando o nome da página e o ícone
-st.set_page_config(page_title= "SIGAH", 
-                   page_icon= ("assets/icon.svg"), 
-                   layout = "wide")
-
-
-
-with open(caminho_css) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
+# Cabeçalho
 with st.container():
     st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
     col1, col2 = st.columns([1,5])
@@ -95,16 +85,12 @@ with st.container():
 
 st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
 
-
-usuario = st.session_state.usuario
+# Sidebar
 st.sidebar.success(f"Logado como: {usuario['nome']}")
 if st.sidebar.button("Sair"):
     del st.session_state.usuario
     st.rerun()
 
-
-# Estabelecendo o layout com abas
-tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
 
 # Funções para formatação
 def formatar_moeda(valor):
@@ -134,6 +120,9 @@ def formatar_telefone(numero: str) -> str:
     else:
         return numero  # Retorna como veio se não bater com formatos esperados
 
+
+# Estabelecendo o layout com abas
+tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
 
 # Fornecedores -----------------------------------------------------------------------------------------------------------------
 with tabs[0]:
