@@ -31,14 +31,9 @@ def login():
                        page_icon="🔐",
                        layout="centered")
 
-    with st.container():
-        st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
-    col1, col2 = st.columns([1,5])
-    with col1:
-        st.image('assets/logo-sigah.svg', width=300)
-    with col2:
-        st.html("<div class='header-title'>Login - Sistema Integrado de Gestão de Atas Hospitalares</div>")
-    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.image('assets/logo-sigah.svg', width=500)
+    st.title("Login - Sistema Integrado de Gestão de Atas Hospitalares")
 
 
     email = st.text_input("E-mail")
