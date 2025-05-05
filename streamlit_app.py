@@ -33,52 +33,26 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
+    with st.container():
+        st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
-    # HTML + inputs juntos dentro da caixinha via HTML + Markdown
-    st.markdown("""
-        <style>
-            .login-box {
-                background-color: white;
-                padding: 2rem;
-                border-radius: 12px;
-                width: 100%;
-                max-width: 400px;
-                margin: 5rem auto;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                text-align: center;
-            }
-            .login-box h2 {
-                margin-bottom: 2rem;
-            }
-            .stTextInput > div > div {
-                margin-bottom: 1rem;
-            }
-            .stButton {
-                margin-top: 1rem;
-            }
-        </style>
+        st.markdown('<div class="login-title">🔐 Login no SIGAH</div>', unsafe_allow_html=True)
 
-        <div class="login-box">
-            <h2>Login</h2>
-        """, unsafe_allow_html=True)
+        email = st.text_input("E-mail")
+        senha = st.text_input("Senha", type="password")
+        entrar = st.button("Entrar")
 
-    email = st.text_input("E-mail")
-    senha = st.text_input("Senha", type="password")
-    entrar = st.button("Entrar")
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    if entrar:
-        if not email or not senha:
-            st.warning("Preencha todos os campos.")
-        else:
-            usuario = autenticar_usuario(email, senha)
-            if usuario:
+        if entrar:
+            if not email or not senha:
+                st.warning("Preencha todos os campos.")
+            elif autenticar_usuario(email, senha):
                 st.success("Login bem-sucedido! Redirecionando...")
-                st.session_state.usuario = usuario
-                st.rerun()
+                st.session_state.usuario = {"email": email}
+                st.experimental_rerun()
             else:
                 st.error("E-mail ou senha inválidos.")
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 
