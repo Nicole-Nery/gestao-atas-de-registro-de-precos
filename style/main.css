@@ -5,10 +5,11 @@ html, body, .stApp * {
     color: #333333;
 }
 
-.logo-login {
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 20px;
+/* Centralizar todas imagens do login */
+section > div > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .stMainBlockContainer {
