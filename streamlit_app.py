@@ -6,11 +6,54 @@ import streamlit.components.v1 as components
 from supabase import create_client, Client
 import textwrap
 import re
+import bcrypt
+
 
 # Conectar ao Supabase
 SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c3R1bmdlaXR6Y2l6Y3lzdXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNjAxNTUsImV4cCI6MjA1OTYzNjE1NX0.L1KZfGO_9Cq7iOGtdDVD4bGp02955s65fjcK2I1jntc"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+
+# Função para login
+def autenticar_usuario(email, senha_digitada):
+    res = supabase.table("usuarios").select("*").eq("email", email).execute()
+
+    if res.data:
+        usuario = res.data[0]
+        senha_hash = usuario["senha"].encode('utf-8')
+        if bcrypt.checkpw(senha_digitada.encode('utf-8'), senha_hash):
+            return usuario
+    return None
+
+def login():
+    st.set_page_config(page_title= "SIGAH - Login",
+                       page_icon="🔐",
+                       layout="centered")
+    st.title("🔐 Login - SIGAH")
+
+    email = st.text_input("E-mail")
+    senha = st.text_input("Senha", type="password")
+    entrar = st.button("Entrar")
+
+    if entrar:
+        if not email or not senha:
+            st.warning("Preencha todos os campos.")
+        else:
+            usuario = autenticar_usuario(email,senha)
+            if usuario:
+                st.success("Login bem-sucedido! Redirecionando...")
+                st.session_state.usuario = usuario
+                st.rerun()
+            else: 
+                st.error("E-mail ou senha inválidos.")
+
+
+# Proteção - só mostra o app se estiver logado
+if "usuario" not in st.session_state:
+    login()
+    st.stop()
+
 
 # Alterando o nome da página e o ícone
 st.set_page_config(page_title= "SIGAH", 
@@ -31,8 +74,15 @@ with st.container():
         st.html("<div class='header-title'>Sistema Integrado de Gestão de Atas Hospitalares</div>")
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 st.write("Bem-vindo ao SIGAH, um sistema especializado no controle de atas, onde você pode gerenciar saldos, acompanhar validade das atas e visualizar relatórios.")
+
+
+usuario = st.session_state.usuario
+st.sidebar.success(f"Logado como: {usuario['nome']}")
+if st.sidebar.button("Sair"):
+    del st.session_state.usuario
+    st.rerun()
+
 
 # Estabelecendo o layout com abas
 tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
