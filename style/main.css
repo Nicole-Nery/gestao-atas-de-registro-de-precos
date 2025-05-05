@@ -27,8 +27,8 @@ html, body, .stApp * {
     gap: 10px;
     margin-top: -20px; /* aproxima do título */
     width: 350px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .stMainBlockContainer {
