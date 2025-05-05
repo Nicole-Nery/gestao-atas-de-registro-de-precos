@@ -70,7 +70,6 @@ if "usuario" not in st.session_state:
     login()
     st.stop()
 
-# Pág principal
 usuario = st.session_state.usuario
 
 # Cabeçalho
