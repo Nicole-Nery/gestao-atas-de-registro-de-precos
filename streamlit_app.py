@@ -31,20 +31,25 @@ def login():
                        page_icon="🔐",
                        layout="centered")
 
-    # Centralizando a imagem com HTML
+    # HTML para a caixinha de login
+    st.markdown(
+        """
+        <div class="login-container">
+            <div class="login-card">
+                <h2>Login</h2>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Inputs dentro da caixinha
     with st.container():
-        st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
-    col1, col2 = st.columns([1,5])
-    with col1:
-        st.image('assets/logo-sigah.svg', width=300)
-    with col2:
-        st.subheader("Login")
-    st.markdown('</div>', unsafe_allow_html=True)
+        email = st.text_input("E-mail")
+        senha = st.text_input("Senha", type="password")
+        entrar = st.button("Entrar")
 
-    email = st.text_input("E-mail")
-    senha = st.text_input("Senha", type="password")
-    entrar = st.button("Entrar")
+    st.markdown("</div></div>", unsafe_allow_html=True)  # Fecha as divs
 
+    # Lógica do login
     if entrar:
         if not email or not senha:
             st.warning("Preencha todos os campos.")
@@ -54,8 +59,9 @@ def login():
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = usuario
                 st.rerun()
-            else: 
+            else:
                 st.error("E-mail ou senha inválidos.")
+
 
 
 # Proteção - só mostra o app se estiver logado
