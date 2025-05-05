@@ -5,11 +5,27 @@ html, body, .stApp * {
     color: #333333;
 }
 
-/* Centralizar todas imagens do login */
-section > div > img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.login-card {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-card h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
 }
 
 .stMainBlockContainer {
