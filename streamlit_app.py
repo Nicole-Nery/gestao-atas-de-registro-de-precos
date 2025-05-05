@@ -33,21 +33,43 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
-    st.markdown("""
-        <div class="login-container">
-            <div class="login-card">
-                <h2>Login</h2>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+    st.set_page_config(page_title="SIGAH - Login",
+                       page_icon="🔐",
+                       layout="centered")
 
-    # Inputs dentro da caixinha (simulados com CSS)
-    with st.container():
-        st.markdown('<div class="login-form">', unsafe_allow_html=True)
-        email = st.text_input("E-mail")
-        senha = st.text_input("Senha", type="password")
-        entrar = st.button("Entrar")
-        st.markdown('</div>', unsafe_allow_html=True)
+    # HTML + inputs juntos dentro da caixinha via HTML + Markdown
+    st.markdown("""
+        <style>
+            .login-box {
+                background-color: white;
+                padding: 2rem;
+                border-radius: 12px;
+                width: 100%;
+                max-width: 400px;
+                margin: 5rem auto;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+            .login-box h2 {
+                margin-bottom: 2rem;
+            }
+            .stTextInput > div > div {
+                margin-bottom: 1rem;
+            }
+            .stButton {
+                margin-top: 1rem;
+            }
+        </style>
+
+        <div class="login-box">
+            <h2>Login</h2>
+        """, unsafe_allow_html=True)
+
+    email = st.text_input("E-mail")
+    senha = st.text_input("Senha", type="password")
+    entrar = st.button("Entrar")
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if entrar:
         if not email or not senha:
