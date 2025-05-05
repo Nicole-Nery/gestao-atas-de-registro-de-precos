@@ -36,7 +36,7 @@ def login():
         """
         <div class="login-container">
             <div class="login-card">
-                <h2>Login</h2>
+                <h2>Login teste</h2>
         """,
         unsafe_allow_html=True
     )
