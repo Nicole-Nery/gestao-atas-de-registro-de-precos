@@ -32,8 +32,14 @@ def login():
                        layout="centered")
 
     # Centralizando a imagem com HTML
-    st.image("assets/logo-sigah.svg", width=300)
-    st.subheader("Login - Sistema Integrado de Gestão de Atas Hospitalares")
+    with st.container():
+        st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
+    col1, col2 = st.columns([1,5])
+    with col1:
+        st.image('assets/logo-sigah.svg', width=300)
+    with col2:
+        st.subheader("Login")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     email = st.text_input("E-mail")
     senha = st.text_input("Senha", type="password")
