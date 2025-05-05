@@ -33,25 +33,22 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
-    # HTML para a caixinha de login
-    st.markdown(
-        """
+    st.markdown("""
         <div class="login-container">
             <div class="login-card">
                 <h2>Login</h2>
-        """,
-        unsafe_allow_html=True
-    )
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
-    # Inputs dentro da caixinha
+    # Inputs dentro da caixinha (simulados com CSS)
     with st.container():
+        st.markdown('<div class="login-form">', unsafe_allow_html=True)
         email = st.text_input("E-mail")
         senha = st.text_input("Senha", type="password")
         entrar = st.button("Entrar")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("</div></div>", unsafe_allow_html=True)  # Fecha as divs
-
-    # Lógica do login
     if entrar:
         if not email or not senha:
             st.warning("Preencha todos os campos.")
@@ -63,6 +60,7 @@ def login():
                 st.rerun()
             else:
                 st.error("E-mail ou senha inválidos.")
+
 
 
 # Fluxo principal -------
