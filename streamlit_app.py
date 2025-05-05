@@ -30,7 +30,16 @@ def login():
     st.set_page_config(page_title= "SIGAH - Login",
                        page_icon="🔐",
                        layout="centered")
-    st.title("🔐 Login - SIGAH")
+
+    with st.container():
+        st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
+    col1, col2 = st.columns([1,5])
+    with col1:
+        st.image('assets/logo-sigah.svg', width=300)
+    with col2:
+        st.html("<div class='header-title'>Login - Sistema Integrado de Gestão de Atas Hospitalares</div>")
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
     email = st.text_input("E-mail")
     senha = st.text_input("Senha", type="password")
