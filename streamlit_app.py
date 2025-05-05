@@ -33,9 +33,6 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
-    st.set_page_config(page_title="SIGAH - Login",
-                       page_icon="🔐",
-                       layout="centered")
 
     # HTML + inputs juntos dentro da caixinha via HTML + Markdown
     st.markdown("""
