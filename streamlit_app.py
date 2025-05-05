@@ -33,7 +33,7 @@ def login():
 
     # Centralizando a imagem com HTML
     st.markdown(
-        """<div class="logo-login"><img src="assets/logo-sigah.svg" width="300"></div>""",
+        """<div class="logo-login"><img src="C:/Users/Cliente/OneDrive - Universidade Federal de Uberlândia/Tudo/UFU/8o Período/Estágio HC-UFU/Engenharia Clínica/SIGAH/assets/logo-sigah.svg" width="300"></div>""",
         unsafe_allow_html=True
     )
 
