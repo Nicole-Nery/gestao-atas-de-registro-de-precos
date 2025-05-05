@@ -33,11 +33,7 @@ def login():
 
     # Centralizando a imagem com HTML
     st.markdown(
-        """
-        <div style="text-align: center;">
-            <img src="assets/logo-sigah.svg" width="300">
-        </div>
-        """,
+        """<div class="logo-login"><img src="assets/logo-sigah.svg" width="300"></div>""",
         unsafe_allow_html=True
     )
 
