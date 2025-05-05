@@ -34,10 +34,7 @@ def autenticar_usuario(email, senha_digitada):
 
 def login():
     with st.container():
-        st.markdown('<div class="login-box">', unsafe_allow_html=True)
-
-        st.markdown('<div class="login-title">🔐 Login no SIGAH</div>', unsafe_allow_html=True)
-
+        st.title("Login")
         email = st.text_input("E-mail")
         senha = st.text_input("Senha", type="password")
         entrar = st.button("Entrar")
