@@ -14,6 +14,10 @@ SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c3R1bmdlaXR6Y2l6Y3lzdXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNjAxNTUsImV4cCI6MjA1OTYzNjE1NX0.L1KZfGO_9Cq7iOGtdDVD4bGp02955s65fjcK2I1jntc"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+caminho_css = "style/main.css"
+
+with open(caminho_css) as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Função para login
 def autenticar_usuario(email, senha_digitada):
@@ -36,7 +40,7 @@ def login():
         """
         <div class="login-container">
             <div class="login-card">
-                <h2>Login teste</h2>
+                <h2>Login</h2>
         """,
         unsafe_allow_html=True
     )
@@ -75,7 +79,7 @@ st.set_page_config(page_title= "SIGAH",
                    page_icon= ("assets/icon.svg"), 
                    layout = "wide")
 
-caminho_css = "style/main.css"
+
 
 with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
