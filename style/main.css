@@ -8,24 +8,27 @@ html, body, .stApp * {
 .login-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 80vh;
+    margin-top: 100px;
 }
 
 .login-card {
     background-color: #ffffff;
-    padding: 40px 30px;
+    padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 350px;
     text-align: center;
 }
 
-.login-card h2 {
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: #333;
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: -20px; /* aproxima do título */
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .stMainBlockContainer {
