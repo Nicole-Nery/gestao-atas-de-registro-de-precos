@@ -8,6 +8,9 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+if "modo" not in st.session_state:
+    st.session_state["modo"] = "login"
+
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
 
@@ -34,6 +37,11 @@ def login():
                 st.experimental_rerun()
             else:
                 st.error("E-mail ou senha inválidos.")
+
+    st.markdown("---")
+    if st.button("Não tem conta? Cadastre-se aqui."):
+        st.session_state["modo"] = "cadastro"
+        st.experimental_rerun()
 
 def cadastrar_usuario(supabase, nome, email, senha):
     try:
@@ -96,7 +104,10 @@ def cadastro():
 
 # Fluxo principal -------
 if "usuario" not in st.session_state:
-    login()
+    if st.session_state["modo"] == "login":
+        login()
+    else:
+        cadastro()
     st.stop()
 
 usuario = st.session_state.usuario
