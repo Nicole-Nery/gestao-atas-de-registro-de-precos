@@ -34,14 +34,14 @@ def login():
             elif autenticar_usuario(email, senha):
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = {"email": email}
-                st.experimental_rerun()
+                st.stop()
             else:
                 st.error("E-mail ou senha inválidos.")
 
     st.markdown("---")
     if st.button("Não tem conta? Cadastre-se aqui."):
         st.session_state["modo"] = "cadastro"
-        st.experimental_rerun()
+        st.stop()
 
 def cadastrar_usuario(supabase, nome, email, senha):
     try:
