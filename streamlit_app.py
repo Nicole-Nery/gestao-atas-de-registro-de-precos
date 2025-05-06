@@ -75,10 +75,10 @@ def cadastrar_usuario(supabase, nome, email, senha):
         return False, f"Erro inesperado: {str(e)}"
 
 
-def cadastro():
-    st.title("Cadastro de Usuário")
-    
+def cadastro():    
     with st.form("cadastro_form"):
+        st.title("Cadastro de usuário")
+
         nome = st.text_input("Nome Completo")
         email = st.text_input("E-mail")
         senha = st.text_input("Senha", type="password")
