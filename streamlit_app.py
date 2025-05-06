@@ -8,7 +8,7 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-if "modo" not in st.session_state:
+if "modo" not in st.session_state or st.session_state["modo"] != "login":
     st.session_state["modo"] = "login"
 
 def autenticar_usuario(email, senha_digitada):
@@ -94,7 +94,7 @@ def cadastro():
             else:
                 # Cadastrar no banco de dados
                 try:
-                    res = cadastrar_usuario(nome, email, senha)
+                    res = cadastrar_usuario(supabase, nome, email, senha)
                     if res.status_code == 201:
                         st.success("Cadastro realizado com sucesso!")
                     else:
