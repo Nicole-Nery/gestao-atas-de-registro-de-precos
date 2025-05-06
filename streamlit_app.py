@@ -19,7 +19,7 @@ def autenticar_usuario(email, senha_digitada):
     return None
 
 def login():
-    with st.form:
+    with st.form("login_form"):
         st.title("Login")
         email = st.text_input("E-mail")
         senha = st.text_input("Senha", type="password")
