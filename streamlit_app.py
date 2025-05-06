@@ -8,7 +8,7 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-if "modo" not in st.session_state or st.session_state["modo"] != "login":
+if "modo" not in st.session_state:
     st.session_state["modo"] = "login"
 
 def autenticar_usuario(email, senha_digitada):
