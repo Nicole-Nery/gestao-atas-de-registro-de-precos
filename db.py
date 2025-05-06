@@ -1,0 +1,6 @@
+from supabase import create_client, Client
+
+# Conectar ao Supabase
+SUPABASE_URL = "https://btstungeitzcizcysupd.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c3R1bmdlaXR6Y2l6Y3lzdXBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNjAxNTUsImV4cCI6MjA1OTYzNjE1NX0.L1KZfGO_9Cq7iOGtdDVD4bGp02955s65fjcK2I1jntc"
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
