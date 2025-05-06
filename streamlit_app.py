@@ -8,13 +8,11 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-if "modo" not in st.session_state:
+modos_validos = ["login", "cadastro"]
+
+if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
     st.session_state["modo"] = "login"
-    st.session_state["iniciou_app"] = True
-elif "usuario" not in st.session_state and st.session_state.get("iniciou_app"):
-    # Se não estiver logado e for uma nova execução, força modo login
-    st.session_state["modo"] = "login"
-    st.session_state["iniciou_app"] = False  # só executa uma vez
+
 
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
