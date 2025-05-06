@@ -8,11 +8,12 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+st.write("Modo atual:", st.session_state["modo"])
 modos_validos = ["login", "cadastro"]
 
 if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
     st.session_state["modo"] = "login"
-
+st.write("Modo atual:", st.session_state["modo"])
 
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
@@ -97,11 +98,11 @@ def cadastro():
             else:
                 # Cadastrar no banco de dados
                 try:
-                    res = cadastrar_novo_usuario(supabase, nome, email, senha)
-                    if res.status_code == 201:
-                        st.success("Cadastro realizado com sucesso!")
+                    sucesso, mensagem = cadastrar_novo_usuario(supabase, nome, email, senha)
+                    if sucesso:
+                        st.success(mensagem)
                     else:
-                        st.error("Ocorreu um erro ao tentar cadastrar o usuário.")
+                        st.error(mensagem)
                 except Exception as e:
                     st.error(f"Erro: {e}")
 
