@@ -77,7 +77,7 @@ def cadastrar_usuario(supabase, nome, email, senha):
 
 def cadastro():    
     with st.form("cadastro_form"):
-        st.title("Cadastro de usuário")
+        st.subheader("Cadastro de usuário")
 
         nome = st.text_input("Nome Completo")
         email = st.text_input("E-mail")
