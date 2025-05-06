@@ -8,7 +8,6 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.write("Modo atual:", st.session_state["modo"])
 modos_validos = ["login", "cadastro"]
 
 if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
