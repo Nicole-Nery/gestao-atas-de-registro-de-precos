@@ -55,10 +55,10 @@ def cadastrar_novo_usuario(supabase, nome, email, senha):
         })
 
         # Verifica se houve erro na criação do auth
-        if response.get("error"):
-            return False, f"Erro ao criar usuário: {response['error']['message']}"
+        if response.error:  # Acesso correto ao atributo `error`
+            return False, f"Erro ao criar usuário: {response.error.message}"
 
-        user_id = response['user']['id']
+        user_id = response.user.id  # Acessando o ID do usuário
 
         # 2. Salva dados adicionais na tabela "usuarios"
         dados_usuario = {
@@ -76,6 +76,7 @@ def cadastrar_novo_usuario(supabase, nome, email, senha):
 
     except Exception as e:
         return False, f"Erro inesperado: {str(e)}"
+
 
 
 def cadastro():    
