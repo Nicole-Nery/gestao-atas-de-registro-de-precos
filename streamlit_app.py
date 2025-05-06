@@ -10,6 +10,11 @@ with open(caminho_css) as f:
 
 if "modo" not in st.session_state:
     st.session_state["modo"] = "login"
+    st.session_state["iniciou_app"] = True
+elif "usuario" not in st.session_state and st.session_state.get("iniciou_app"):
+    # Se não estiver logado e for uma nova execução, força modo login
+    st.session_state["modo"] = "login"
+    st.session_state["iniciou_app"] = False  # só executa uma vez
 
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
