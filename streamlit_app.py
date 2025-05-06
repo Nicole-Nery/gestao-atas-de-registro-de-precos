@@ -43,7 +43,7 @@ def login():
         st.session_state["modo"] = "cadastro"
         st.stop()
 
-def cadastrar_usuario(supabase, nome, email, senha):
+def cadastrar_novo_usuario(supabase, nome, email, senha):
     try:
         # 1. Cria o usuário com e-mail e senha
         response = supabase.auth.sign_up({
@@ -94,7 +94,7 @@ def cadastro():
             else:
                 # Cadastrar no banco de dados
                 try:
-                    res = cadastrar_usuario(supabase, nome, email, senha)
+                    res = cadastrar_novo_usuario(supabase, nome, email, senha)
                     if res.status_code == 201:
                         st.success("Cadastro realizado com sucesso!")
                     else:
