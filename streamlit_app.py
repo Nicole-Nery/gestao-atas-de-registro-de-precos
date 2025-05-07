@@ -48,6 +48,9 @@ def login():
 
 def cadastrar_novo_usuario(supabase, nome, email, senha):
     try:
+        # Criptografa a senha
+        hashed_password = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
         # 1. Cria o usuário com e-mail e senha
         response = supabase.auth.sign_up({
             "email": email,
@@ -65,15 +68,13 @@ def cadastrar_novo_usuario(supabase, nome, email, senha):
             "id": user_id,     # usa o mesmo ID do auth
             "nome": nome,
             "email": email,
-            "senha": senha
+            "senha": hashed_password
         }
         try:
             supabase.table("usuarios").insert(dados_usuario).execute()
             return True, "Usuário cadastrado com sucesso!"
         except Exception as e: 
             return False, f"Erro ao salvar dados do usuário: {e}"
-
-        
 
     except Exception as e:
         return False, f"Erro inesperado: {str(e)}"
