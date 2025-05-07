@@ -108,6 +108,10 @@ def cadastro():
         confirmar_senha = st.text_input("Confirmar Senha", type="password")
         
         cadastrar = st.form_submit_button("Cadastrar")
+        if st.button("← Voltar para o login"):
+            st.session_state["modo"] = "login"
+            st.rerun()
+
         
         if cadastrar:
             if not nome or not email or not senha or not confirmar_senha:
