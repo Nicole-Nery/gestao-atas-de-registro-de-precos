@@ -26,17 +26,8 @@ if modo == "login":
         <style>
             .block-container {
                 padding-top: 5vh;
-                max-width: 400px;
+                max-width: 1000px;
                 margin: auto;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-        <style>
-            .block-container {
-                padding: 1rem 2rem;
-                max-width: none;
             }
         </style>
     """, unsafe_allow_html=True)
