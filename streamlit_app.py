@@ -64,7 +64,8 @@ def cadastrar_novo_usuario(supabase, nome, email, senha):
         dados_usuario = {
             "id": user_id,     # usa o mesmo ID do auth
             "nome": nome,
-            "email": email
+            "email": email,
+            "senha": senha
         }
 
         insert_response = supabase.table("usuarios").insert(dados_usuario).execute()
