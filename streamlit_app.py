@@ -8,11 +8,11 @@ caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-modos_validos = ["login", "cadastro"]
+modos_validos = ["login", "cadastro", "home"]
 
 if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
     st.session_state["modo"] = "login"
-st.write("Modo atual:", st.session_state["modo"])
+
 
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
@@ -37,6 +37,7 @@ def login():
             elif autenticar_usuario(email, senha):
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = {"email": email}
+                st.session_state["modo"] == "home"
                 st.stop()
             else:
                 st.error("E-mail ou senha inválidos.")
@@ -115,6 +116,14 @@ if "usuario" not in st.session_state:
         cadastro()
     st.stop()
 
+# Exibe a tela de acordo com o modo atual
+if st.session_state["modo"] == "login":
+    login()
+elif st.session_state["modo"] == "cadastro":
+    cadastro()
+elif st.session_state["modo"] == "home":
+    show_home()
+
 usuario = st.session_state.usuario
 
 # Sidebar
@@ -122,5 +131,3 @@ st.sidebar.success(f"Logado como: {usuario['nome']}")
 if st.sidebar.button("Sair"):
     del st.session_state.usuario
     st.rerun()
-
-show_home()
