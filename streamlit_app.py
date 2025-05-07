@@ -67,13 +67,13 @@ def cadastrar_novo_usuario(supabase, nome, email, senha):
             "email": email,
             "senha": senha
         }
+        try:
+            supabase.table("usuarios").insert(dados_usuario).execute()
+            return True, "Usuário cadastrado com sucesso!"
+        except Exception as e: 
+            return False, f"Erro ao salvar dados do usuário: {e}"
 
-        insert_response = supabase.table("usuarios").insert(dados_usuario).execute()
-
-        if insert_response.error:
-            return False, f"Erro ao salvar dados do usuário: {insert_response.error.message}"
-
-        return True, "Usuário cadastrado com sucesso!"
+        
 
     except Exception as e:
         return False, f"Erro inesperado: {str(e)}"
