@@ -8,10 +8,6 @@ import textwrap
 import re
 
 def show_home():
-    # Alterando o nome da página e o ícone
-    st.set_page_config(page_title= "SIGAH", 
-                   page_icon= ("assets/icon.svg"), 
-                   layout = "wide")
 
     caminho_css = "style/main.css"
     with open(caminho_css) as f:
