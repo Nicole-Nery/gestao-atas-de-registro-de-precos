@@ -50,43 +50,50 @@ def autenticar_usuario(email, senha_digitada):
             return usuario
     return None
 
+# Tela de login
 def login():
-    with st.form("login_form"):
-        st.title("Login")
-        email = st.text_input("E-mail")
-        senha = st.text_input("Senha", type="password")
-        entrar = st.form_submit_button("Entrar")
+    st.title("Login")
 
-        if entrar:
-            if not email or not senha:
-                st.warning("Preencha todos os campos.")
-            elif autenticar_usuario(email, senha):
-                st.success("Login bem-sucedido! Redirecionando...")
-                st.session_state.usuario = {"email": email}
-                st.session_state["modo"] = "home"
-                st.rerun()
-            else:
-                st.error("E-mail ou senha inválidos.")
+    aba = st.radio("Escolha o tipo de login:", ["Email e Senha", "Entrar com Microsoft"])
 
-    # Novo bloco: login com conta Microsoft
-    st.divider()
-    st.subheader("Ou entre com sua conta Microsoft")
-    if st.button("Entrar com Microsoft"):
-        result = app_microsoft.acquire_token_interactive(scopes=["User.Read"])
-        if "access_token" in result:
-            email_microsoft = result["account"]["username"]
-            st.session_state.usuario = {"email": email_microsoft}
-            st.session_state["modo"] = "home"
-            st.success(f"Bem-vindo, {email_microsoft}!")
+    if aba == "Email e Senha":
+        with st.form("login_form"):
+            email = st.text_input("E-mail")
+            senha = st.text_input("Senha", type="password")
+            entrar = st.form_submit_button("Entrar")
+
+            if entrar:
+                if not email or not senha:
+                    st.warning("Preencha todos os campos.")
+                elif autenticar_usuario(email, senha):
+                    st.success("Login bem-sucedido! Redirecionando...")
+                    st.session_state.usuario = {"email": email}
+                    st.session_state["modo"] = "home"
+                    st.rerun()
+                else:
+                    st.error("E-mail ou senha inválidos.")
+
+        st.markdown("---")
+        if st.button("Não tem conta? Cadastre-se aqui."):
+            st.session_state["modo"] = "cadastro"
             st.rerun()
-        else:
-            st.error("Falha na autenticação com Microsoft.")
 
-    st.markdown("---")
-    cadastre_se_aqui = st.button("Não tem conta? Cadastre-se aqui.")
-    if cadastre_se_aqui:
-        st.session_state["modo"] = "cadastro"
-        st.rerun()
+    else:  # Login com Microsoft
+        if st.button("Entrar com Microsoft"):
+            flow = app_microsoft.initiate_device_flow(scopes=["User.Read"])
+            if "user_code" in flow:
+                st.info(f"Para entrar, acesse **{flow['verification_uri']}** e insira o código: **{flow['user_code']}**")
+                result = app_microsoft.acquire_token_by_device_flow(flow)
+                if "access_token" in result:
+                    email_microsoft = result["account"]["username"]
+                    st.session_state.usuario = {"email": email_microsoft}
+                    st.session_state["modo"] = "home"
+                    st.success(f"Bem-vindo, {email_microsoft}!")
+                    st.rerun()
+                else:
+                    st.error("Falha na autenticação com Microsoft.")
+            else:
+                st.error("Não foi possível iniciar o login com a Microsoft.")
 
 
 def cadastrar_novo_usuario(supabase, nome, email, senha):
