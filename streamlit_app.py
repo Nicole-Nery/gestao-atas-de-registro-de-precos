@@ -60,9 +60,10 @@ def login():
                 st.error("E-mail ou senha inválidos.")
 
     st.markdown("---")
-    if st.button("Não tem conta? Cadastre-se aqui."):
+    cadastre_se_aqui = st.button("Não tem conta? Cadastre-se aqui.")
+    if cadastre_se_aqui:
         st.session_state["modo"] = "cadastro"
-        st.stop()
+        st.rerun()
 
 def cadastrar_novo_usuario(supabase, nome, email, senha):
     try:
@@ -124,6 +125,8 @@ def cadastro():
                         st.error(mensagem)
                 except Exception as e:
                     st.error(f"Erro: {e}")
+
+    st.markdown("---")
     voltar_login = st.button("← Voltar para o login")
     if voltar_login:
         st.session_state["modo"] = "login"
