@@ -109,12 +109,6 @@ def cadastro():
         
         cadastrar = st.form_submit_button("Cadastrar")
 
-        voltar_login = st.button("← Voltar para o login")
-        if voltar_login:
-            st.session_state["modo"] = "login"
-            st.rerun()
-
-        
         if cadastrar:
             if not nome or not email or not senha or not confirmar_senha:
                 st.warning("Por favor, preencha todos os campos.")
@@ -130,6 +124,10 @@ def cadastro():
                         st.error(mensagem)
                 except Exception as e:
                     st.error(f"Erro: {e}")
+    voltar_login = st.button("← Voltar para o login")
+    if voltar_login:
+        st.session_state["modo"] = "login"
+        st.rerun()
 
 # Fluxo principal -------
 if "usuario" not in st.session_state:
