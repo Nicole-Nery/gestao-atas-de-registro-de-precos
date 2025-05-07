@@ -8,13 +8,18 @@ import textwrap
 import re
 
 def show_home():
+    # Alterando o nome da página e o ícone
+    st.set_page_config(page_title= "SIGAH", 
+                   page_icon= ("assets/icon.svg"), 
+                   layout = "wide")
+
     caminho_css = "style/main.css"
     with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     usuario = st.session_state.get("usuario", {})
     st.write(f"Olá, {usuario.get('nome', 'usuário')}!")
-    
+
     # Cabeçalho
     with st.container():
         st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
