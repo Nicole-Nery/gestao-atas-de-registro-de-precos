@@ -2,11 +2,20 @@ import streamlit as st
 import bcrypt
 from home import show_home
 from db import supabase
-
+from msal import PublicClientApplication
 
 st.set_page_config(page_title= "SIGAH", 
                 page_icon= ("assets/icon.svg"), 
                 layout = "wide")
+
+
+# Configurações do Azure
+CLIENT_ID = "172ebff3-89ee-4fb1-a009-e60bdad22f50"
+TENANT_ID = "497ce3ec-f703-405e-b828-87aca0ba39ee" 
+AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
+
+app_microsoft = PublicClientApplication(client_id=CLIENT_ID, authority=AUTHORITY)
+
 
 caminho_css = "style/main.css"
 with open(caminho_css) as f:
@@ -59,11 +68,26 @@ def login():
             else:
                 st.error("E-mail ou senha inválidos.")
 
+    # Novo bloco: login com conta Microsoft
+    st.divider()
+    st.subheader("Ou entre com sua conta Microsoft")
+    if st.button("Entrar com Microsoft"):
+        result = app_microsoft.acquire_token_interactive(scopes=["User.Read"])
+        if "access_token" in result:
+            email_microsoft = result["account"]["username"]
+            st.session_state.usuario = {"email": email_microsoft}
+            st.session_state["modo"] = "home"
+            st.success(f"Bem-vindo, {email_microsoft}!")
+            st.rerun()
+        else:
+            st.error("Falha na autenticação com Microsoft.")
+
     st.markdown("---")
     cadastre_se_aqui = st.button("Não tem conta? Cadastre-se aqui.")
     if cadastre_se_aqui:
         st.session_state["modo"] = "cadastro"
         st.rerun()
+
 
 def cadastrar_novo_usuario(supabase, nome, email, senha):
     try:
