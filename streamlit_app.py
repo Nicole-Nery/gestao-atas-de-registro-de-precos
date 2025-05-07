@@ -9,7 +9,6 @@ st.set_page_config(page_title= "SIGAH",
                 layout = "wide")
 
 caminho_css = "style/main.css"
-
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
@@ -21,7 +20,7 @@ if "modo" not in st.session_state or st.session_state["modo"] not in modos_valid
 # CSS dinâmico com base no modo
 modo = st.session_state.get("modo", "login")
 
-if modo == "login":
+if modo == "login" | modo == "cadastro":
     st.markdown("""
         <style>
             .block-container {
