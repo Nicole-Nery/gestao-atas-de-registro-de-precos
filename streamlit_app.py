@@ -20,7 +20,7 @@ if "modo" not in st.session_state or st.session_state["modo"] not in modos_valid
 # CSS dinâmico com base no modo
 modo = st.session_state.get("modo", "login")
 
-if modo == "login" | modo == "cadastro":
+if modo in ["login", "cadastro"]:
     st.markdown("""
         <style>
             .block-container {
