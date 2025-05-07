@@ -18,6 +18,28 @@ modos_validos = ["login", "cadastro", "home"]
 if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
     st.session_state["modo"] = "login"
 
+# CSS dinâmico com base no modo
+modo = st.session_state.get("modo", "login")
+
+if modo == "login":
+    st.markdown("""
+        <style>
+            .block-container {
+                padding-top: 5vh;
+                max-width: 400px;
+                margin: auto;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+        <style>
+            .block-container {
+                padding: 1rem 2rem;
+                max-width: none;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
