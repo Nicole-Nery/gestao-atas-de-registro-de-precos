@@ -3,6 +3,11 @@ import bcrypt
 from home import show_home
 from db import supabase
 
+
+st.set_page_config(page_title= "SIGAH", 
+                page_icon= ("assets/icon.svg"), 
+                layout = "wide")
+
 caminho_css = "style/main.css"
 
 with open(caminho_css) as f:
@@ -125,9 +130,3 @@ elif st.session_state["modo"] == "home":
     show_home()
 
 usuario = st.session_state.usuario
-
-# Sidebar
-st.sidebar.success(f"Logado como: {usuario['nome']}")
-if st.sidebar.button("Sair"):
-    del st.session_state.usuario
-    st.rerun()
