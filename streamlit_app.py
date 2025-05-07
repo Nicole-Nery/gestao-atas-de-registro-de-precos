@@ -38,7 +38,7 @@ def login():
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = {"email": email}
                 st.session_state["modo"] = "home"
-                st.stop()
+                st.rerun()
             else:
                 st.error("E-mail ou senha inválidos.")
 
