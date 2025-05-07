@@ -37,7 +37,7 @@ def login():
             elif autenticar_usuario(email, senha):
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = {"email": email}
-                st.session_state["modo"] == "home"
+                st.session_state["modo"] = "home"
                 st.stop()
             else:
                 st.error("E-mail ou senha inválidos.")
