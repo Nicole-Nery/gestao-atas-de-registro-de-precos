@@ -397,7 +397,7 @@ def show_home():
                         st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
                         st.markdown(f"**Fornecedor:** {fornecedor_nome}")
                         st.markdown(f"**N° Protocolo SEI:** {link_ata}")
-                        st.markdown(f"**Ata renovável? {'Sim' if ata_renovavel_bool else 'Não'}**")
+                        st.markdown(f"**Ata renovável?**: {'Sim' if ata_renovavel_bool else 'Não'}")
 
                         # Buscar os equipamentos dessa ata
                         try:
@@ -471,7 +471,7 @@ def show_home():
                                 "data_validade": nova_validade_ata.isoformat(),
                                 "fornecedor_id": novo_fornecedor_id,
                                 "link_ata": novo_link_ata,
-                                "ata_renovacao": nova_info_renovacao
+                                "ata_renovavel": nova_info_renovacao
                             }).eq("id", ata_id).execute()
 
                             st.success("Ata atualizada com sucesso!")
