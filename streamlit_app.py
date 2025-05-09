@@ -8,10 +8,12 @@ st.set_page_config(page_title= "SIGAH",
                 page_icon= ("assets/icon.svg"), 
                 layout = "wide")
 
+# Estilo CSS
 caminho_css = "style/main.css"
 with open(caminho_css) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+# Modo
 modos_validos = ["login", "cadastro", "home"]
 
 if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
@@ -45,7 +47,6 @@ def autenticar_usuario(email, senha_digitada):
 def login():
     st.title("Login")
 
-    
     with st.form("login_form"):
         email = st.text_input("E-mail")
         senha = st.text_input("Senha", type="password")
@@ -55,10 +56,11 @@ def login():
             if not email or not senha:
                 st.warning("Preencha todos os campos.")
             elif autenticar_usuario(email, senha):
+                usuario_autenticado = autenticar_usuario(email, senha)
                 st.success("Login bem-sucedido! Redirecionando...")
-                st.session_state.usuario = {"email": email}
+                st.session_state.usuario = {usuario_autenticado}
                 st.session_state["modo"] = "home"
-                #st.rerun()
+                st.rerun()
             else:
                 st.error("E-mail ou senha inválidos.")
 
