@@ -62,7 +62,6 @@ def login():
                 st.session_state["modo"] = "home"
                 st.rerun()
                 usuario = st.session_state.get("usuario", {})
-                st.write(f"Olá, {usuario.get('email', 'usuário')}!")
                 
             else:
                 st.error("E-mail ou senha inválidos.")
