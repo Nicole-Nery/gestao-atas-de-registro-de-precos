@@ -57,7 +57,6 @@ def login():
                 st.warning("Preencha todos os campos.")
             elif autenticar_usuario(email, senha):
                 usuario_autenticado = autenticar_usuario(email, senha)
-                st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = usuario_autenticado
                 st.session_state["modo"] = "home"
                 st.rerun()
