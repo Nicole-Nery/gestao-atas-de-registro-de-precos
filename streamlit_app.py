@@ -16,6 +16,7 @@ with open(caminho_css) as f:
 # Modo
 modos_validos = ["login", "cadastro", "home"]
 
+placeholder = st.empty()
 if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
     st.session_state["modo"] = "login"
 
@@ -60,6 +61,7 @@ def login():
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = usuario_autenticado
                 st.session_state["modo"] = "home"
+                placeholder.empty() 
                 #st.rerun()
             else:
                 st.error("E-mail ou senha inválidos.")
