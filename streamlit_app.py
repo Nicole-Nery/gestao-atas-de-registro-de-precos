@@ -2,7 +2,6 @@ import streamlit as st
 import bcrypt
 from home import show_home
 from db import supabase
-from msal import PublicClientApplication
 
 st.set_page_config(page_title= "SIGAH", 
                 page_icon= ("assets/icon.svg"), 
@@ -61,8 +60,10 @@ def login():
                 st.success("Login bem-sucedido! Redirecionando...")
                 st.session_state.usuario = usuario_autenticado
                 st.session_state["modo"] = "home"
-                placeholder.empty() 
-                #st.rerun()
+                st.rerun()
+                usuario = st.session_state.get("usuario", {})
+                st.write(f"Olá, {usuario.get('email', 'usuário')}!")
+                
             else:
                 st.error("E-mail ou senha inválidos.")
 
