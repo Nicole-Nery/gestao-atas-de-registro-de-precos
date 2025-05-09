@@ -8,7 +8,6 @@ import textwrap
 import re
 
 def show_home():
-
     caminho_css = "style/main.css"
     with open(caminho_css) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -286,11 +285,13 @@ def show_home():
                     validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
                     fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome", help="Digite o nome ou CNPJ para localizar o fornecedor.")
                     link_ata = st.text_input("Número do Protocolo SEI")
+                    ata_renovavel = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
+                    renovavel_bool = ata_renovavel == "Sim"
 
                     submit_ata = st.form_submit_button("Cadastrar Ata")
 
                     if submit_ata:
-                        if num_ata and data_ata and validade_ata and (fornecedor_exibido != "Selecione"):
+                        if num_ata and data_ata and ata_renovavel and validade_ata and (fornecedor_exibido != "Selecione"):
                             if re.fullmatch(r'\d{1,5}/\d{4}', num_ata):
                                 try:
                                     fornecedor_id = fornecedores_dict[fornecedor_exibido]
@@ -300,7 +301,8 @@ def show_home():
                                         "data_inicio": data_ata.isoformat(),
                                         "data_validade": validade_ata.isoformat(),
                                         "fornecedor_id": fornecedor_id,
-                                        "link_ata": link_ata
+                                        "link_ata": link_ata,
+                                        "ata_renovavel": renovavel_bool,
                                     }).execute()
                                     st.success(f"Ata '{num_ata}' cadastrada com sucesso!")
 
@@ -364,7 +366,7 @@ def show_home():
 
                 try:
                     # Buscar todas as atas com nome do fornecedor
-                    response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, fornecedores(nome)").order("data_inicio", desc=True).execute()
+                    response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, fornecedores(nome), ata_renovavel").order("data_inicio", desc=True).execute()
                     atas_result = response.data
                     atas_dict = {a["nome"]: a["id"] for a in atas_result}
                     atas_opcoes = ["Selecione"] + list(atas_dict.keys())
@@ -388,12 +390,14 @@ def show_home():
                         validade_ata = ata_info["data_validade"]
                         link_ata = ata_info.get("link_ata", "")
                         fornecedor_nome = ata_info["fornecedores"]["nome"]
+                        ata_renovavel_bool = ata_info["ata_renovavel"]
 
                         st.markdown(f"**Número:** {nome}")
                         st.markdown(f"**Data da Ata:** {pd.to_datetime(data_ata).strftime('%d/%m/%Y')}")
                         st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
                         st.markdown(f"**Fornecedor:** {fornecedor_nome}")
                         st.markdown(f"**N° Protocolo SEI:** {link_ata}")
+                        st.markdown(f"**Ata renovável? {'Sim' if ata_renovavel_bool else 'Não'}**")
 
                         # Buscar os equipamentos dessa ata
                         try:
@@ -427,7 +431,6 @@ def show_home():
             elif aba == "Atualizar":
                 st.subheader("Atualizar dados de uma Ata")
 
-                
                 response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
                 atas_data = response_atas.data
                 atas_dict = {a["nome"]: a["id"] for a in atas_data}
@@ -453,6 +456,8 @@ def show_home():
                         nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
                         novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
                         novo_link_ata = st.text_input("Número do Protocolo SEI", value=ata_info["link_ata"])
+                        nova_info_renovacao = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
+                        nova_info_renovacao_bool = nova_info_renovacao == 'Sim'
 
                         atualizar = st.form_submit_button("Atualizar Ata")
 
@@ -465,7 +470,8 @@ def show_home():
                                 "data_inicio": nova_data.isoformat(),
                                 "data_validade": nova_validade_ata.isoformat(),
                                 "fornecedor_id": novo_fornecedor_id,
-                                "link_ata": novo_link_ata
+                                "link_ata": novo_link_ata,
+                                "ata_renovacao": nova_info_renovacao
                             }).eq("id", ata_id).execute()
 
                             st.success("Ata atualizada com sucesso!")
