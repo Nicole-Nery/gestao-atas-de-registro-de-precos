@@ -471,7 +471,7 @@ def show_home():
                                 "data_validade": nova_validade_ata.isoformat(),
                                 "fornecedor_id": novo_fornecedor_id,
                                 "link_ata": novo_link_ata,
-                                "ata_renovavel": nova_info_renovacao
+                                "ata_renovavel": nova_info_renovacao_bool
                             }).eq("id", ata_id).execute()
 
                             st.success("Ata atualizada com sucesso!")
