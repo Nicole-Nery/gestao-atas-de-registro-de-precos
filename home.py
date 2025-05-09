@@ -14,7 +14,7 @@ def show_home():
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     usuario = st.session_state.get("usuario", {})
-    st.write(f"Olá, {usuario.get('nome', 'usuário')}!")
+    st.write(f"Olá, {usuario.get('email', 'usuário')}!")
 
     # Cabeçalho
     with st.container():
