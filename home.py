@@ -1143,7 +1143,7 @@ def show_home():
             novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96)
             if st.button("Salvar novo prazo"):
                 st.write(f"Oie {novo_prazo}")
-                update_config('prazo_renovacao_ata', novo_prazo)
-                st.success("Prazo atualizado!")
+                #update_config('prazo_renovacao_ata', novo_prazo)
+                #st.success("Prazo atualizado!")
                 #st.rerun()
         
