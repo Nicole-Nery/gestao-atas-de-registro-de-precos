@@ -1143,5 +1143,4 @@ def show_home():
                 if submitted:
                     update_config('prazo_renovacao_ata', novo_prazo)
                     st.success(f"Prazo atualizado para {novo_prazo} meses!")
-
-        
+                    st.rerun()       
