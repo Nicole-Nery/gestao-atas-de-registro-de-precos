@@ -1149,6 +1149,8 @@ def show_home():
                     st.success(f"Prazo atualizado para {novo_prazo} meses!")
                     st.rerun() 
 
+        st.markdown("---")
+
         try:
             # Buscar atas
             atas_response = supabase.table("atas").select("id, nome, data_inicio").execute()
