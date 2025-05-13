@@ -1174,7 +1174,6 @@ def show_home():
                     data_renovacao = data_inicio + relativedelta(months=prazo_meses)
                     dias_para_renovacao = (data_renovacao - hoje).days
 
-                    # Adicionar a ata ao relatório de renovação
                     relatorio_renovacao.append({
                         "Ata": ata["nome"],
                         "Data Início": data_inicio.strftime('%d/%m/%Y'),
@@ -1184,25 +1183,22 @@ def show_home():
 
                     # Adicionar à lista de renovações próximas (90 e 30 dias)
                     if 30 < dias_para_renovacao <= 90:
-                        renovo_90_dias.append(f"🔔 {ata['nome']} - {dias_para_renovacao} dias restantes")
+                        renovo_90_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
                     elif dias_para_renovacao <= 30:
-                        renovo_30_dias.append(f"⚠️ {ata['nome']} - {dias_para_renovacao} dias restantes")
+                        renovo_30_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
 
-                # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
-
-                # Exibir a tabela
                 st.dataframe(relatorio_df, height=200)
 
                 # Exibir alertas de renovação
                 if renovo_90_dias:
-                    with st.container():
+                    with st.container(border=True):
                         st.warning("🔔 Renovações nos próximos 90 dias:")
                         for alerta in renovo_90_dias:
                             st.write(alerta)
 
                 if renovo_30_dias:
-                    with st.container():
+                    with st.container(border=True):
                         st.error("⚠️ Renovações nos próximos 30 dias:")
                         for alerta in renovo_30_dias:
                             st.write(alerta)
