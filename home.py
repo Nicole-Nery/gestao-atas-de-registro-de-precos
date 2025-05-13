@@ -1159,47 +1159,56 @@ def show_home():
                 hoje = date.today()
                 prazo_meses = st.session_state.prazo_renovacao_ata
 
+                # Definir listas para armazenar atas com alertas
+                renovo_90_dias = []
+                renovo_30_dias = []
+
                 for ata in atas_data.values():
                     if not ata:
                         continue
 
-                    data_inicio = date.fromisoformat(ata["data_inicio"]) # Garantindo que data_inicio está no formato date
+                    # Garantindo que data_inicio está no formato date
+                    data_inicio = date.fromisoformat(ata["data_inicio"])
 
                     # Calculando a data de renovação
                     data_renovacao = data_inicio + relativedelta(months=prazo_meses)
                     dias_para_renovacao = (data_renovacao - hoje).days
 
-                    # Definir a cor do alerta com base nos dias restantes
-                    if dias_para_renovacao > 30:
-                        cor = "green"
-                    elif 15 <= dias_para_renovacao <= 30:
-                        cor = "yellow"
-                    else:
-                        cor = "red"
-
+                    # Adicionar a ata ao relatório de renovação
                     relatorio_renovacao.append({
                         "Ata": ata["nome"],
                         "Data Início": data_inicio.strftime('%d/%m/%Y'),
                         "Data Renovação": data_renovacao.strftime('%d/%m/%Y'),
-                        "Dias para renovação": dias_para_renovacao,
-                        "Cor": cor
+                        "Dias para renovação": dias_para_renovacao
                     })
+
+                    # Adicionar à lista de renovações próximas (90 e 30 dias)
+                    if 30 < dias_para_renovacao <= 90:
+                        renovo_90_dias.append(f"🔔 {ata['nome']} - {dias_para_renovacao} dias restantes")
+                    elif dias_para_renovacao <= 30:
+                        renovo_30_dias.append(f"⚠️ {ata['nome']} - {dias_para_renovacao} dias restantes")
 
                 # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
 
-                 # Exibir a tabela com destaque de cor
-                for index, row in relatorio_df.iterrows():
-                    cor = row["Cor"]
-                    st.markdown(f'<p style="color:{cor}">Ata: {row["Ata"]} | Renovação em {row["Dias para renovação"]} dias</p>', unsafe_allow_html=True)
-
-
                 # Exibir a tabela
                 st.dataframe(relatorio_df, height=200)
 
+                # Exibir alertas de renovação
+                if renovo_90_dias:
+                    with st.container():
+                        st.warning("🔔 Renovações nos próximos 90 dias:")
+                        for alerta in renovo_90_dias:
+                            st.write(alerta)
+
+                if renovo_30_dias:
+                    with st.container():
+                        st.error("⚠️ Renovações nos próximos 30 dias:")
+                        for alerta in renovo_30_dias:
+                            st.write(alerta)
+
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
-
 
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
