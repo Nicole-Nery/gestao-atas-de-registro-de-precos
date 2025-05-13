@@ -1156,14 +1156,26 @@ def show_home():
 
             if atas_data:
                 relatorio_renovacao = []
+                hoje = date.today()
+                prazo_meses = st.session_state.prazo_renovacao_ata
+
                 for ata in atas_data.values():
                     if not ata:
                         continue
 
-                    from datetime import date
-                    hoje = date.today()
-                    prazo_meses = st.session_state.prazo_renovacao_ata
-                    dias_para_renovacao = ((ata["data_inicio"] + relativedelta(months=prazo_meses)) - hoje).days
+                    # Garantir que data_inicio está no formato date
+                    data_inicio = date.fromisoformat(ata["data_inicio"])
+
+                    # Calcular a data de renovação
+                    data_renovacao = data_inicio + relativedelta(months=prazo_meses)
+                    dias_para_renovacao = (data_renovacao - hoje).days
+
+                    relatorio_renovacao.append({
+                        "Ata": ata["nome"],
+                        "Data Início": data_inicio.strftime('%d/%m/%Y'),
+                        "Data Renovação": data_renovacao.strftime('%d/%m/%Y'),
+                        "Dias para renovação": dias_para_renovacao
+                    })
 
                     relatorio_renovacao.append({
                         "Ata": ata["nome"],
