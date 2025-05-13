@@ -1123,24 +1123,31 @@ def show_home():
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
 
-    # Renovação de atas -------------------------------------------------------------------------------------------------------------------------
-    prazo_padrao = get_config('prazo_renovacao_ata')
+    # Antes do tabs — carregue uma vez só
+    if 'prazo_renovacao_ata' not in st.session_state:
+        st.session_state.prazo_renovacao_ata = get_config('prazo_renovacao_ata')
 
     with tabs[5]:
-        col1, col2 = st.columns([1,4])
-
+        col1, col2 = st.columns([1, 4])
         with col1:
             st.image("assets/logos.svg", width=300)
         with col2:
             st.subheader("Renovação de atas")
-            
-        st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
+
+        # Usa o valor do session_state
+        st.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
 
         with st.expander("Alterar prazo de renovação"):
             with st.form("form_alterar_prazo"):
-                novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
+                novo_prazo = st.number_input(
+                    "Novo prazo de renovação (meses)",
+                    min_value=1,
+                    max_value=96,
+                    value=st.session_state.prazo_renovacao_ata
+                )
                 submitted = st.form_submit_button("Salvar novo prazo")
                 if submitted:
                     update_config('prazo_renovacao_ata', novo_prazo)
+                    st.session_state.prazo_renovacao_ata = novo_prazo  # atualiza visualmente
                     st.success(f"Prazo atualizado para {novo_prazo} meses!")
-                    st.rerun()       
+ 
