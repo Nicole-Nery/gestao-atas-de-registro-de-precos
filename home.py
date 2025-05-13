@@ -6,6 +6,7 @@ import streamlit.components.v1 as components
 from db import supabase
 import textwrap
 import re
+from dateutil.relativedelta import relativedelta
 
 def show_home():
     caminho_css = "style/main.css"
@@ -1123,6 +1124,7 @@ def show_home():
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
 
+    # Renovação da Ata -----------------------------------------------------------------------------------------------------------------------------
     if 'prazo_renovacao_ata' not in st.session_state:
         st.session_state.prazo_renovacao_ata = get_config('prazo_renovacao_ata')
 
@@ -1139,16 +1141,47 @@ def show_home():
 
         with st.expander("Alterar prazo de renovação"):
             with st.form("form_alterar_prazo"):
-                novo_prazo = st.number_input(
-                    "Novo prazo de renovação (meses)",
-                    min_value=1,
-                    max_value=96,
-                    value=st.session_state.prazo_renovacao_ata
-                )
+                novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1,max_value=96, value=st.session_state.prazo_renovacao_ata)
                 submitted = st.form_submit_button("Salvar novo prazo")
                 if submitted:
                     update_config('prazo_renovacao_ata', novo_prazo)
                     st.session_state.prazo_renovacao_ata = novo_prazo
                     st.success(f"Prazo atualizado para {novo_prazo} meses!")
                     st.rerun() 
+
+        try:
+            # Buscar atas
+            atas_response = supabase.table("atas").select("id, nome, data_inicio").execute()
+            atas_data = {ata["id"]: ata for ata in atas_response.data}
+
+            if atas_data:
+                relatorio_renovacao = []
+                for ata in atas_data:
+                    if not ata:
+                        continue
+                    
+                    hoje = datetime.date.today()
+                    prazo_meses = st.session_state.prazo_renovacao_ata
+                    dias_para_renovacao = ((ata["data_inicio"] + relativedelta(months=prazo_meses)) - hoje).days
+
+                    relatorio_renovacao.append({
+                        "Ata": ata["nome"],
+                        "Data": ata["data_inicio"],
+                        "Dias para renovação": dias_para_renovacao
+                    })
+
+                # Criar DataFrame
+                relatorio_df = pd.DataFrame(relatorio_renovacao)
+
+                # Exibir a tabela
+                st.dataframe(relatorio_df, height=200)
+
+            else:
+                st.info("Nenhum consumo cadastrado ainda.")
+
+
+        except Exception as e:
+            st.error(f"Erro ao gerar relatório: {e}")
+
+        
  
