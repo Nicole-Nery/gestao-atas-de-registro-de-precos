@@ -62,13 +62,14 @@ def show_home():
             return int(configuracoes.data[0]["valor"])
     
     def update_config(chave, valor):
-        print("Oi")
-        supabase.table("configuracoes").update({
+        from supabase import Client
+        resp = supabase.table("configuracoes").upsert({
             "chave": chave,
-            "valor":int(valor)
+            "valor": int(valor)
         }).execute()
-        st.write(f"Update response: {response}")
-
+        
+        # printa a resposta crua para você ver o que o Supabase está tentando dizer
+        st.write("Resposta do Supabase:", resp)
 
     # Estabelecendo o layout com abas
     tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
