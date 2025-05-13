@@ -1163,28 +1163,42 @@ def show_home():
                     if not ata:
                         continue
 
-                    # Garantir que data_inicio está no formato date
-                    data_inicio = date.fromisoformat(ata["data_inicio"])
+                    data_inicio = date.fromisoformat(ata["data_inicio"]) # Garantindo que data_inicio está no formato date
 
-                    # Calcular a data de renovação
+                    # Calculando a data de renovação
                     data_renovacao = data_inicio + relativedelta(months=prazo_meses)
                     dias_para_renovacao = (data_renovacao - hoje).days
+
+                    # Definir a cor do alerta com base nos dias restantes
+                    if dias_para_renovacao > 30:
+                        cor = "green"
+                    elif 15 <= dias_para_renovacao <= 30:
+                        cor = "yellow"
+                    else:
+                        cor = "red"
 
                     relatorio_renovacao.append({
                         "Ata": ata["nome"],
                         "Data Início": data_inicio.strftime('%d/%m/%Y'),
                         "Data Renovação": data_renovacao.strftime('%d/%m/%Y'),
-                        "Dias para renovação": dias_para_renovacao
+                        "Dias para renovação": dias_para_renovacao,
+                        "Cor": cor
                     })
 
                 # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
 
+                 # Exibir a tabela com destaque de cor
+                for index, row in relatorio_df.iterrows():
+                    cor = row["Cor"]
+                    st.markdown(f'<p style="color:{cor}">Ata: {row["Ata"]} | Renovação em {row["Dias para renovação"]} dias</p>', unsafe_allow_html=True)
+
+
                 # Exibir a tabela
                 st.dataframe(relatorio_df, height=200)
 
             else:
-                st.info("Nenhum consumo cadastrado ainda.")
+                st.info("Nenhuma ata cadastrada ainda.")
 
 
         except Exception as e:
