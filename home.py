@@ -62,7 +62,6 @@ def show_home():
             return int(configuracoes.data[0]["valor"])
     
     def update_config(chave, valor):
-        from supabase import Client
         supabase.table("configuracoes").update({
             "chave": chave,
             "valor":int(valor)
@@ -1142,6 +1141,7 @@ def show_home():
         if st.button("Alterar prazo"):
             novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
             if st.button("Salvar novo prazo"):
+                st.write(novo_prazo)
                 update_config('prazo_renovacao_ata', novo_prazo)
                 st.success("Prazo atualizado!")
                 #st.rerun()
