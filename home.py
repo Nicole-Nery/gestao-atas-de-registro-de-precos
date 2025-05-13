@@ -1160,7 +1160,8 @@ def show_home():
                     if not ata:
                         continue
                     
-                    hoje = datetime.date.today()
+                    from datetime import date
+                    hoje = date.today()
                     prazo_meses = st.session_state.prazo_renovacao_ata
                     dias_para_renovacao = ((ata["data_inicio"] + relativedelta(months=prazo_meses)) - hoje).days
 
