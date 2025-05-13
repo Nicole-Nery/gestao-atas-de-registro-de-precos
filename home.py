@@ -63,7 +63,7 @@ def show_home():
     
     def update_config(chave, valor):
         from supabase import Client
-        supabase.table("configuracoes").upsert({
+        supabase.table("configuracoes").update({
             "chave": chave,
             "valor":int(valor)
         }).execute()
