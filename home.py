@@ -1142,5 +1142,5 @@ def show_home():
                 submitted = st.form_submit_button("Salvar novo prazo")
                 if submitted:
                     update_config('prazo_renovacao_ata', novo_prazo)
-                    st.success(f"Prazo atualizado para {novo_prazo} meses!")
+                    #st.success(f"Prazo atualizado para {novo_prazo} meses!")
                     st.rerun()       
