@@ -56,9 +56,21 @@ def show_home():
         else:
             return numero  # Retorna como veio se não bater com formatos esperados
 
+    def get_config(chave):
+        configuracoes = supabase.table('configuracoes').select("valor").eq("chave", chave).execute()
+        if configuracoes.data:
+            return int(configuracoes.data[0]["valor"])
+    
+    def update_config(chave, valor):
+        from supabase import Client
+        supabase.table("configuracoes").upsert({
+            "chave": chave,
+            "valor":int(valor)
+        }).execute()
+
 
     # Estabelecendo o layout com abas
-    tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
+    tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
 
     # Fornecedores -----------------------------------------------------------------------------------------------------------------
     with tabs[0]:
@@ -477,7 +489,6 @@ def show_home():
                             st.success("Ata atualizada com sucesso!")
                         except Exception as e:
                             st.error(f"Erro ao atualizar a Ata: {e}")
-
             
                     # Buscar equipamentos vinculados à Ata
                     st.subheader("Equipamentos desta Ata")
@@ -1113,3 +1124,24 @@ def show_home():
 
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
+
+    # Renovação de atas -------------------------------------------------------------------------------------------------------------------------
+    
+    with tabs[5]:
+        col1, col2 = st.columns([1,4])
+
+        with col1:
+            st.image("assets/logos.svg", width=300)
+        with col2:
+            st.subheader("Renovação de atas")
+
+        prazo_padrao = get_config('prazo_renovacao_ata')
+        st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
+
+        if st.button("Alterar prazo"):
+            novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
+            if st.button("Salvar novo prazo"):
+                update_config('prazo_renovacao_ata', novo_prazo)
+                st.success("Prazo atualizado!")
+                st.rerun()
+        
