@@ -1190,7 +1190,7 @@ def show_home():
                         renovo_30_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
 
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
-                st.dataframe(relatorio_df, height=120)
+                st.dataframe(relatorio_df, height=150)
 
                 # Exibir alertas de renovação
                 if renovo_90_dias:
