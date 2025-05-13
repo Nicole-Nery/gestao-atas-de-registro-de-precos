@@ -62,11 +62,12 @@ def show_home():
             return int(configuracoes.data[0]["valor"])
     
     def update_config(chave, valor):
+        print("Oi")
         supabase.table("configuracoes").update({
             "chave": chave,
             "valor":int(valor)
         }).execute()
-        st.write("Update response:", response)
+        st.write(f"Update response: {response}")
 
 
     # Estabelecendo o layout com abas
@@ -1139,9 +1140,10 @@ def show_home():
         st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
 
         if st.button("Alterar prazo"):
+            st.write("Oi")
             novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
             if st.button("Salvar novo prazo"):
-                st.write(novo_prazo)
+                st.write(f"{novo_prazo}")
                 update_config('prazo_renovacao_ata', novo_prazo)
                 st.success("Prazo atualizado!")
                 #st.rerun()
