@@ -1143,5 +1143,5 @@ def show_home():
             if st.button("Salvar novo prazo"):
                 update_config('prazo_renovacao_ata', novo_prazo)
                 st.success("Prazo atualizado!")
-                st.rerun()
+                #st.rerun()
         
