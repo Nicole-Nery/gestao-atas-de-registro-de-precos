@@ -56,17 +56,17 @@ def show_home():
         else:
             return numero  # Retorna como veio se não bater com formatos esperados
 
-    def get_config(chave):
-        configuracoes = supabase.table('configuracoes').select("valor").eq("chave", chave).execute()
-        if configuracoes.data:
-            return int(configuracoes.data[0]["valor"])
+    #def get_config(chave):
+    #    configuracoes = supabase.table('configuracoes').select("valor").eq("chave", chave).execute()
+    #    if configuracoes.data:
+    #        return int(configuracoes.data[0]["valor"])
     
-    def update_config(chave, valor):
-        from supabase import Client
-        supabase.table("configuracoes").upsert({
-            "chave": chave,
-            "valor":int(valor)
-        }).execute()
+    #def update_config(chave, valor):
+    #    from supabase import Client
+    #    supabase.table("configuracoes").upsert({
+    #        "chave": chave,
+    #        "valor":int(valor)
+    #    }).execute()
 
 
     # Estabelecendo o layout com abas
