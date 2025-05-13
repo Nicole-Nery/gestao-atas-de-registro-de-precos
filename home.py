@@ -1162,8 +1162,9 @@ def show_home():
                 prazo_meses = st.session_state.prazo_renovacao_ata
 
                 # Definir listas para armazenar atas com alertas
-                renovo_90_dias = []
-                renovo_30_dias = []
+                renovacoes_90_dias = []
+                renovacoes_30_dias = []
+                renovacoes_vencidas = []
 
                 for ata in atas_data.values():
                     if not ata:
@@ -1184,25 +1185,34 @@ def show_home():
                     })
 
                     # Adicionar à lista de renovações próximas (90 e 30 dias)
-                    if 30 < dias_para_renovacao <= 90:
-                        renovo_90_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
+                    if dias_para_renovacao < 0:
+                        renovacoes_vencidas.append(f"**Ata:** {ata[nome]} — Vencida há -{dias_para_renovacao} dias")
                     elif dias_para_renovacao <= 30:
-                        renovo_30_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
+                        renovacoes_30_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
+                    elif 30 < dias_para_renovacao <= 90:
+                        renovacoes_90_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
+            
 
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
                 st.dataframe(relatorio_df, height=150)
 
                 # Exibir alertas de renovação
-                if renovo_90_dias:
+                if renovacoes_90_dias:
                     with st.container(border=True):
                         st.warning("🔔 Renovações nos próximos 90 dias:")
-                        for alerta in renovo_90_dias:
+                        for alerta in renovacoes_90_dias:
                             st.write(alerta)
 
-                if renovo_30_dias:
+                if renovacoes_30_dias:
                     with st.container(border=True):
                         st.error("⚠️ Renovações nos próximos 30 dias:")
-                        for alerta in renovo_30_dias:
+                        for alerta in renovacoes_30_dias:
+                            st.write(alerta)
+
+                if renovacoes_vencidas:
+                    with st.container(border=True):
+                        st.error("❌ Atas com renovação vencida:")
+                        for alerta in renovacoes_vencidas:
                             st.write(alerta)
 
             else:
