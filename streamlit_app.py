@@ -70,7 +70,7 @@ def show_home():
 
 
     # Estabelecendo o layout com abas
-    tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
+    tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status"])
 
     # Fornecedores -----------------------------------------------------------------------------------------------------------------
     with tabs[0]:
