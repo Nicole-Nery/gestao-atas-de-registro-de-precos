@@ -1139,11 +1139,11 @@ def show_home():
         prazo_padrao = get_config('prazo_renovacao_ata')
         st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
 
-        if st.button("Alterar prazo"):
-            novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96)
-            if st.button("Salvar novo prazo"):
-                st.write(f"Oie {novo_prazo}")
-                #update_config('prazo_renovacao_ata', novo_prazo)
-                #st.success("Prazo atualizado!")
-                #st.rerun()
+        with st.form("form_alterar_prazo"):
+            novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
+            submitted = st.form_submit_button("Salvar novo prazo")
+            if submitted:
+                update_config('prazo_renovacao_ata', novo_prazo)
+                st.success(f"Prazo atualizado para {novo_prazo} meses!")
+
         
