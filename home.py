@@ -1156,10 +1156,10 @@ def show_home():
 
             if atas_data:
                 relatorio_renovacao = []
-                for ata in atas_data:
+                for ata in atas_data.values():
                     if not ata:
                         continue
-                    
+
                     from datetime import date
                     hoje = date.today()
                     prazo_meses = st.session_state.prazo_renovacao_ata
