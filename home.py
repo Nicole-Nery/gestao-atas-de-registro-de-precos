@@ -1124,7 +1124,8 @@ def show_home():
             st.error(f"Erro ao gerar relatório: {e}")
 
     # Renovação de atas -------------------------------------------------------------------------------------------------------------------------
-    
+    prazo_padrao = get_config('prazo_renovacao_ata')
+
     with tabs[5]:
         col1, col2 = st.columns([1,4])
 
@@ -1132,8 +1133,7 @@ def show_home():
             st.image("assets/logos.svg", width=300)
         with col2:
             st.subheader("Renovação de atas")
-
-        prazo_padrao = get_config('prazo_renovacao_ata')
+            
         st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
 
         with st.expander("Alterar prazo de renovação"):
@@ -1142,5 +1142,5 @@ def show_home():
                 submitted = st.form_submit_button("Salvar novo prazo")
                 if submitted:
                     update_config('prazo_renovacao_ata', novo_prazo)
-                    #st.success(f"Prazo atualizado para {novo_prazo} meses!")
+                    st.success(f"Prazo atualizado para {novo_prazo} meses!")
                     st.rerun()       
