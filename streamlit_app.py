@@ -60,7 +60,6 @@ def show_home():
         configuracoes = supabase.table('configuracoes').select("valor").eq("chave", chave).execute()
         if configuracoes.data:
             return int(configuracoes.data[0]["valor"])
-        return None
     
     def update_config(chave, valor):
         from supabase import Client
@@ -1127,21 +1126,22 @@ def show_home():
             st.error(f"Erro ao gerar relatório: {e}")
 
     # Renovação de atas -------------------------------------------------------------------------------------------------------------------------
-    with tabs[5]:
-        col1, col2 = st.columns([1,4])
+    
+    #with tabs[5]:
+    #    col1, col2 = st.columns([1,4])
 
-        with col1:
-            st.image("assets/logos.svg", width=300)
-        with col2:
-            st.subheader("Renovação de atas")
+    #    with col1:
+    #        st.image("assets/logos.svg", width=300)
+    #    with col2:
+    #        st.subheader("Renovação de atas")
 
-        prazo_padrao = get_config('prazo_renovacao_ata')
-        st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
+    #    prazo_padrao = get_config('prazo_renovacao_ata')
+    #    st.markdown(f"**Prazo padrão de renovação:** {prazo_padrao} meses")
 
-        if st.button("Alterar prazo"):
-            novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
-            if st.button("Salvar novo prazo"):
-                update_config('prazo_renovacao_ata', novo_prazo)
-                st.success("Prazo atualizado!")
-                st.rerun()
+    #    if st.button("Alterar prazo"):
+    #        novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1, max_value=96, value=int(prazo_padrao))
+    #        if st.button("Salvar novo prazo"):
+    #            update_config('prazo_renovacao_ata', novo_prazo)
+    #            st.success("Prazo atualizado!")
+    #            st.rerun()
         
