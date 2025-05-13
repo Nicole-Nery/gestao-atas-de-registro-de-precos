@@ -67,6 +67,7 @@ def show_home():
             "chave": chave,
             "valor":int(valor)
         }).execute()
+        print("Update response:", response)
 
 
     # Estabelecendo o layout com abas
