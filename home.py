@@ -1177,12 +1177,6 @@ def show_home():
                         "Dias para renovação": dias_para_renovacao
                     })
 
-                    relatorio_renovacao.append({
-                        "Ata": ata["nome"],
-                        "Data": ata["data_inicio"],
-                        "Dias para renovação": dias_para_renovacao
-                    })
-
                 # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
 
