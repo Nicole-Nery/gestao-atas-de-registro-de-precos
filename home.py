@@ -1123,7 +1123,7 @@ def show_home():
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
 
-    # Antes do tabs — carregue uma vez só
+    # Antes do tabs — carregar a config uma vez
     if 'prazo_renovacao_ata' not in st.session_state:
         st.session_state.prazo_renovacao_ata = get_config('prazo_renovacao_ata')
 
@@ -1134,8 +1134,9 @@ def show_home():
         with col2:
             st.subheader("Renovação de atas")
 
-        # Usa o valor do session_state
-        st.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
+        # Cria espaço reservado para o markdown com o prazo
+        prazo_placeholder = st.empty()
+        prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
 
         with st.expander("Alterar prazo de renovação"):
             with st.form("form_alterar_prazo"):
@@ -1148,6 +1149,7 @@ def show_home():
                 submitted = st.form_submit_button("Salvar novo prazo")
                 if submitted:
                     update_config('prazo_renovacao_ata', novo_prazo)
-                    st.session_state.prazo_renovacao_ata = novo_prazo  # atualiza visualmente
-                    st.success(f"Prazo atualizado para {novo_prazo} meses!")
+                    st.session_state.prazo_renovacao_ata = novo_prazo
+                    prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {novo_prazo} meses")  # Atualiza aqui
+                    st.success("Prazo atualizado com sucesso!")
  
