@@ -17,8 +17,11 @@ def show_home():
 
     col1, col2 = st.columns([8, 2])
     with col1:
-        st.write("**HC-UFU - Hospital de Clínicas de Uberlândia**")
-        st.write(f"{usuario.get('email', 'usuário')}!")
+        st.markdown(
+            f"""<p style='margin-bottom:0;'><strong>HC-UFU - Hospital de Clínicas de Uberlândia</strong></p>
+            <p style='margin-top:0;'>Bem-vindo(a), {usuario.get('email', 'usuário')}</p>""",
+            unsafe_allow_html=True
+        )
     #with col2:
         #if st.button("Encerrar sessão"):
         #    for key in list(st.session_state.keys()):
