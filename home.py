@@ -19,11 +19,11 @@ def show_home():
     with col1:
         st.markdown("**HC-UFU - Hospital de Clínicas de Uberlândia**")
         st.write(f"{usuario.get('email', 'usuário')}!")
-    with col2:
-        if st.button("Encerrar sessão"):
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+    #with col2:
+        #if st.button("Encerrar sessão"):
+        #    for key in list(st.session_state.keys()):
+        #        del st.session_state[key]
+        #    st.rerun()
     st.markdown("---")
 
     # Cabeçalho
