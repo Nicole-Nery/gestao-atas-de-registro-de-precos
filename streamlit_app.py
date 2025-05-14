@@ -121,6 +121,8 @@ def cadastro():
                 st.warning("Por favor, preencha todos os campos.")
             elif senha != confirmar_senha:
                 st.error("As senhas não coincidem.")
+            elif len(senha) < 6:
+                st.error("A senha deve conter pelo menos 6 dígitos.")
             else:
                 # Cadastrar no banco de dados
                 try:
