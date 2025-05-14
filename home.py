@@ -15,7 +15,7 @@ def show_home():
 
     usuario = st.session_state.get("usuario", {})
 
-    col1, col2 = st.columns([7, 3])
+    col1, col2 = st.columns([8, 2])
     with col1:
         st.write(f"Olá, {usuario.get('email', 'usuário')}!")
     with col2:
