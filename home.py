@@ -22,15 +22,15 @@ def show_home():
             <p style='margin-top:0;'>Bem-vindo(a), {usuario.get('email', 'usuário')}</p>""",
             unsafe_allow_html=True
         )
-    #with col2:
-        #if st.button("Encerrar sessão"):
-        #    for key in list(st.session_state.keys()):
-        #        del st.session_state[key]
-        #    st.rerun()
-    st.markdown("---")
+    with col2:
+        if st.button("Encerrar sessão"):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
 
     # Cabeçalho
     with st.container():
+        st.markdown("---")
         st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
         col1, col2 = st.columns([1,5])
         with col1:
