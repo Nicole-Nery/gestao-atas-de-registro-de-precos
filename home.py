@@ -19,7 +19,7 @@ def show_home():
     with col1:
         st.write(f"Olá, {usuario.get('email', 'usuário')}!")
     with col2:
-        if st.button("🚪 Sair"):
+        if st.button("Encerrar sessão"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
