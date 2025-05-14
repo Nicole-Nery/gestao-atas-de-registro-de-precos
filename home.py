@@ -23,7 +23,7 @@ def show_home():
             unsafe_allow_html=True
         )
     with col2:
-        if st.button("Encerrar sessão"):
+        if st.button("🚪 Encerrar sessão"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
