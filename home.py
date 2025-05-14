@@ -14,7 +14,15 @@ def show_home():
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     usuario = st.session_state.get("usuario", {})
-    st.write(f"Olá, {usuario.get('email', 'usuário')}!")
+
+    col1, col2 = st.columns([9, 1])
+    with col1:
+        st.write(f"Olá, {usuario.get('email', 'usuário')}!")
+    with col2:
+        if st.button("🚪 Sair"):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
 
     # Cabeçalho
     with st.container():
@@ -1220,6 +1228,3 @@ def show_home():
 
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
-
-        
- 
