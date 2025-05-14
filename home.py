@@ -17,7 +17,7 @@ def show_home():
 
     col1, col2 = st.columns([8, 2])
     with col1:
-        st.markdown("**HC-UFU - Hospital de Clínicas de Uberlândia**")
+        st.write("**HC-UFU - Hospital de Clínicas de Uberlândia**")
         st.write(f"{usuario.get('email', 'usuário')}!")
     #with col2:
         #if st.button("Encerrar sessão"):
