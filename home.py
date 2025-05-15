@@ -1226,8 +1226,8 @@ def show_home():
                     else:
                         st.write("Não há atas com renovações nos próximos 30 dias.")
 
-                with st.container(border=True):
-                    st.error("❌ Atas com renovação vencida:", help="Atas com renovação vencida há mais de 30 dias não serão mostradas.")
+                with st.container(border=True, help="Atas com renovação vencida há mais de 30 dias não serão mostradas."):
+                    st.error("❌ Atas com renovação vencida:")
                     if renovacoes_vencidas:
                        for alerta in renovacoes_vencidas:
                             st.write(alerta)
