@@ -1227,18 +1227,14 @@ def show_home():
                         st.write("Não há atas com renovações nos próximos 30 dias.")
 
                 with st.container(border=True):
-                    col1, col2 = st.columns([9,1])
-                    with col1:
-                        st.error("❌ Atas com renovação vencida:")
-                        if renovacoes_vencidas:
-                            for alerta in renovacoes_vencidas:
-                                    st.write(alerta)
-                        else:
-                            st.write("Não há atas com renovações vencidas, ou já se passaram mais de 30 dias desde o vencimento das atas.")
-                    with col2:
-                        st.markdown("ℹ️", help="Atas com renovação vencida há mais de 30 dias não são mostradas.")
-
-
+                    st.error("❌ Atas com renovação vencida:")
+                    st.info("ℹ️ Atas com renovação vencida há mais de 30 dias não são mostradas.")
+                    if renovacoes_vencidas:
+                        for alerta in renovacoes_vencidas:
+                                st.write(alerta)
+                    else:
+                        st.write("Não há atas com renovações vencidas, ou já se passaram mais de 30 dias desde o vencimento das atas.")
+                    
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
 
