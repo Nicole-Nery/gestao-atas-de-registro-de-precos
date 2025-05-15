@@ -1228,8 +1228,8 @@ def show_home():
 
                 with st.container(border=True):
                     st.markdown("""
-                        <div style='background-color:#f8d7da; padding:15px; border-radius:7px; position:relative'>
-                            ❌   Atas com renovação vencida:
+                        <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative'>
+                            ❌    Atas com renovação vencida:
                             <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
                         </div>
                         """, unsafe_allow_html=True)
