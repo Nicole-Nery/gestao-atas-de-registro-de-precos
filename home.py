@@ -1198,7 +1198,8 @@ def show_home():
 
                     # Adicionar à lista de renovações próximas (90 e 30 dias)
                     if dias_para_renovacao < 0:
-                        renovacoes_vencidas.append(f"**Ata:** {ata['nome']} — Vencida há {-dias_para_renovacao} dia(s)")
+                        if dias_para_renovacao > -2:
+                            renovacoes_vencidas.append(f"**Ata:** {ata['nome']} — Vencida há {-dias_para_renovacao} dia(s)")
                     elif dias_para_renovacao <= 30:
                         renovacoes_30_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
                     elif 30 < dias_para_renovacao <= 90:
@@ -1225,6 +1226,7 @@ def show_home():
                     with st.container(border=True):
                         st.error("❌ Atas com renovação vencida:")
                         for alerta in renovacoes_vencidas:
+
                             st.write(alerta)
 
             else:
