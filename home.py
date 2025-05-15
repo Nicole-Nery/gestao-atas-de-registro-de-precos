@@ -1210,24 +1210,29 @@ def show_home():
                 st.dataframe(relatorio_df, height=150)
 
                 # Exibir alertas de renovação
-                if renovacoes_90_dias:
-                    with st.container(border=True):
-                        st.warning("🔔 Renovações nos próximos 90 dias:")
+                with st.container(border=True):
+                    st.warning("🔔 Renovações nos próximos 90 dias:")
+                    if renovacoes_90_dias:
                         for alerta in renovacoes_90_dias:
                             st.write(alerta)
+                    else:
+                        st.write("Não há atas com renovações nos próximos 90 dias.")
 
-                if renovacoes_30_dias:
-                    with st.container(border=True):
-                        st.error("⚠️ Renovações nos próximos 30 dias:")
+                with st.container(border=True):
+                    st.error("⚠️ Renovações nos próximos 30 dias:")
+                    if renovacoes_30_dias:
                         for alerta in renovacoes_30_dias:
                             st.write(alerta)
+                    else:
+                        st.write("Não há atas com renovações nos próximos 30 dias.")
 
-                if renovacoes_vencidas:
-                    with st.container(border=True):
-                        st.error("❌ Atas com renovação vencida:")
-                        for alerta in renovacoes_vencidas:
-
+                with st.container(border=True):
+                    st.error("❌ Atas com renovação vencida:")
+                    if renovacoes_vencidas:
+                       for alerta in renovacoes_vencidas:
                             st.write(alerta)
+                    else:
+                        st.write("Não há atas com renovações vencidas, ou já se passaram mais de 30 dias desde o vencimento.")
 
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
