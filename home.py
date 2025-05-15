@@ -1227,8 +1227,12 @@ def show_home():
                         st.write("Não há atas com renovações nos próximos 30 dias.")
 
                 with st.container(border=True):
-                    st.error("❌ Atas com renovação vencida:")
-                    st.info("ℹ️ Atas com renovação vencida há mais de 30 dias não são mostradas.")
+                    st.markdown("""
+                        <div style='color:#721c24; background-color:#f8d7da; padding:10px; border-radius:5px; position:relative'>
+                            ❌ Atas com renovação vencida:
+                            <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
+                        </div>
+                        """, unsafe_allow_html=True)
                     if renovacoes_vencidas:
                         for alerta in renovacoes_vencidas:
                                 st.write(alerta)
