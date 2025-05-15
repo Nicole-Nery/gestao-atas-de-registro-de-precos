@@ -1237,6 +1237,7 @@ def show_home():
                         for alerta in renovacoes_vencidas:
                                 st.write(alerta)
                     else:
+                        st.write("")
                         st.write("Não há atas com renovações vencidas, ou já se passaram mais de 30 dias desde o vencimento das atas.")
                     
             else:
