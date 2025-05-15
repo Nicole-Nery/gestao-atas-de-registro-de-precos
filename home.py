@@ -1236,8 +1236,7 @@ def show_home():
                         else:
                             st.write("Não há atas com renovações vencidas, ou já se passaram mais de 30 dias desde o vencimento das atas.")
                     with col2:
-                        st.markdown("ℹ️", help="Atas com renovação vencida há mais de 30 dias não são mostradas.")
-
+                        st.markdown(help="Atas com renovação vencida há mais de 30 dias não são mostradas.")
 
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
