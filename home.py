@@ -230,7 +230,7 @@ def show_home():
                 try:
                     fornecedores_result = buscar_fornecedores()
 
-                    if fornecedores_result():
+                    if fornecedores_result:
                         df_fornecedores = pd.DataFrame(fornecedores_result)
                         df_fornecedores = df_fornecedores.rename(columns={
                             "nome": "Nome",
