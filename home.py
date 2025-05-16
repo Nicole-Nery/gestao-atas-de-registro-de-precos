@@ -701,8 +701,8 @@ def show_home():
         with col2:
             aba = st.session_state.aba_empenhos
 
-            if aba == "Registrar":
-                st.subheader("Registro de Empenhos")
+            if aba == "Empenhar":
+                st.subheader("Empenhar")
                 try:
                     response = supabase.table("atas").select("id, nome, data_validade").order("nome", desc=False).execute()
                     atas_result = response.data
