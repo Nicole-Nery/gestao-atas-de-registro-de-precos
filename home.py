@@ -354,8 +354,7 @@ def show_home():
             if aba == "Cadastrar":
                 st.subheader("Cadastro de Atas")
                 try:
-                    response = supabase.table("fornecedores").select("id, nome, cnpj").order("nome").execute()
-                    fornecedores_result = response.data
+                    fornecedores_result = buscar_fornecedores(["id", "nome", "cnpj"])
 
                     # Exibir no selectbox como "Nome (CNPJ)"
                     fornecedores_dict = {
