@@ -182,7 +182,7 @@ def show_home():
 
             if aba == "Cadastrar":
                 st.subheader("Cadastro de Fornecedores")
-                with st.form("novo_fornecedor", clear_on_submit=True):
+                with st.form("novo_fornecedor"):
                     nome_fornecedor = st.text_input("Nome do Fornecedor")
                     cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
                     email = st.text_input("E-mail")
@@ -215,6 +215,13 @@ def show_home():
                         }
                         cadastrar_fornecedor(dados)
                         st.success(f"Fornecedor '{nome_formatado}' cadastrado com sucesso!")
+                        st.session_state["nome_fornecedor"] = ""
+                        st.session_state["cnpj"] = ""
+                        st.session_state["email"] = ""
+                        st.session_state["endereco"] = ""
+                        st.session_state["cep"] = ""
+                        st.session_state["telefone"] = ""
+
                     except Exception as e:
                         st.error(f"Erro ao cadastrar fornecedor: {e}")
 
@@ -264,29 +271,35 @@ def show_home():
                                     atualizar = st.form_submit_button("Atualizar Fornecedor")
 
                                     if atualizar:
-                                        padrao_cnpj = r"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$"
-                                        padrao_cep = r"\d{5}-\d{3}"
+                                        valido, msg = validar_dados_fornecedor(novo_nome, novo_cnpj, novo_cep)
+                                        if not valido:
+                                            st.error(msg)
+                                            return
+                                        
+                                        if cnpj_existe(cnpj):
+                                            st.warning("⚠️ Já existe um fornecedor cadastrado com esse CNPJ.")
+                                            return
+                                        
+                                        try:
+                                            atualizar_dados_fornecedor(
+                                                fornecedor_id,
+                                                nome=novo_nome,
+                                                cnpj=novo_cnpj,
+                                                email=novo_email,
+                                                endereco=novo_endereco,
+                                                cep=novo_cep,
+                                                telefone=novo_telefone
+                                            )
+                                            st.success(f"Fornecedor {novo_nome.upper()} atualizado com sucesso!")
+                                            st.session_state["novo_nome"] = ""
+                                            st.session_state["novo_cnpj"] = ""
+                                            st.session_state["novo_email"] = ""
+                                            st.session_state["novo_endereco"] = ""
+                                            st.session_state["novo_cep"] = ""
+                                            st.session_state["novo_telefone"] = ""
 
-                                        if not novo_nome or not novo_cnpj:
-                                            st.warning("Preencha todos os campos obrigatórios.")
-                                        elif not re.match(padrao_cnpj, novo_cnpj):
-                                            st.error("❌ CNPJ inválido. Use o formato 00.000.000/0000-00.")
-                                        elif novo_cep and not re.fullmatch(padrao_cep, novo_cep):
-                                            st.error("❌ CEP inválido. Use o formato 00000-000.")
-                                        else:
-                                            try:
-                                                atualizar_dados_fornecedor(
-                                                    fornecedor_id,
-                                                    nome=novo_nome,
-                                                    cnpj=novo_cnpj,
-                                                    email=novo_email,
-                                                    endereco=novo_endereco,
-                                                    cep=novo_cep,
-                                                    telefone=novo_telefone
-                                                )
-                                                st.success(f"Fornecedor {novo_nome.upper()} atualizado com sucesso!")
-                                            except Exception as e:
-                                                st.error(f"Erro ao atualizar fornecedor: {e}")
+                                        except Exception as e:
+                                            st.error(f"Erro ao atualizar fornecedor: {e}")
                     except Exception as e:
                         st.error(f"Erro ao carregar fornecedores: {e}")
 
@@ -362,7 +375,7 @@ def show_home():
                     fornecedores_dict = {}
 
                 # Formulário para cadastrar nova Ata
-                with st.form("nova_ata", clear_on_submit=True):
+                with st.form("nova_ata"):
                     num_ata = st.text_input("Número da Ata (ex: 12/2024, 1234/2025)")
                     data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
                     validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
@@ -415,7 +428,7 @@ def show_home():
                 if ata_nome != "Selecione":
                     ata_id = atas_dict[ata_nome]
 
-                    with st.form("novo_equipamento", clear_on_submit=True):
+                    with st.form("novo_equipamento"):
                         especificacao = st.text_input("Especificação")
                         marca_modelo = st.text_input("Marca/Modelo")
                         quantidade = st.number_input("Quantidade", min_value=1, step=1)
