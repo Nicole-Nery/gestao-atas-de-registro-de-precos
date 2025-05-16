@@ -689,7 +689,7 @@ def show_home():
 
         # Sessão de estado para armazenar aba ativa
         if "aba_empenhos" not in st.session_state:
-            st.session_state.aba_empenhos = "Registrar"
+            st.session_state.aba_empenhos = "Empenhar"
 
         with col1:
             st.image("assets/logos.svg", width=300)
