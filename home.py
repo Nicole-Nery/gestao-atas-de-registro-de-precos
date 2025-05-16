@@ -112,9 +112,6 @@ def show_home():
     def buscar_fornecedor_por_id(fornecedor_id):
         return supabase.table("fornecedores").select("*").eq("id", fornecedor_id).single().execute().data
 
-    def atualizar_fornecedor(fornecedor_id, novos_dados):
-        supabase.table("fornecedores").update(novos_dados).eq("id", fornecedor_id).execute()
-
     def excluir_fornecedor(fornecedor_id):
         supabase.table("fornecedores").delete().eq("id", fornecedor_id).execute()
     
@@ -174,11 +171,41 @@ def show_home():
                         "ata_renovavel": renovavel_bool,
                     }).execute()
                     st.success(f"Ata '{num_ata}' cadastrada com sucesso!")
+                    st.session_state["nome"] = ""
+                    st.session_state["data_inicio"] = ""
+                    st.session_state["data_validade"] = ""
+                    st.session_state["fornecedor_id"] = ""
+                    st.session_state["link_ata"] = ""
+                    st.session_state["ata_renovavel"] = ""
 
                 except Exception as e:
                     st.error(f"Erro ao cadastrar a Ata: {e}")
             else:
                 st.error("Formato inválido. Use o padrão: 1234/2024")   
+        else:
+            st.warning("Preencha todos os campos obrigatórios.")
+
+    def buscar_atas(colunas=None):
+        colunas_str = ", ".join(colunas) if colunas else "*"
+        return supabase.table("atas").select(colunas_str).order("nome").execute().data
+    
+    def cadastrar_equipamento(especificacao, marca_modelo, quantidade, saldo_disponivel, valor_unitario):
+        if especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
+            try:
+                espeficicacao_formatada = ' '.join(especificacao.split()).upper()
+                marca_modelo_formatada = ' '.join(marca_modelo.split()).upper()
+                supabase.table("equipamentos").insert({
+                    "ata_id": ata_id,
+                    "especificacao": espeficicacao_formatada,
+                    "marca_modelo": marca_modelo_formatada,
+                    "quantidade": quantidade,
+                    "saldo_disponivel": saldo_disponivel,
+                    "valor_unitario": valor_unitario,
+                    "valor_total": valor_total
+                }).execute()
+                st.success(f"Equipamento '{espeficicacao_formatada}' cadastrado com sucesso na ata '{ata_nome}'!")
+            except Exception as e:
+                st.error(f"Erro ao cadastrar equipamento: {e}")
         else:
             st.warning("Preencha todos os campos obrigatórios.")
 
@@ -407,12 +434,11 @@ def show_home():
                     if submit_ata:
                         cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, ata_renovavel, renovavel_bool)
 
-
+                # Adicionar Equipamento na Ata --------------------------------------------
                 st.subheader("Adicionar Equipamento à Ata")
 
                 try:
-                    response = supabase.table("atas").select("id, nome").order("nome").execute()
-                    atas_result = response.data
+                    atas_result = buscar_atas(["id", "nome"])
                     atas_dict = {a["nome"]: a["id"] for a in atas_result}
                     atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
@@ -436,24 +462,9 @@ def show_home():
 
                         submit_equipamento = st.form_submit_button("Adicionar Equipamento")
 
-                        if submit_equipamento and especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
-                            try:
-                                espeficicacao_formatada = ' '.join(especificacao.split()).upper()
-                                marca_modelo_formatada = ' '.join(marca_modelo.split()).upper()
-                                response = supabase.table("equipamentos").insert({
-                                    "ata_id": ata_id,
-                                    "especificacao": espeficicacao_formatada,
-                                    "marca_modelo": marca_modelo_formatada,
-                                    "quantidade": quantidade,
-                                    "saldo_disponivel": saldo_disponivel,
-                                    "valor_unitario": valor_unitario,
-                                    "valor_total": valor_total
-                                }).execute()
-                                st.success(f"Equipamento '{espeficicacao_formatada}' cadastrado com sucesso na ata '{ata_nome}'!")
-                            except Exception as e:
-                                st.error(f"Erro ao cadastrar equipamento: {e}")
-                        else:
-                            st.warning("Preencha todos os campos obrigatórios.")
+                        if submit_equipamento:
+                            cadastrar_equipamento(especificacao, marca_modelo, quantidade, saldo_disponivel, valor_unitario)
+                        
 
             elif aba == "Consultar":
                 st.subheader("Consultar Atas Cadastradas")
