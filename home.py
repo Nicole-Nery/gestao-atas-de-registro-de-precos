@@ -276,10 +276,6 @@ def show_home():
                                             st.error(msg)
                                             return
                                         
-                                        if cnpj_existe(novo_cnpj):
-                                            st.warning("⚠️ Já existe um fornecedor cadastrado com esse CNPJ.")
-                                            return
-                                        
                                         try:
                                             atualizar_dados_fornecedor(
                                                 fornecedor_id,
