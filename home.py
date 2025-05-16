@@ -158,6 +158,29 @@ def show_home():
             "telefone": "Telefone"
         })
         return df
+    
+    def cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, ata_renovavel, renovavel_bool):
+        if num_ata and data_ata and ata_renovavel and validade_ata and (fornecedor_exibido != "Selecione"):
+            if re.fullmatch(r'\d{1,5}/\d{4}', num_ata):
+                try:
+                    fornecedor_id = fornecedores_dict[fornecedor_exibido]
+
+                    supabase.table("atas").insert({
+                        "nome": num_ata,
+                        "data_inicio": data_ata.isoformat(),
+                        "data_validade": validade_ata.isoformat(),
+                        "fornecedor_id": fornecedor_id,
+                        "link_ata": link_ata,
+                        "ata_renovavel": renovavel_bool,
+                    }).execute()
+                    st.success(f"Ata '{num_ata}' cadastrada com sucesso!")
+
+                except Exception as e:
+                    st.error(f"Erro ao cadastrar a Ata: {e}")
+            else:
+                st.error("Formato inválido. Use o padrão: 1234/2024")   
+        else:
+            st.warning("Preencha todos os campos obrigatórios.")
 
     # Estabelecendo o layout com abas
     tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
@@ -382,29 +405,9 @@ def show_home():
                     submit_ata = st.form_submit_button("Cadastrar Ata")
 
                     if submit_ata:
-                        if num_ata and data_ata and ata_renovavel and validade_ata and (fornecedor_exibido != "Selecione"):
-                            if re.fullmatch(r'\d{1,5}/\d{4}', num_ata):
-                                try:
-                                    fornecedor_id = fornecedores_dict[fornecedor_exibido]
+                        cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, ata_renovavel, renovavel_bool)
 
-                                    supabase.table("atas").insert({
-                                        "nome": num_ata,
-                                        "data_inicio": data_ata.isoformat(),
-                                        "data_validade": validade_ata.isoformat(),
-                                        "fornecedor_id": fornecedor_id,
-                                        "link_ata": link_ata,
-                                        "ata_renovavel": renovavel_bool,
-                                    }).execute()
-                                    st.success(f"Ata '{num_ata}' cadastrada com sucesso!")
 
-                                except Exception as e:
-                                    st.error(f"Erro ao cadastrar a Ata: {e}")
-                            else:
-                                st.error("Formato inválido. Use o padrão: 1234/2024")   
-                        else:
-                            st.warning("Preencha todos os campos obrigatórios.")
-
-                    
                 st.subheader("Adicionar Equipamento à Ata")
 
                 try:
