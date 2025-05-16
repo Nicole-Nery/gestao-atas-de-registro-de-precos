@@ -693,7 +693,7 @@ def show_home():
 
         with col1:
             st.image("assets/logos.svg", width=300)
-            botoes_empenhos = ["Registrar", "Consultar", "Atualizar", "Excluir"]
+            botoes_empenhos = ["Empenhar", "Consultar", "Atualizar", "Excluir"]
             for b in botoes_empenhos:
                 if st.button(b, key=f"botao_{b}_empenhos"):
                     st.session_state.aba_empenhos = b
