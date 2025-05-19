@@ -1211,7 +1211,12 @@ def show_home():
 
         
             with st.container(border=True):
-                st.error("⚠️ Atas vencidas:")
+                st.markdown("""
+                        <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                            ❌    Atas vencidas:
+                            <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
+                        </div>
+                        """, unsafe_allow_html=True)
                 if atas_vencidas:
                     for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
                         validade_dt = pd.to_datetime(atas_vencidas["data_validade"])
@@ -1223,7 +1228,7 @@ def show_home():
                         st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
                         st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
                 else:
-                    st.write("Não há atas vencidas.")
+                    st.write("Não há atas vencidas nos últimos 30 dias.")
 
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
@@ -1329,7 +1334,7 @@ def show_home():
                         for alerta in renovacoes_vencidas:
                                 st.write(alerta)
                     else:
-                        st.write("Não há atas com renovações vencidas, ou já se passaram mais de 30 dias desde o vencimento das atas.")
+                        st.write("Não há atas com renovações vencidas nos últimos 30 dias.")
                     
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
