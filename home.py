@@ -472,7 +472,7 @@ def show_home():
             elif aba == "Consultar":
                 st.subheader("Consultar Atas Cadastradas")
 
-                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"])
+                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
                 
                 try:
                     # Buscar todas as atas com nome do fornecedor
