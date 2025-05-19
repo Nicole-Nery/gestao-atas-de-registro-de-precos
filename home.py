@@ -1162,6 +1162,15 @@ def show_home():
                 hoje = pd.Timestamp.today()
                 relatorio_df = relatorio_df[(relatorio_df["Data de Validade"] >= hoje - pd.Timedelta(days=30))]
 
+                # Garantir que % utilizado é float antes de formatar
+                relatorio_df["% Utilizado"] = (
+                    relatorio_df["% Utilizado"]
+                    .astype(str)
+                    .str.replace('%', '', regex=False)
+                    .str.replace(',', '.', regex=False)
+                    .astype(float)
+                )
+
                 # Formatações
                 relatorio_df["Data de Validade"] = relatorio_df["Data de Validade"].dt.strftime('%d/%m/%Y')
                 relatorio_df["Valor Total (R$)"] = relatorio_df["Valor Total (R$)"].apply(formatar_moeda)
