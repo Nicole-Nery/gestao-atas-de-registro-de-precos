@@ -1217,11 +1217,11 @@ def show_home():
                         validade_dt = pd.to_datetime(ata["data_validade"])
                         dias_vencida = (pd.Timestamp.today() - validade_dt).days
 
-                    if 0 < dias_vencida <= 30:
-                        validade = validade_dt.strftime('%d/%m/%Y')
-                        saldo = saldo_por_ata.get(ata["id"], 0)
-                        st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
-                        st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+                        if 0 < dias_vencida <= 30:
+                            validade = validade_dt.strftime('%d/%m/%Y')
+                            saldo = saldo_por_ata.get(ata["id"], 0)
+                            st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
+                            st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
                 else:
                     st.write("Não há atas vencidas nos últimos 30 dias.")
 
