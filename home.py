@@ -1219,7 +1219,7 @@ def show_home():
                         """, unsafe_allow_html=True)
                 if atas_vencidas:
                     for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
-                        validade_dt = pd.to_datetime(atas_vencidas["data_validade"])
+                        validade_dt = pd.to_datetime(ata["data_validade"])
                         dias_vencida = (pd.Timestamp.today() - validade_dt).days
 
                     if 0 < dias_vencida <= 30:
