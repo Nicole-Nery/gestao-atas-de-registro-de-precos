@@ -1297,7 +1297,6 @@ def show_home():
                         "Dias para renovação": dias_para_renovacao
                     })
 
-                    relatorio_renovacao = relatorio_renovacao[relatorio_renovacao["Dias para renovação"] >= -30]
 
                     # Adicionar à lista de renovações próximas (90 e 30 dias)
                     if dias_para_renovacao < 0:
@@ -1310,6 +1309,7 @@ def show_home():
             
 
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
+                relatorio_df = relatorio_df[relatorio_df["Dias para renovação"] >= -30]
                 st.dataframe(relatorio_df, height=150)
 
                 # Exibir alertas de renovação
