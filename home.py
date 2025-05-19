@@ -1155,24 +1155,20 @@ def show_home():
                 # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_consumo)
 
-                # Transformar a data
-                relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"]).dt.strftime('%d/%m/%Y')
+                # Manter validade como datetime antes de formatar
+                relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"])
 
-                # Garantir que '% Utilizado' esteja como float
-                relatorio_df["% Utilizado"] = (
-                    relatorio_df["% Utilizado"]
-                    .astype(str)
-                    .str.replace('%', '')
-                    .str.replace(',', '.')
-                    .astype(float)
-                )
+                # Remover atas vencidas há mais de 30 dias
+                hoje = pd.Timestamp.today()
+                relatorio_df = relatorio_df[(relatorio_df["Data de Validade"] >= hoje - pd.Timedelta(days=30))]
 
-                # Aplicar formatações
+                # Formatações
+                relatorio_df["Data de Validade"] = relatorio_df["Data de Validade"].dt.strftime('%d/%m/%Y')
                 relatorio_df["Valor Total (R$)"] = relatorio_df["Valor Total (R$)"].apply(formatar_moeda)
                 relatorio_df["Valor Utilizado (R$)"] = relatorio_df["Valor Utilizado (R$)"].apply(formatar_moeda)
                 relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].map(lambda x: f"{x:.1f}%")
 
-                # Exibir a tabela
+
                 st.dataframe(relatorio_df, height=200)
 
             else:
@@ -1196,7 +1192,6 @@ def show_home():
                 ata for ata in atas_data.values()
                 if ata["data_validade"] and hoje < pd.to_datetime(ata["data_validade"]).date() <= data_limite
             ]
-
 
             with st.container(border=True):
                 st.warning("🔔 Atas vencendo nos próximos 30 dias:")
