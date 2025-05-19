@@ -156,8 +156,8 @@ def show_home():
         })
         return df
     
-    def cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, ata_renovavel, renovavel_bool):
-        if num_ata and data_ata and ata_renovavel and validade_ata and (fornecedor_exibido != "Selecione"):
+    def cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, categoria_ata, ata_renovavel, renovavel_bool):
+        if num_ata and data_ata and ata_renovavel and validade_ata and categoria_ata and (fornecedor_exibido != "Selecione"):
             if re.fullmatch(r'\d{1,5}/\d{4}', num_ata):
                 try:
                     fornecedor_id = fornecedores_dict[fornecedor_exibido]
@@ -168,6 +168,7 @@ def show_home():
                         "data_validade": validade_ata.isoformat(),
                         "fornecedor_id": fornecedor_id,
                         "link_ata": link_ata,
+                        "categoria_ata": categoria_ata,
                         "ata_renovavel": renovavel_bool,
                     }).execute()
                     st.success(f"Ata '{num_ata}' cadastrada com sucesso!")
@@ -176,6 +177,7 @@ def show_home():
                     st.session_state["data_validade"] = ""
                     st.session_state["fornecedor_id"] = ""
                     st.session_state["link_ata"] = ""
+                    st.session_state["categoria_ata"] = ""
                     st.session_state["ata_renovavel"] = ""
 
                 except Exception as e:
@@ -425,6 +427,7 @@ def show_home():
                     data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
                     validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
                     fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome", help="Digite o nome ou CNPJ para localizar o fornecedor.")
+                    categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata")
                     link_ata = st.text_input("Número do Protocolo SEI")
                     ata_renovavel = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
                     renovavel_bool = ata_renovavel == "Sim"
@@ -432,7 +435,7 @@ def show_home():
                     submit_ata = st.form_submit_button("Cadastrar Ata")
 
                     if submit_ata:
-                        cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, ata_renovavel, renovavel_bool)
+                        cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, categoria_ata, ata_renovavel, renovavel_bool)
 
                 # Adicionar Equipamento na Ata --------------------------------------------
                 st.subheader("Adicionar Equipamento à Ata")
@@ -471,7 +474,7 @@ def show_home():
 
                 try:
                     # Buscar todas as atas com nome do fornecedor
-                    response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, fornecedores(nome), ata_renovavel").order("data_inicio", desc=True).execute()
+                    response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, categoria_ata, fornecedores(nome), ata_renovavel").order("data_inicio", desc=True).execute()
                     atas_result = response.data
                     atas_dict = {a["nome"]: a["id"] for a in atas_result}
                     atas_opcoes = ["Selecione"] + list(atas_dict.keys())
@@ -493,6 +496,7 @@ def show_home():
                         nome = ata_info["nome"]
                         data_ata = ata_info["data_inicio"]
                         validade_ata = ata_info["data_validade"]
+                        categoria_ata = ata_info["categoria_ata"]
                         link_ata = ata_info.get("link_ata", "")
                         fornecedor_nome = ata_info["fornecedores"]["nome"]
                         ata_renovavel_bool = ata_info["ata_renovavel"]
@@ -501,6 +505,7 @@ def show_home():
                         st.markdown(f"**Data da Ata:** {pd.to_datetime(data_ata).strftime('%d/%m/%Y')}")
                         st.markdown(f"**Validade:** {pd.to_datetime(validade_ata).strftime('%d/%m/%Y')}")
                         st.markdown(f"**Fornecedor:** {fornecedor_nome}")
+                        st.markdown(f"**Categoria:** {categoria_ata}")
                         st.markdown(f"**N° Protocolo SEI:** {link_ata}")
                         st.markdown(f"**Ata renovável?**: {'Sim' if ata_renovavel_bool else 'Não'}")
 
@@ -560,6 +565,7 @@ def show_home():
                         nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
                         nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
                         novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", index=fornecedores_nomes.index(nome_fornecedor_atual))
+                        nova_categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata")
                         novo_link_ata = st.text_input("Número do Protocolo SEI", value=ata_info["link_ata"])
                         nova_info_renovacao = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
                         nova_info_renovacao_bool = nova_info_renovacao == 'Sim'
@@ -575,6 +581,7 @@ def show_home():
                                 "data_inicio": nova_data.isoformat(),
                                 "data_validade": nova_validade_ata.isoformat(),
                                 "fornecedor_id": novo_fornecedor_id,
+                                "categoria_ata": nova_categoria_ata,
                                 "link_ata": novo_link_ata,
                                 "ata_renovavel": nova_info_renovacao_bool
                             }).eq("id", ata_id).execute()
@@ -627,7 +634,7 @@ def show_home():
             elif aba == "Excluir":
                 st.subheader("Excluir Ata/Equipamento(s) da Ata")
                 try:
-                    response_atas = supabase.table("atas").select("id, nome, data_inicio, data_validade, fornecedores(nome), link_ata").order("nome").execute() 
+                    response_atas = supabase.table("atas").select("id, nome, data_inicio, data_validade, categoria_ata, fornecedores(nome), link_ata").order("nome").execute() 
                     atas_data = response_atas.data
                     atas_dict = {a["nome"]: a["id"] for a in atas_data}
                     atas_nomes = ["Selecione"] + list(atas_dict.keys())
@@ -646,6 +653,7 @@ def show_home():
                                 "Data de início": ata_info["data_inicio"],
                                 "Data de validade": ata_info["data_validade"],
                                 "Fornecedor": fornecedor_nome,
+                                "Categoria": categoria_ata,
                                 "N° Protocolo SEI": ata_info["link_ata"]
                             }])
                             
