@@ -474,8 +474,7 @@ def show_home():
 
                 try:
                     # Buscar todas as atas com nome do fornecedor
-                    response = supabase.table("atas").select("id, nome, data_inicio, data_validade, link_ata, categoria_ata, fornecedores(nome), ata_renovavel").order("data_inicio", desc=True).execute()
-                    atas_result = response.data
+                    atas_result = buscar_atas()
                     atas_dict = {a["nome"]: a["id"] for a in atas_result}
                     atas_opcoes = ["Selecione"] + list(atas_dict.keys())
 
@@ -541,8 +540,7 @@ def show_home():
             elif aba == "Atualizar":
                 st.subheader("Atualizar dados de uma Ata")
 
-                response_atas = supabase.table("atas").select("id,nome").order("nome").execute() 
-                atas_data = response_atas.data
+                atas_data = buscar_atas(["id", "nome"])
                 atas_dict = {a["nome"]: a["id"] for a in atas_data}
                 atas_nomes = ["Selecione"] + list(atas_dict.keys())
 
@@ -1216,7 +1214,11 @@ def show_home():
                 st.error("⚠️ Atas vencidas:")
                 if atas_vencidas:
                     for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
-                        validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                        validade_dt = pd.to_datetime(atas_vencidas["data_validade"])
+                        dias_vencida = (pd.Timestamp.today() - validade_dt).days
+
+                    if 0 < dias_vencida <= 30:
+                        validade = validade_dt.strftime('%d/%m/%Y')
                         saldo = saldo_por_ata.get(ata["id"], 0)
                         st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
                         st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
