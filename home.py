@@ -472,17 +472,25 @@ def show_home():
             elif aba == "Consultar":
                 st.subheader("Consultar Atas Cadastradas")
 
+                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"])
+                
                 try:
                     # Buscar todas as atas com nome do fornecedor
                     atas_result = buscar_atas()
-                    atas_dict = {a["nome"]: a["id"] for a in atas_result}
+
+                    if categorias_selecionadas:
+                        atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
+                    else:
+                        atas_filtradas = atas_result
+
+                    atas_dict = {a["nome"]: a["id"] for a in atas_filtradas}
                     atas_opcoes = ["Selecione"] + list(atas_dict.keys())
 
                 except Exception as e:
                     st.error(f"Erro ao buscar atas: {e}")
                     atas_opcoes = ["Selecione"]
                     atas_dict = {}
-
+                
                 ata_visualizar = st.selectbox("Selecione uma Ata para consultar", atas_opcoes, key="selecione_ata_visualizar")
 
                 if ata_visualizar != "Selecione":
