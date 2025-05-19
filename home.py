@@ -1297,6 +1297,8 @@ def show_home():
                         "Dias para renovação": dias_para_renovacao
                     })
 
+                    relatorio_renovacao = relatorio_renovacao[relatorio_renovacao["Dias para renovação"] >= -30]
+
                     # Adicionar à lista de renovações próximas (90 e 30 dias)
                     if dias_para_renovacao < 0:
                         if dias_para_renovacao > -31:
