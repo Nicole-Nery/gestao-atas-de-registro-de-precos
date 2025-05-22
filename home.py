@@ -574,13 +574,13 @@ def show_home():
                     ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
                     fornecedores_nomes = buscar_fornecedores(["nome"]) # lista de dicionarios {'nome': 'tal'}
                     nome_fornecedor_atual = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"]
-                    st.write(f"{ata_info}")
+
                     with st.form("form_editar_ata"):
                         novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
                         nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
                         nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
                         novo_fornecedor_nome = st.selectbox("Fornecedor", [dicionario["nome"] for dicionario in fornecedores_nomes], key="selecione_novo_fornecedor_nome", index=[dicionario["nome"] for dicionario in fornecedores_nomes].index(nome_fornecedor_atual) if nome_fornecedor_atual else 0)
-                        nova_categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata")
+                        nova_categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata", value=ata_info["categoria_ata"])
                         novo_link_ata = st.text_input("Número do Protocolo SEI", value=ata_info["link_ata"])
                         nova_info_renovacao = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
                         nova_info_renovacao_bool = nova_info_renovacao == 'Sim'
