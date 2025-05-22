@@ -678,8 +678,6 @@ def show_home():
                 if ata_selecionada != "Selecione":
                     ata_id = atas_dict[ata_selecionada]
                     ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
-                    st.write(f"ATA_INFO: {ata_info}")    
-
 
                     if ata_info:
                         fornecedor_nome = ata_info.get("fornecedores", {}).get("nome", "Não informado")
@@ -689,7 +687,7 @@ def show_home():
                             "Data de início": ata_info["data_inicio"],
                             "Data de validade": ata_info["data_validade"],
                             "Fornecedor": fornecedor_nome,
-                            "Categoria": categoria_ata,
+                            "Categoria": ata_info["categoria_ata"],
                             "N° Protocolo SEI": ata_info["link_ata"]
                         }])
                         
