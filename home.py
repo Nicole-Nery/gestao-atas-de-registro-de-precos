@@ -577,9 +577,7 @@ def show_home():
                     categorias = ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
                     categoria_atual = ata_info["categoria_ata"]
 
-                    st.write(f"{ata_info["data_validade"]}")
-
-
+                    
                     with st.form("form_editar_ata"):
                         novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
                         nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
