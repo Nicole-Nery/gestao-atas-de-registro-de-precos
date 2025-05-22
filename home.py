@@ -677,7 +677,7 @@ def show_home():
 
                 if ata_selecionada != "Selecione":
                     ata_id = atas_dict[ata_selecionada]
-                    ata_info = next((a for a in atas_dict if a["id"] == ata_id), None)
+                    ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
 
                     if ata_info:
                         fornecedor_nome = ata_info.get("fornecedores", {}).get("nome", "Não informado")
