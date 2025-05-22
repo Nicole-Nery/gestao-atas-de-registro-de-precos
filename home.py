@@ -575,7 +575,7 @@ def show_home():
                     fornecedores_nomes = buscar_fornecedores(["nome"]) # lista de dicionarios {'nome': 'tal'}
                     nome_fornecedor_atual = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"]
 
-                    st.write("estou escrevendo 'Equipamentos médicos'")
+                    st.write("estou escrevendo 'Infraestrutura hospitalar'")
                     st.write(f"a categoria de fato é {ata_info["categoria_ata"]}")
 
 
