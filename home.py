@@ -838,7 +838,7 @@ def show_home():
                 ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
 
                 if ata_nome != "Selecione":
-                    ata_id = atas_dict[ata_nome]["id"]
+                    ata_id = atas_dict[ata_nome]
                     
                     try:
                         response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
