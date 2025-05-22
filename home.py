@@ -572,7 +572,7 @@ def show_home():
 
                     # Buscar os dados da Ata selecionada
                     ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
-                    fornecedores_nomes = buscar_fornecedores(["nome"])
+                    fornecedores_nomes = buscar_fornecedores(["nome"]) # lista de dicionarios {'nome': 'tal'}
                     nome_fornecedor_atual = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"]
                     st.write(f"O FORNECEDOR ATUAL É {nome_fornecedor_atual}")
                     st.write(f"OS FORNECEDORES DISPONIVEIS SAO {fornecedores_nomes}")
@@ -581,7 +581,7 @@ def show_home():
                         novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
                         nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
                         nova_validade_ata = st.date_input("Validade da Ata", min_value=nova_data, format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_validade"]).date())
-                        #novo_fornecedor_nome = st.selectbox("Fornecedor", fornecedores_nomes,key="selecione_novo_fornecedor_nome", value=nome_fornecedor_atual)
+                        novo_fornecedor_nome = st.selectbox("Fornecedor", (dicionario["nome"] for dicionario in fornecedores_nomes),key="selecione_novo_fornecedor_nome", value=nome_fornecedor_atual)
                         nova_categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata")
                         novo_link_ata = st.text_input("Número do Protocolo SEI", value=ata_info["link_ata"])
                         nova_info_renovacao = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
