@@ -575,6 +575,11 @@ def show_home():
                     fornecedores_nomes = buscar_fornecedores(["nome"]) # lista de dicionarios {'nome': 'tal'}
                     nome_fornecedor_atual = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"]
 
+                    st.write("Valor atual da categoria da ata:", ata_info["categoria_ata"])
+                    st.write("Tipo:", type(ata_info["categoria_ata"]))
+                    st.write("Está na lista de opções?", ata_info["categoria_ata"] in ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"])
+
+
                     with st.form("form_editar_ata"):
                         novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
                         nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
