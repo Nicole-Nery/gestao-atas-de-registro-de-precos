@@ -589,6 +589,9 @@ def show_home():
 
                     if atualizar:
                         try:
+                            fornecedores_data = listar_nomes_ids_fornecedores()
+                            fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
+                            
                             novo_fornecedor_id = fornecedores_dict[novo_fornecedor_nome]
 
                             supabase.table("atas").update({
