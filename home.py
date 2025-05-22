@@ -575,6 +575,8 @@ def show_home():
                     fornecedores_nomes = buscar_fornecedores(["nome"])
                     nome_fornecedor_atual = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"]
                     st.write(f"O FORNECEDOR ATUAL É {nome_fornecedor_atual}")
+                    st.write(f"OS FORNECEDORES DISPONIVEIS SAO {fornecedores_nomes}")
+
                     with st.form("form_editar_ata"):
                         novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
                         nova_data = st.date_input("Data da Ata", format="DD/MM/YYYY", value=pd.to_datetime(ata_info["data_inicio"]).date())
