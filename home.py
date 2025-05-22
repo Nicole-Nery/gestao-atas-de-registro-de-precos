@@ -505,7 +505,7 @@ def show_home():
                         validade_ata = ata_info["data_validade"]
                         categoria_ata = ata_info["categoria_ata"]
                         link_ata = ata_info.get("link_ata", "")
-                        fornecedor_nome = ata_info["fornecedores"]["nome"]
+                        fornecedor_nome = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"] 
                         ata_renovavel_bool = ata_info["ata_renovavel"]
 
                         st.markdown(f"**Número:** {nome}")
