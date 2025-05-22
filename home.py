@@ -475,7 +475,6 @@ def show_home():
                 categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
                 
                 try:
-                    # Buscar todas as atas com nome do fornecedor
                     atas_result = buscar_atas()
 
                     if categorias_selecionadas:
@@ -548,23 +547,33 @@ def show_home():
             elif aba == "Atualizar":
                 st.subheader("Atualizar dados de uma Ata")
 
-                atas_data = buscar_atas(["id", "nome"])
-                atas_dict = {a["nome"]: a["id"] for a in atas_data}
-                atas_nomes = ["Selecione"] + list(atas_dict.keys())
+                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
+                
+                try:
+                    atas_result = buscar_atas()
 
-                ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_nomes)
+                    if categorias_selecionadas:
+                        atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
+                    else:
+                        atas_filtradas = atas_result
+
+                    atas_dict = {a["nome"]: a["id"] for a in atas_filtradas}
+                    atas_opcoes = ["Selecione"] + list(atas_dict.keys())
+
+                except Exception as e:
+                    st.error(f"Erro ao buscar atas: {e}")
+                    atas_opcoes = ["Selecione"]
+                    atas_dict = {}
+
+                ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_opcoes)
 
                 if ata_selecionada != "Selecione":
                     ata_id = atas_dict[ata_selecionada]
-                    ata_info_response = supabase.table("atas").select("*").eq("id", ata_id).single().execute()
-                    ata_info = ata_info_response.data
 
-                    response_fornecedores = supabase.table("fornecedores").select("id,nome").order("nome").execute()
-                    fornecedores_data = response_fornecedores.data
-                    fornecedores_dict = {f["nome"]: f["id"] for f in fornecedores_data}
-                    fornecedores_nomes = list(fornecedores_dict.keys())
-
-                    nome_fornecedor_atual = next((nome for nome, id_ in fornecedores_dict.items() if id_ == ata_info["fornecedor_id"]), None)
+                    # Buscar os dados da Ata selecionada
+                    ata_info = next((a for a in atas_result if a["id"] == ata_id), None)
+                    fornecedores_nomes = buscar_fornecedores(["nome"])
+                    nome_fornecedor_atual = buscar_fornecedor_por_id(ata_info["fornecedor_id"])["nome"]
 
                     with st.form("form_editar_ata"):
                         novo_nome = st.text_input("Nome da Ata", value=ata_info["nome"])
