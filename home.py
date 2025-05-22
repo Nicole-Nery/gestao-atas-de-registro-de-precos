@@ -838,6 +838,7 @@ def show_home():
                 ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
 
                 if ata_nome != "Selecione":
+                    st.write(f"ATA_NOME ====== {ata_nome}")
                     ata_id = atas_dict[ata_nome]
                     
                     try:
