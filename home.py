@@ -211,6 +211,28 @@ def show_home():
         else:
             st.warning("Preencha todos os campos obrigatórios.")
 
+    def selecionar_categoria():
+        categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
+                
+        try:
+            atas_result = buscar_atas()
+
+            if categorias_selecionadas:
+                atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
+            else:
+                atas_filtradas = atas_result
+
+            atas_dict = {a["nome"]: a["id"] for a in atas_filtradas}
+            atas_opcoes = ["Selecione"] + list(atas_dict.keys())
+
+        except Exception as e:
+            st.error(f"Erro ao buscar atas: {e}")
+            atas_opcoes = ["Selecione"]
+            atas_dict = {}
+        
+        return atas_opcoes
+            
+
     # Estabelecendo o layout com abas
     tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
 
@@ -472,24 +494,7 @@ def show_home():
             elif aba == "Consultar":
                 st.subheader("Consultar Atas Cadastradas")
 
-                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
-                
-                try:
-                    atas_result = buscar_atas()
-
-                    if categorias_selecionadas:
-                        atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
-                    else:
-                        atas_filtradas = atas_result
-
-                    atas_dict = {a["nome"]: a["id"] for a in atas_filtradas}
-                    atas_opcoes = ["Selecione"] + list(atas_dict.keys())
-
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_opcoes = ["Selecione"]
-                    atas_dict = {}
-                
+                atas_opcoes = selecionar_categoria()
                 ata_visualizar = st.selectbox("Selecione uma Ata para consultar", atas_opcoes, key="selecione_ata_visualizar")
 
                 if ata_visualizar != "Selecione":
@@ -547,24 +552,7 @@ def show_home():
             elif aba == "Atualizar":
                 st.subheader("Atualizar dados de uma Ata")
 
-                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
-                
-                try:
-                    atas_result = buscar_atas()
-
-                    if categorias_selecionadas:
-                        atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
-                    else:
-                        atas_filtradas = atas_result
-
-                    atas_dict = {a["nome"]: a["id"] for a in atas_filtradas}
-                    atas_opcoes = ["Selecione"] + list(atas_dict.keys())
-
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_opcoes = ["Selecione"]
-                    atas_dict = {}
-
+                atas_opcoes = selecionar_categoria()
                 ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_opcoes)
 
                 if ata_selecionada != "Selecione":
@@ -655,24 +643,7 @@ def show_home():
             elif aba == "Excluir":
                 st.subheader("Excluir Ata/Equipamento(s) da Ata")
 
-                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
-                
-                try:
-                    atas_result = buscar_atas()
-
-                    if categorias_selecionadas:
-                        atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
-                    else:
-                        atas_filtradas = atas_result
-
-                    atas_dict = {a["nome"]: a["id"] for a in atas_filtradas}
-                    atas_opcoes = ["Selecione"] + list(atas_dict.keys())
-
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_opcoes = ["Selecione"]
-                    atas_dict = {}
-
+                atas_opcoes = selecionar_categoria()
                 ata_selecionada = st.selectbox("Selecione uma Ata para excluir", atas_opcoes, key="selecionar_ata_exclusao")
 
                 if ata_selecionada != "Selecione":
