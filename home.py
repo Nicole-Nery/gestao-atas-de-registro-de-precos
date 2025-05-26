@@ -232,6 +232,21 @@ def show_home():
         
         return [atas_opcoes, atas_dict]
             
+    def selecionar_categoria_para_empenho():
+        categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
+
+        try:
+                    
+            atas_result = buscar_atas()
+            atas_dict = {a["nome"]: {"id": a["id"], "data_validade":a["data_validade"]} for a in atas_result}
+            atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+
+        except Exception as e:
+            st.error(f"Erro ao buscar atas: {e}")
+            atas_cadastradas = ["Selecione"]
+            atas_dict = {}
+        
+        return [atas_cadastradas, atas_dict]
 
     # Estabelecendo o layout com abas
     tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
@@ -730,11 +745,9 @@ def show_home():
 
             if aba == "Empenhar":
                 st.subheader("Empenhar")
-
-                atas_opcoes, atas_dict = selecionar_categoria()
-                atas_result = buscar_atas()
-
-                ata_nome = st.selectbox("Selecione a Ata", atas_opcoes, key="selecione_ata_nome_empenho")
+                
+                atas_cadastradas, atas_dict = selecionar_categoria_para_empenho()
+                ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome_empenho")
 
                 if ata_nome != "Selecione":
                     ata_id = atas_dict[ata_nome]["id"]
