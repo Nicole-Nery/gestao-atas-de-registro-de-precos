@@ -730,18 +730,11 @@ def show_home():
 
             if aba == "Empenhar":
                 st.subheader("Empenhar")
-                try:
-                    response = supabase.table("atas").select("id, nome, data_validade").order("nome", desc=False).execute()
-                    atas_result = response.data
-                    atas_dict = {a["nome"]: {"id": a["id"], "data_validade":a["data_validade"]} for a in atas_result}
-                    atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_cadastradas = ["Selecione"]
-                    atas_dict = {}
+                atas_opcoes, atas_dict = selecionar_categoria()
+                atas_result = buscar_atas()
 
-                ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome_empenho")
+                ata_nome = st.selectbox("Selecione a Ata", atas_opcoes, key="selecione_ata_nome_empenho")
 
                 if ata_nome != "Selecione":
                     ata_id = atas_dict[ata_nome]["id"]
