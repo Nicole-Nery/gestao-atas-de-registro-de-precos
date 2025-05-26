@@ -235,10 +235,15 @@ def show_home():
     def selecionar_categoria_para_empenho():
         categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
 
-        try:
-                    
+        try:       
             atas_result = buscar_atas()
-            atas_dict = {a["nome"]: {"id": a["id"], "data_validade":a["data_validade"]} for a in atas_result}
+
+            if categorias_selecionadas:
+                atas_filtradas = [ata for ata in atas_result if ata["categoria_ata"] in categorias_selecionadas]
+            else:
+                atas_filtradas = atas_result
+
+            atas_dict = {a["nome"]: {"id": a["id"], "data_validade":a["data_validade"]} for a in atas_filtradas}
             atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
 
         except Exception as e:
@@ -804,17 +809,7 @@ def show_home():
             if aba == "Consultar":
                 st.subheader("Consultar Empenhos cadastrados")
 
-                try:
-                    response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
-                    atas_result = response.data
-                    atas_dict = {a["nome"]: a["id"] for a in atas_result}
-                    atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
-
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_cadastradas = ["Selecione"]
-                    atas_dict = {}
-
+                atas_cadastradas, atas_dict = selecionar_categoria_para_empenho()
                 ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
 
                 if ata_nome != "Selecione":
@@ -844,18 +839,8 @@ def show_home():
 
             if aba == "Atualizar":
                 st.subheader("Atualizar Empenhos cadastrados")
-
-                try:
-                    response = supabase.table("atas").select("id, nome, data_validade").order("nome", desc=False).execute()
-                    atas_result = response.data
-                    atas_dict = {a["nome"]: {"id": a["id"], "data_validade": a["data_validade"]} for a in atas_result}
-                    atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
-
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_cadastradas = ["Selecione"]
-                    atas_dict = {}
-
+                
+                atas_cadastradas, atas_dict = selecionar_categoria_para_empenho()
                 ata_nome = st.selectbox("Selecione a Ata para atualizar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_atualizar")
 
                 if ata_nome != "Selecione":
@@ -900,17 +885,7 @@ def show_home():
             if aba == "Excluir":
                 st.subheader("Excluir empenhos")
                 
-                try:
-                    response = supabase.table("atas").select("id, nome").order("nome", desc=False).execute()
-                    atas_result = response.data
-                    atas_dict = {a["nome"]: a["id"] for a in atas_result}
-                    atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
-
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_cadastradas = ["Selecione"]
-                    atas_dict = {}
-
+                atas_cadastradas, atas_dict = selecionar_categoria_para_empenho()
                 ata_nome = st.selectbox("Selecione Ata para excluir empenho(s)", atas_cadastradas, key="selecione_ata_nome_empenho_excluir")
 
                 if ata_nome != "Selecione":
@@ -964,7 +939,6 @@ def show_home():
                             st.info("Nenhum empenho cadastrado para esta Ata.")
                     except Exception as e:
                         st.error(f"Erro ao buscar empenhos: {e}")
-
 
 
     # Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
