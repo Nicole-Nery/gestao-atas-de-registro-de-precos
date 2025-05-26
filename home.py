@@ -777,7 +777,7 @@ def show_home():
                                     data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
                                     observacao = st.text_input("Observação (opcional)")
 
-                                    registrar_empenho = st.form_submit_button("Cadastrar Empenho")    
+                                    registrar_empenho = st.form_submit_button("Empenhar")    
                                     if registrar_empenho:
                                         ata_validade_date = date.fromisoformat(ata_validade)
                                         if data_empenho > ata_validade_date:
@@ -798,9 +798,9 @@ def show_home():
                                                     "saldo_disponivel": saldo_disp - quantidade
                                                 }).eq("id", equipamento_id).execute()
 
-                                                st.success("Empenho cadastrado com sucesso!")
+                                                st.success("Empenho realizado com sucesso!")
                                             except Exception as e:
-                                                st.error(f"Erro ao cadastrar empenho: {e}")
+                                                st.error(f"Erro ao cempenhar: {e}")
                         else:
                             st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
                     except Exception as e:
@@ -813,7 +813,7 @@ def show_home():
                 ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
 
                 if ata_nome != "Selecione":
-                    ata_id = atas_dict[ata_nome]
+                    ata_id = atas_dict[ata_nome]["id"]
                     
                     try:
                         response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
@@ -889,7 +889,7 @@ def show_home():
                 ata_nome = st.selectbox("Selecione Ata para excluir empenho(s)", atas_cadastradas, key="selecione_ata_nome_empenho_excluir")
 
                 if ata_nome != "Selecione":
-                    ata_id = atas_dict[ata_nome]
+                    ata_id = atas_dict[ata_nome]["id"]
                     
                     try:
                         response = supabase.rpc("empenhos_por_ata", {"ata_id_param": ata_id}).execute()
