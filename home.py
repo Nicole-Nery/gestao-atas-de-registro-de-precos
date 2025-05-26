@@ -495,6 +495,7 @@ def show_home():
                 st.subheader("Consultar Atas Cadastradas")
 
                 atas_opcoes, atas_dict = selecionar_categoria()
+                atas_result = buscar_atas()
                 ata_visualizar = st.selectbox("Selecione uma Ata para consultar", atas_opcoes, key="selecione_ata_visualizar")
 
                 if ata_visualizar != "Selecione":
@@ -553,6 +554,7 @@ def show_home():
                 st.subheader("Atualizar dados de uma Ata")
 
                 atas_opcoes, atas_dict = selecionar_categoria()
+                atas_result = buscar_atas()
                 ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_opcoes)
 
                 if ata_selecionada != "Selecione":
@@ -644,6 +646,7 @@ def show_home():
                 st.subheader("Excluir Ata/Equipamento(s) da Ata")
 
                 atas_opcoes, atas_dict = selecionar_categoria()
+                atas_result = buscar_atas()
                 ata_selecionada = st.selectbox("Selecione uma Ata para excluir", atas_opcoes, key="selecionar_ata_exclusao")
 
                 if ata_selecionada != "Selecione":
