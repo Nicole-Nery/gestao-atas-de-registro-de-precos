@@ -807,7 +807,7 @@ def show_home():
                         st.error(f"Erro ao buscar equipamentos: {e}")
             
             if aba == "Consultar":
-                st.subheader("Consultar Empenhos cadastrados")
+                st.subheader("Consultar empenhos realizados")
 
                 atas_cadastradas, atas_dict = selecionar_categoria_para_empenho()
                 ata_nome = st.selectbox("Selecione a Ata para consultar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_consulta")
@@ -838,7 +838,7 @@ def show_home():
                         st.error(f"Erro ao buscar empenhos: {e}")
 
             if aba == "Atualizar":
-                st.subheader("Atualizar Empenhos cadastrados")
+                st.subheader("Atualizar empenhos realizados")
                 
                 atas_cadastradas, atas_dict = selecionar_categoria_para_empenho()
                 ata_nome = st.selectbox("Selecione a Ata para atualizar empenhos", atas_cadastradas, key="selecione_ata_nome_empenho_atualizar")
