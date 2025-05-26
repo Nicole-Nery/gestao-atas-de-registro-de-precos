@@ -230,7 +230,7 @@ def show_home():
             atas_opcoes = ["Selecione"]
             atas_dict = {}
         
-        return atas_opcoes
+        return [atas_opcoes, atas_dict]
             
 
     # Estabelecendo o layout com abas
@@ -494,7 +494,7 @@ def show_home():
             elif aba == "Consultar":
                 st.subheader("Consultar Atas Cadastradas")
 
-                atas_opcoes = selecionar_categoria()
+                atas_opcoes, atas_dict = selecionar_categoria()[0], selecionar_categoria[1]
                 ata_visualizar = st.selectbox("Selecione uma Ata para consultar", atas_opcoes, key="selecione_ata_visualizar")
 
                 if ata_visualizar != "Selecione":
@@ -552,7 +552,7 @@ def show_home():
             elif aba == "Atualizar":
                 st.subheader("Atualizar dados de uma Ata")
 
-                atas_opcoes = selecionar_categoria()
+                atas_opcoes, atas_dict = selecionar_categoria()[0], selecionar_categoria[1]
                 ata_selecionada = st.selectbox("Selecione uma Ata para atualizar dados", atas_opcoes)
 
                 if ata_selecionada != "Selecione":
@@ -643,7 +643,7 @@ def show_home():
             elif aba == "Excluir":
                 st.subheader("Excluir Ata/Equipamento(s) da Ata")
 
-                atas_opcoes = selecionar_categoria()
+                atas_opcoes, atas_dict = selecionar_categoria()[0], selecionar_categoria[1]
                 ata_selecionada = st.selectbox("Selecione uma Ata para excluir", atas_opcoes, key="selecionar_ata_exclusao")
 
                 if ata_selecionada != "Selecione":
