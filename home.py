@@ -1357,7 +1357,11 @@ def show_home():
                         exibir_alertas(alertas_90)
                     
                     with st.container(border=True):
-                        st.warning("⚠️ Renovações nos próximos 30 dias")
+                        st.markdown("""
+                            <div style='background-color:#f9ca92; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                ⚠️ Renovações nos próximos 30 dias:
+                            </div>
+                            """, unsafe_allow_html=True)
                         exibir_alertas(alertas_30)
 
                     with st.container(border=True):
