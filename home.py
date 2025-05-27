@@ -1000,6 +1000,7 @@ def show_home():
                 ata_nome = ata["nome"]
                 especificacao = equipamento["especificacao"]
                 data_empenho = pd.to_datetime(emp["data_empenho"])
+                categoria = ata["categoria_ata"]
 
                 # Aplicar filtros
 
@@ -1012,6 +1013,7 @@ def show_home():
 
                 empenhos_filtrados.append({
                     "Ata": ata_nome,
+                    "Categoria": categoria,
                     "Equipamento": especificacao,
                     "Quantidade": emp["quantidade_empenhada"],
                     "Data do Empenho": data_empenho.strftime('%d/%m/%Y'),
