@@ -1021,10 +1021,6 @@ def show_home():
 
             if empenhos_filtrados:
                 df_empenhos = pd.DataFrame(empenhos_filtrados)
-                st.write(df_empenhos)
-                st.write("-------")
-
-
                 st.dataframe(df_empenhos, height=200)
 
                 st.subheader("📊 Análises e Gráficos")
