@@ -1189,7 +1189,7 @@ def show_home():
                 categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione", key="selecionar_categoria_relatorio")
                 
                 if categorias_selecionadas:
-                    relatorio_df_filtrado = relatorio_df[relatorio_df["Categoria"] == categorias_selecionadas, ]
+                    relatorio_df_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
                     st.dataframe(relatorio_df_filtrado, height=200)
 
             else:
