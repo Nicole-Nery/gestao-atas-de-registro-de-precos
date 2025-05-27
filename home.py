@@ -1065,8 +1065,8 @@ def show_home():
                 with aba0:
                     total_por_categoria = df_empenhos.groupby("Categoria")["Quantidade"].sum().reset_index()
                     fig_categoria = px.pie(total_por_categoria, names="Categoria", values="Quantidade", title="Empenhos por categoria")
-                fig_categoria.update_traces(textinfo='percent+label')
-                st.plotly_chart(fig_categoria, use_container_width=True)
+                    fig_categoria.update_traces(textinfo='percent+label')
+                    st.plotly_chart(fig_categoria, use_container_width=True)
 
                 with aba1:
                     total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
