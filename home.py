@@ -1358,7 +1358,7 @@ def show_home():
                     
                     with st.container(border=True):
                         st.markdown("""
-                            <div style='background-color:#fff89e; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                            <div style='background-color:#f7f090; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
                                 ⚠️ Renovações nos próximos 30 dias:
                             </div>
                             """, unsafe_allow_html=True)
