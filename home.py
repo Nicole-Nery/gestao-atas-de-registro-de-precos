@@ -1215,7 +1215,11 @@ def show_home():
                     ]
 
                     with st.container(border=True):
-                        st.warning("🔔 Atas vencendo nos próximos 30 dias:")
+                        st.markdown("""
+                            <div style='background-color:#f7f090; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                ⚠️ Atas vencendo nos próximos 30 dias:
+                            </div>
+                            """, unsafe_allow_html=True)
                         if atas_vencendo:
                             for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
                                 validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
