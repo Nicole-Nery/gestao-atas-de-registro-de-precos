@@ -1334,24 +1334,10 @@ def show_home():
                     relatorio_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
                     st.dataframe(relatorio_filtrado, height=150)
 
-                    # Exibir alertas 90 dias
-                    with st.container(border=True):
-                        st.markdown("""
-                            <div style='background-color:#8fe978; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
-                                🔔    Renovações nos próximos 90 dias:
-                                <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
-                            </div>
-                            """, unsafe_allow_html=True)
-                        if alertas_90:
-                            for alerta in alertas_90:
-                                    st.write(alerta)
-                        else:
-                            st.write("Não há atas com renovações nos próximos 90 dias.")
 
-                    # Exibir alertas 30 dias
-                    alertas_filtrados = [a for a in alertas_30 if a["categoria"] in categorias_selecionadas]
-                    with st.container(border=True):
-                        st.warning("⚠️ Renovações nos próximos 30 dias")
+                    def exibir_alertas(alertas):
+                        alertas_filtrados = [a for a in alertas if a["categoria"] in categorias_selecionadas]
+                        
                         if alertas_filtrados:
                             for a in alertas_filtrados:
                                 if a["dias"] < 0:
@@ -1361,20 +1347,28 @@ def show_home():
                         else:
                             st.write("Não há atas nesta condição.")
 
-                    # Exibir alertas vencidas
+
+                    with st.container(border=True):
+                        st.markdown("""
+                            <div style='background-color:#a9eb98; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                🔔 Renovações nos próximos 90 dias:
+                            </div>
+                            """, unsafe_allow_html=True)
+                        exibir_alertas(alertas_90)
+                    
+                    with st.container(border=True):
+                        st.warning("⚠️ Renovações nos próximos 30 dias")
+                        exibir_alertas(alertas_30)
+
                     with st.container(border=True):
                         st.markdown("""
                             <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
-                                ❌    Atas com renovação vencida:
+                                ❌ Atas com renovação vencida:
                                 <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
                             </div>
                             """, unsafe_allow_html=True)
-                        if alertas_vencidas:
-                            for alerta in alertas_vencidas:
-                                    st.write(alerta)
-                        else:
-                            st.write("Não há atas com renovações vencidas nos últimos 30 dias.")
-
+                        exibir_alertas(alertas_vencidas)
+                        
                     
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
