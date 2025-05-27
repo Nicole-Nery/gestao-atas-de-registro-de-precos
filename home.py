@@ -1019,11 +1019,12 @@ def show_home():
                     "Observação": emp["observacao"]
                 })
 
-                st.write("olha")
-                st.write(empenhos_filtrados)
-
             if empenhos_filtrados:
                 df_empenhos = pd.DataFrame(empenhos_filtrados)
+                st.write(df_empenhos)
+                st.write("-------")
+
+
                 st.dataframe(df_empenhos, height=200)
 
                 st.subheader("📊 Análises e Gráficos")
