@@ -191,6 +191,10 @@ def show_home():
         colunas_str = ", ".join(colunas) if colunas else "*"
         return supabase.table("atas").select(colunas_str).order("nome").execute().data
     
+    def buscar_equipamentos(colunas=None):
+        colunas_str = ", ".join(colunas) if colunas else "*"
+        return supabase.table("equipamentos").select(colunas_str).order("especificacao").execute().data
+
     def cadastrar_equipamento(especificacao, marca_modelo, quantidade, saldo_disponivel, valor_unitario):
         if especificacao and marca_modelo and quantidade and saldo_disponivel and valor_unitario:
             try:
@@ -952,16 +956,18 @@ def show_home():
             st.subheader("Histórico Geral de Empenhos")
 
         try:
+            # Filtrar por categoria
+            categorias = ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
+            categoria_filtro = st.selectbox("Filtrar por Categoria", categorias, key="selecione_categoria_filtro")
+
             # Filtrar por ata
-            atas_response = supabase.table("atas").select("id, nome").order("nome").execute()
-            atas_data = atas_response.data
+            atas_data = buscar_atas(["id", "nome", "categoria_ata"])
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_data}
             atas_opcoes = ["Todas"] + list(atas_dict.keys())
             ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
             # Filtrar por equipamento
-            equipamentos_response = supabase.table("equipamentos").select("id, especificacao, ata_id").execute()
-            equipamentos_data = equipamentos_response.data
+            equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_data}
             equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_data)))
             equipamento_filtro = st.selectbox("Filtrar por Equipamento", equipamentos_opcoes, key="filtro_equipamento")
@@ -969,7 +975,7 @@ def show_home():
             # Filtro de data
             col1, col2 = st.columns(2)
             with col1:
-                data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2023-01-01"), format= 'DD/MM/YYYY', key="data_inicio_filtro")
+                data_inicio = st.date_input("Data inicial", value=pd.to_datetime("2024-01-01"), format= 'DD/MM/YYYY', key="data_inicio_filtro")
             with col2:
                 data_fim = st.date_input("Data final", value=pd.to_datetime("today"), format= 'DD/MM/YYYY', key="data_fim_filtro")
 
@@ -984,11 +990,19 @@ def show_home():
                     continue
 
                 ata_id = equipamento["ata_id"]
-                ata_nome = next((nome for nome, id_ in atas_dict.items() if id_ == ata_id), "Desconhecida")
+                ata = next((a for a in atas_data if a["id"] == ata_id), None)
+                if not ata:
+                    continue
+
+                if categoria_filtro != "Todas" and ata["categoria_ata"] != categoria_filtro:
+                    continue
+
+                ata_nome = ata["nome"]
                 especificacao = equipamento["especificacao"]
                 data_empenho = pd.to_datetime(emp["data_empenho"])
 
                 # Aplicar filtros
+
                 if ata_filtro != "Todas" and atas_dict[ata_filtro] != ata_id:
                     continue
                 if equipamento_filtro != "Todos" and especificacao != equipamento_filtro:
