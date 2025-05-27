@@ -480,7 +480,7 @@ def show_home():
                         cadastrar_ata(num_ata, data_ata, validade_ata, fornecedor_exibido, link_ata, categoria_ata, ata_renovavel, renovavel_bool)
 
                 # Adicionar Equipamento na Ata --------------------------------------------
-                st.subheader("Adicionar Equipamento à Ata")
+                st.subheader("Adicionar Item a uma Ata")
 
                 try:
                     atas_result = buscar_atas(["id", "nome"])
