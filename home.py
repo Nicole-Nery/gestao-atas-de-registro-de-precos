@@ -1316,7 +1316,7 @@ def show_home():
                         "categoria": ata["categoria_ata"]
                     }
 
-                    if dias_para_renovacao < 0 and dias_para_renovacao > -31:
+                    if dias_para_renovacao < 0 and dias_para_renovacao >= 30:
                         alertas_vencidas.append(alerta)
                     elif dias_para_renovacao <= 30:
                         alertas_30.append(alerta)
@@ -1334,23 +1334,46 @@ def show_home():
                     relatorio_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
                     st.dataframe(relatorio_filtrado, height=150)
 
-                    def exibir_alertas(alertas, titulo, icone="⚠️"):
-                        alertas_filtrados = [a for a in alertas if a["categoria"] in categorias_selecionadas]
-                        with st.container(border=True):
-                            st.warning(f"{icone} {titulo}")
-                            if alertas_filtrados:
-                                for a in alertas_filtrados:
-                                    if a["dias"] < 0:
-                                        st.write(f"**Ata:** {a['nome']} — Vencida há {-a['dias']} dia(s)")
-                                    else:
-                                        st.write(f"**Ata:** {a['nome']} — {a['dias']} dias restantes")
-                            else:
-                                st.write("Não há atas nesta condição.")
+                    # Exibir alertas 90 dias
+                    with st.container(border=True):
+                        st.markdown("""
+                            <div style='background-color:#8fe978; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                🔔    Renovações nos próximos 90 dias:
+                                <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
+                            </div>
+                            """, unsafe_allow_html=True)
+                        if alertas_90:
+                            for alerta in alertas_90:
+                                    st.write(alerta)
+                        else:
+                            st.write("Não há atas com renovações nos próximos 90 dias.")
 
-                    # Exibir alertas filtrados por categoria
-                    exibir_alertas(alertas_90, "Renovações nos próximos 90 dias", "🔔")
-                    exibir_alertas(alertas_30, "Renovações nos próximos 30 dias", "⚠️")
-                    exibir_alertas(alertas_vencidas, "Atas com renovação vencida", "❌")
+                    # Exibir alertas 30 dias
+                    alertas_filtrados = [a for a in alertas_30 if a["categoria"] in categorias_selecionadas]
+                    with st.container(border=True):
+                        st.warning("⚠️ Renovações nos próximos 30 dias")
+                        if alertas_filtrados:
+                            for a in alertas_filtrados:
+                                if a["dias"] < 0:
+                                    st.write(f"**Ata:** {a['nome']} — Vencida há {-a['dias']} dia(s)")
+                                else:
+                                    st.write(f"**Ata:** {a['nome']} — {a['dias']} dias restantes")
+                        else:
+                            st.write("Não há atas nesta condição.")
+
+                    # Exibir alertas vencidas
+                    with st.container(border=True):
+                        st.markdown("""
+                            <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                ❌    Atas com renovação vencida:
+                                <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
+                            </div>
+                            """, unsafe_allow_html=True)
+                        if alertas_vencidas:
+                            for alerta in alertas_vencidas:
+                                    st.write(alerta)
+                        else:
+                            st.write("Não há atas com renovações vencidas nos últimos 30 dias.")
 
                     
             else:
