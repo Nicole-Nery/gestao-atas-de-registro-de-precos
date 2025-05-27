@@ -1149,6 +1149,7 @@ def show_home():
 
                     relatorio_consumo.append({
                         "Ata": ata["nome"],
+                        "Ata ID": ata["id"],
                         "Categoria": ata["categoria_ata"],
                         "Equipamento": eq["especificacao"],
                         "Qtd Total": eq["quantidade"],
@@ -1190,61 +1191,64 @@ def show_home():
                 
                 if categorias_selecionadas:
                     relatorio_df_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
+                    ata_ids_filtradas = set(relatorio_df_filtrado["Ata ID"].unique())
+
                     st.dataframe(relatorio_df_filtrado, height=200)
+
+                    hoje = datetime.today().date()
+                    data_limite = hoje + timedelta(days=30)
+
+                    # Criar dicionário: ata_id -> saldo total disponível
+                    saldo_por_ata = {}
+                    for eq in equipamentos_data:
+                        ata_id = eq["ata_id"]
+                        saldo_por_ata[ata_id] = saldo_por_ata.get(ata_id, 0) + eq["saldo_disponivel"]
+
+                    atas_vencidas = [
+                        ata for ata in atas_data.values()
+                        if ata["id"] in ata_ids_filtradas and ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() < hoje
+                    ]
+
+                    atas_vencendo = [
+                        ata for ata in atas_data.values()
+                        if ata["id"] in ata_ids_filtradas and ata["data_validade"] and hoje < pd.to_datetime(ata["data_validade"]).date() <= data_limite
+                    ]
+
+                    with st.container(border=True):
+                        st.warning("🔔 Atas vencendo nos próximos 30 dias:")
+                        if atas_vencendo:
+                            for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
+                                validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                                saldo = saldo_por_ata.get(ata["id"], 0)
+                                st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
+                                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+                        else:
+                            st.write("Não há atas vencendo nos próximos 30 dias.")
+
+                
+                    with st.container(border=True):
+                        st.markdown("""
+                                <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                    ❌    Atas vencidas:
+                                    <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
+                                </div>
+                                """, unsafe_allow_html=True)
+                        if atas_vencidas:
+                            for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
+                                validade_dt = pd.to_datetime(ata["data_validade"])
+                                dias_vencida = (pd.Timestamp.today() - validade_dt).days
+
+                                if 0 < dias_vencida <= 30:
+                                    validade = validade_dt.strftime('%d/%m/%Y')
+                                    saldo = saldo_por_ata.get(ata["id"], 0)
+                                    st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
+                                    st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+                        else:
+                            st.write("Não há atas vencidas nos últimos 30 dias.")
 
             else:
                 st.info("Nenhum consumo cadastrado ainda.")
 
-            hoje = datetime.today().date()
-            data_limite = hoje + timedelta(days=30)
-
-            # Criar dicionário: ata_id -> saldo total disponível
-            saldo_por_ata = {}
-            for eq in equipamentos_data:
-                ata_id = eq["ata_id"]
-                saldo_por_ata[ata_id] = saldo_por_ata.get(ata_id, 0) + eq["saldo_disponivel"]
-
-            atas_vencidas = [
-                ata for ata in atas_data.values()
-                if ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() < hoje
-            ]
-
-            atas_vencendo = [
-                ata for ata in atas_data.values()
-                if ata["data_validade"] and hoje < pd.to_datetime(ata["data_validade"]).date() <= data_limite
-            ]
-
-            with st.container(border=True):
-                st.warning("🔔 Atas vencendo nos próximos 30 dias:")
-                if atas_vencendo:
-                    for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
-                        validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
-                        saldo = saldo_por_ata.get(ata["id"], 0)
-                        st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
-                        st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
-                else:
-                    st.write("Não há atas vencendo nos próximos 30 dias.")
-
-        
-            with st.container(border=True):
-                st.markdown("""
-                        <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
-                            ❌    Atas vencidas:
-                            <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-                if atas_vencidas:
-                    for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
-                        validade_dt = pd.to_datetime(ata["data_validade"])
-                        dias_vencida = (pd.Timestamp.today() - validade_dt).days
-
-                        if 0 < dias_vencida <= 30:
-                            validade = validade_dt.strftime('%d/%m/%Y')
-                            saldo = saldo_por_ata.get(ata["id"], 0)
-                            st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
-                            st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
-                else:
-                    st.write("Não há atas vencidas nos últimos 30 dias.")
 
         except Exception as e:
             st.error(f"Erro ao gerar relatório: {e}")
