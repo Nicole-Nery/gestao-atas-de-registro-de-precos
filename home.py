@@ -212,7 +212,7 @@ def show_home():
             st.warning("Preencha todos os campos obrigatórios.")
 
     def selecionar_categoria():
-        categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
+        categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione", key="selecionar_categoria_funcao")
                 
         try:
             atas_result = buscar_atas()
@@ -233,7 +233,7 @@ def show_home():
         return [atas_opcoes, atas_dict]
             
     def selecionar_categoria_para_empenho():
-        categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione")
+        categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione", key="selecionar_categoria_empenho_funcao")
 
         try:       
             atas_result = buscar_atas()
