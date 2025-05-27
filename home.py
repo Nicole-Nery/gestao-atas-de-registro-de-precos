@@ -326,7 +326,7 @@ def show_home():
 
                     if fornecedores_result:
                         df_fornecedores = pd.DataFrame(fornecedores_result)
-                        df_fornecedores = df_fornecedores.rename(columns={
+                        df_fornecedores = df_fornecedores.drop(columns=["id"]).rename(columns={
                             "nome": "Nome",
                             "cnpj": "CNPJ",
                             "email": "E-mail",
