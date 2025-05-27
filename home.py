@@ -1127,12 +1127,11 @@ def show_home():
 
         try:
             # Buscar atas
-            atas_response = supabase.table("atas").select("id, nome, data_validade").execute()
-            atas_data = {ata["id"]: ata for ata in atas_response.data}
+            atas_response = buscar_atas(["id", "nome", "data_validade", "categoria_ata"])
+            atas_data = {ata["id"]: ata for ata in atas_response}
 
             # Buscar equipamentos
-            equipamentos_response = supabase.table("equipamentos").select("especificacao, quantidade, saldo_disponivel, ata_id, valor_unitario").order("ata_id").execute()
-            equipamentos_data = equipamentos_response.data
+            equipamentos_data = buscar_equipamentos(["especificacao", "quantidade", "saldo_disponivel", "ata_id", "valor_unitario"])
 
             if equipamentos_data:
                 relatorio_consumo = []
@@ -1150,6 +1149,7 @@ def show_home():
 
                     relatorio_consumo.append({
                         "Ata": ata["nome"],
+                        "Categoria": ata["categoria_ata"],
                         "Equipamento": eq["especificacao"],
                         "Qtd Total": eq["quantidade"],
                         "Saldo Utilizado": saldo_utilizado,
@@ -1186,8 +1186,11 @@ def show_home():
                 relatorio_df["Valor Utilizado (R$)"] = relatorio_df["Valor Utilizado (R$)"].apply(formatar_moeda)
                 relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].map(lambda x: f"{x:.1f}%")
 
-
-                st.dataframe(relatorio_df, height=200)
+                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione", key="selecionar_categoria_relatorio")
+                
+                if categorias_selecionadas:
+                    relatorio_df_filtrado = relatorio_df[relatorio_df["Categoria"] == categorias_selecionadas]
+                    st.dataframe(relatorio_df_filtrado, height=200)
 
             else:
                 st.info("Nenhum consumo cadastrado ainda.")
