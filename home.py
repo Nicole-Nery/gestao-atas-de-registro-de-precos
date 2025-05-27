@@ -1003,7 +1003,6 @@ def show_home():
                 categoria = ata["categoria_ata"]
 
                 # Aplicar filtros
-
                 if ata_filtro != "Todas" and atas_dict[ata_filtro] != ata_id:
                     continue
                 if equipamento_filtro != "Todos" and especificacao != equipamento_filtro:
@@ -1019,6 +1018,9 @@ def show_home():
                     "Data do Empenho": data_empenho.strftime('%d/%m/%Y'),
                     "Observação": emp["observacao"]
                 })
+
+                st.write("olha")
+                st.write(empenhos_filtrados)
 
             if empenhos_filtrados:
                 df_empenhos = pd.DataFrame(empenhos_filtrados)
