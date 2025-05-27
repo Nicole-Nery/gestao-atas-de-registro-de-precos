@@ -1282,81 +1282,76 @@ def show_home():
 
         try:
             # Buscar atas
-            atas_response = supabase.table("atas").select("id, nome, data_inicio").execute()
-            atas_data = {ata["id"]: ata for ata in atas_response.data}
+            atas_response = buscar_atas(["id", "nome", "data_inicio", "categoria_ata"])
+            atas_data = {ata["id"]: ata for ata in atas_response}
 
             if atas_data:
+                # Inicialização
                 relatorio_renovacao = []
-                hoje = date.today()
-                prazo_meses = st.session_state.prazo_renovacao_ata
+                alertas_90 = []
+                alertas_30 = []
+                alertas_vencidas = []
 
-                # Definir listas para armazenar atas com alertas
-                renovacoes_90_dias = []
-                renovacoes_30_dias = []
-                renovacoes_vencidas = []
-
+                # Preenchendo os dados brutos
                 for ata in atas_data.values():
                     if not ata:
                         continue
 
-                    # Garantindo que data_inicio está no formato date
                     data_inicio = date.fromisoformat(ata["data_inicio"])
-
-                    # Calculando a data de renovação
-                    data_renovacao = data_inicio + relativedelta(months=prazo_meses)
+                    data_renovacao = data_inicio + relativedelta(months=st.session_state.prazo_renovacao_ata)
                     dias_para_renovacao = (data_renovacao - hoje).days
 
                     relatorio_renovacao.append({
                         "Ata": ata["nome"],
+                        "Ata ID": ata["id"],
+                        "Categoria": ata["categoria_ata"],
                         "Data Início": data_inicio.strftime('%d/%m/%Y'),
                         "Data Renovação": data_renovacao.strftime('%d/%m/%Y'),
                         "Dias para renovação": dias_para_renovacao
                     })
 
+                    alerta = {
+                        "nome": ata["nome"],
+                        "dias": dias_para_renovacao,
+                        "categoria": ata["categoria_ata"]
+                    }
 
-                    # Adicionar à lista de renovações próximas (90 e 30 dias)
-                    if dias_para_renovacao < 0:
-                        if dias_para_renovacao > -31:
-                            renovacoes_vencidas.append(f"**Ata:** {ata['nome']} — Vencida há {-dias_para_renovacao} dia(s)")
+                    if dias_para_renovacao < 0 and dias_para_renovacao > -31:
+                        alertas_vencidas.append(alerta)
                     elif dias_para_renovacao <= 30:
-                        renovacoes_30_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
-                    elif 30 < dias_para_renovacao <= 90:
-                        renovacoes_90_dias.append(f"**Ata:** {ata['nome']} — {dias_para_renovacao} dias restantes")
-            
+                        alertas_30.append(alerta)
+                    elif dias_para_renovacao <= 90:
+                        alertas_90.append(alerta)
 
+                # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
                 relatorio_df = relatorio_df[relatorio_df["Dias para renovação"] >= -30]
-                st.dataframe(relatorio_df, height=150)
 
-                # Exibir alertas de renovação
-                with st.container(border=True):
-                    st.warning("🔔 Renovações nos próximos 90 dias:")
-                    if renovacoes_90_dias:
-                        for alerta in renovacoes_90_dias:
-                            st.write(alerta)
-                    else:
-                        st.write("Não há atas com renovações nos próximos 90 dias.")
+                # Seleção de categorias
+                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", categorias, placeholder="Selecione", key="selecionar_categoria_renovacao")
 
-                with st.container(border=True):
-                    st.warning("⚠️ Renovações nos próximos 30 dias:")
-                    if renovacoes_30_dias:
-                        for alerta in renovacoes_30_dias:
-                            st.write(alerta)
-                    else:
-                        st.write("Não há atas com renovações nos próximos 30 dias.")
+                if categorias_selecionadas:
+                    relatorio_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
+                    st.dataframe(relatorio_filtrado, height=150)
 
-                with st.container(border=True):
-                    st.markdown("""
-                        <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
-                            ❌    Atas com renovação vencida:
-                            <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    if renovacoes_vencidas:
-                        for alerta in renovacoes_vencidas:
-                                st.write(alerta)
-                    else:
-                        st.write("Não há atas com renovações vencidas nos últimos 30 dias.")
+                    def exibir_alertas(alertas, titulo, icone="⚠️"):
+                        alertas_filtrados = [a for a in alertas if a["categoria"] in categorias_selecionadas]
+                        with st.container(border=True):
+                            st.warning(f"{icone} {titulo}")
+                            if alertas_filtrados:
+                                for a in alertas_filtrados:
+                                    if a["dias"] < 0:
+                                        st.write(f"**Ata:** {a['nome']} — Vencida há {-a['dias']} dia(s)")
+                                    else:
+                                        st.write(f"**Ata:** {a['nome']} — {a['dias']} dias restantes")
+                            else:
+                                st.write("Não há atas nesta condição.")
+
+                    # Exibir alertas filtrados por categoria
+                    exibir_alertas(alertas_90, "Renovações nos próximos 90 dias", "🔔")
+                    exibir_alertas(alertas_30, "Renovações nos próximos 30 dias", "⚠️")
+                    exibir_alertas(alertas_vencidas, "Atas com renovação vencida", "❌")
+
                     
             else:
                 st.info("Nenhuma ata cadastrada ainda.")
