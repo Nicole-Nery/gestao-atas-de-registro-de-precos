@@ -1060,7 +1060,13 @@ def show_home():
                         </div>
                     """, unsafe_allow_html=True)
 
-                aba1, aba2, aba3 = st.tabs(["Por Ata", "Por Mês", "Por Equipamento"])
+                aba0, aba1, aba2, aba3 = st.tabs(["Por Categoria", "Por Ata", "Por Mês", "Por Equipamento"])
+
+                with aba0:
+                    total_por_categoria = df_empenhos.groupby("Categoria")["Quantidade"].sum().reset_index()
+                    fig_categoria = px.bar(total_por_categoria, x="Categoria", y="Quantidade", title="Total de Empenhos por Categoria")
+                    fig_categoria.update_yaxes(dtick=5)
+                    st.plotly_chart(fig_categoria, use_container_width=True)
 
                 with aba1:
                     total_por_ata = df_empenhos.groupby("Ata")["Quantidade"].sum().reset_index()
