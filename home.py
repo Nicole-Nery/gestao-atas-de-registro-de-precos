@@ -1316,11 +1316,11 @@ def show_home():
                         "categoria": ata["categoria_ata"]
                     }
 
-                    if dias_para_renovacao < 0 and dias_para_renovacao >= 30:
+                    if dias_para_renovacao < 0 and dias_para_renovacao >= -30:
                         alertas_vencidas.append(alerta)
-                    elif dias_para_renovacao <= 30:
+                    elif dias_para_renovacao > 0 and dias_para_renovacao <= 30:
                         alertas_30.append(alerta)
-                    elif dias_para_renovacao <= 90:
+                    elif dias_para_renovacao > 30 and dias_para_renovacao <= 90:
                         alertas_90.append(alerta)
 
                 # Criar DataFrame
@@ -1350,7 +1350,7 @@ def show_home():
 
                     with st.container(border=True):
                         st.markdown("""
-                            <div style='background-color:#a9eb98; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                            <div style='background-color:#c3fbb4; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
                                 🔔 Renovações nos próximos 90 dias:
                             </div>
                             """, unsafe_allow_html=True)
