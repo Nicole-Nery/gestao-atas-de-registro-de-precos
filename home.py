@@ -509,7 +509,7 @@ def show_home():
                         valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
                         valor_total = valor_unitario * quantidade
 
-                        submit_equipamento = st.form_submit_button("Adicionar Equipamento")
+                        submit_equipamento = st.form_submit_button("Adicionar Item")
 
                         if submit_equipamento:
                             cadastrar_equipamento(especificacao, marca_modelo, quantidade, saldo_disponivel, valor_unitario)
@@ -966,11 +966,11 @@ def show_home():
             atas_opcoes = ["Todas"] + list(atas_dict.keys())
             ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
-            # Filtrar por equipamento
+            # Filtrar por Item
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_data}
             equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_data)))
-            equipamento_filtro = st.selectbox("Filtrar por Equipamento", equipamentos_opcoes, key="filtro_equipamento")
+            equipamento_filtro = st.selectbox("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento")
 
             # Filtro de data
             col1, col2 = st.columns(2)
@@ -1060,7 +1060,7 @@ def show_home():
                         </div>
                     """, unsafe_allow_html=True)
 
-                aba0, aba1, aba2, aba3 = st.tabs(["Por Categoria", "Por Ata", "Por Mês", "Por Equipamento"])
+                aba0, aba1, aba2, aba3 = st.tabs(["Por Categoria", "Por Ata", "Por Mês", "Por Item"])
 
                 with aba0:
                     total_por_categoria = df_empenhos.groupby("Categoria")["Quantidade"].sum().reset_index()
@@ -1105,7 +1105,7 @@ def show_home():
                     top_eq["Equipamento"] = top_eq["Equipamento"].apply(lambda x: '<br>'.join(textwrap.wrap(x, width=20)))
 
                     fig_top_eq = px.bar(top_eq, x="Quantidade", y="Equipamento", orientation="h",
-                                        title="Top 5 Equipamentos Mais Empenhados")
+                                        title="Top 5 Itens Mais Empenhados")
                     fig_top_eq.update_xaxes(dtick=5)
                     fig_top_eq.update_yaxes(title_text="")
                     st.plotly_chart(fig_top_eq, use_container_width=True)
