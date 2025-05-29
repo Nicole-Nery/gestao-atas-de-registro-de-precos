@@ -957,21 +957,21 @@ def show_home():
 
         try:
             # Filtrar por categoria
-            categorias = ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
+            categorias = ["Todos", "Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
             categoria_filtro = st.multiselect("Filtrar por Categoria", categorias, key="selecione_categoria_filtro", placeholder="Selecione")
 
             # Buscar atas
             atas_data = buscar_atas(["id", "nome", "categoria_ata"])
 
             # Filtrar atas pelas categorias selecionadas
-            if categoria_filtro:
-                atas_filtradas = [ata for ata in atas_data if ata["categoria_ata"] in categoria_filtro]
-            else:
+            if not categoria_filtro or "Todos" in categoria_filtro:
                 atas_filtradas = atas_data
+            else:
+                atas_filtradas = [ata for ata in atas_data if ata["categoria_ata"] in categoria_filtro]   
 
             # Construir opções de atas
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
-            atas_opcoes = list(atas_dict.keys())
+            atas_opcoes = ["Todas"] + list(atas_dict.keys())
 
             # Filtrar por ata
             ata_filtro = st.multiselect("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro", placeholder="Selecione", )
@@ -979,16 +979,16 @@ def show_home():
             # Filtrar por Item
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
 
-            if ata_filtro:
-                ata_id_selecionada = [atas_dict[nome_ata] for nome_ata in ata_filtro]
-                equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"] in ata_id_selecionada] 
-            else:
+            if not ata_filtro or "Todas" in ata_filtro:
                 # Quando a categoria está filtrada mas a ata não, buscar todos os equipamentos das atas dessa categoria
                 if categoria_filtro:
                     ata_ids_filtradas = [ata["id"] for ata in atas_filtradas]
                     equipamentos_filtrados = [eq for eq in equipamentos_data if eq["ata_id"] in ata_ids_filtradas]
                 else:
                     equipamentos_filtrados = equipamentos_data
+            else:
+                ata_id_selecionada = [atas_dict[nome_ata] for nome_ata in ata_filtro if nome_ata != "Todas"]
+                equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"] in ata_id_selecionada] 
 
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
             equipamentos_opcoes = sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
