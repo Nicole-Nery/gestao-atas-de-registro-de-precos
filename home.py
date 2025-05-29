@@ -970,12 +970,19 @@ def show_home():
             
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
             atas_opcoes = ["Todas"] + list(atas_dict.keys())
-            
+
             ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
             # Filtrar por Item
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
-            equipamentos_dict = {eq["id"]: eq for eq in equipamentos_data}
+
+            if ata_filtro != "Todas":
+                ata_id_selecionada = atas_dict[ata_filtro]
+                equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"]==ata_id_selecionada]
+            else:
+                equipamentos_filtrados = equipamentos_data
+
+            equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
             equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_data)))
             equipamento_filtro = st.selectbox("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento")
 
