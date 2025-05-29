@@ -963,11 +963,8 @@ def show_home():
             # Filtrar por ata
             atas_data = buscar_atas(["id", "nome", "categoria_ata"])
 
-            if categoria_filtro != "Todas":
-                atas_filtradas = [ata for ata in atas_data if ata["categoria_ata"] == categoria_filtro]
-            else:
-                atas_filtradas = atas_data
-            
+            atas_filtradas = [ata for ata in atas_data if ata["categoria_ata"] == categoria_filtro]
+        
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
             atas_opcoes = atas_dict.keys()
 
