@@ -969,7 +969,7 @@ def show_home():
                 atas_filtradas = atas_data
             
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
-            atas_opcoes = list(atas_dict.keys())
+            atas_opcoes = atas_dict.keys()
 
             ata_filtro = st.multiselect("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
