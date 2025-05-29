@@ -980,7 +980,7 @@ def show_home():
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
 
             if ata_filtro:
-                ata_id_selecionada = atas_dict[ata_filtro]
+                ata_id_selecionada = [atas_dict[nome_ata] for nome_ata in ata_filtro]
                 equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"]==ata_id_selecionada]
             else:
                 # Quando a categoria está filtrada mas a ata não, buscar todos os equipamentos das atas dessa categoria
