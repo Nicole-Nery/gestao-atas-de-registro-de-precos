@@ -1049,7 +1049,7 @@ def show_home():
                 especificacoes_nao_empenhadas = especificacoes_filtradas - especificacoes_empenhadas
 
                 if especificacoes_nao_empenhadas:
-                    st.write("Itens desta(s) Ata(s) ainda não empenhados:")
+                    st.markdown("**Itens desta(s) Ata(s) ainda não empenhados:**")
                     for especificacao in sorted(especificacoes_nao_empenhadas):
                         st.write(f"- {especificacao}")
 
