@@ -957,8 +957,8 @@ def show_home():
 
         try:
             # Filtrar por categoria
-            categorias = ["Todas", "Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
-            categoria_filtro = st.multiselect("Filtrar por Categoria", categorias, key="selecione_categoria_filtro")
+            categorias = ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
+            categoria_filtro = st.multiselect("Filtrar por Categoria", categorias, key="selecione_categoria_filtro", placeholder="Selecione")
 
             # Filtrar por ata
             atas_data = buscar_atas(["id", "nome", "categoria_ata"])
@@ -969,9 +969,9 @@ def show_home():
                 atas_filtradas = atas_data
             
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
-            atas_opcoes = ["Todas"] + list(atas_dict.keys())
+            atas_opcoes = list(atas_dict.keys())
 
-            ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
+            ata_filtro = st.multiselect("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
             # Filtrar por Item
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
