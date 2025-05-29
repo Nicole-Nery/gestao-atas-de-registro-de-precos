@@ -991,8 +991,15 @@ def show_home():
                 equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"] in ata_id_selecionada] 
 
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
-            equipamentos_opcoes = sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
+            equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
             equipamento_filtro = st.multiselect("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento", placeholder="Selecione")
+
+            # Considera todos se estiver vazio ou se "Todos" estiver selecionado
+            if not equipamento_filtro or "Todos" in equipamento_filtro:
+                equipamentos_selecionados = equipamentos_filtrados
+            else:
+                equipamentos_selecionados = [eq for eq in equipamentos_filtrados if eq["especificacao"] in equipamento_filtro]
+
 
             # Filtro de data
             col1, col2 = st.columns(2)
@@ -1047,7 +1054,7 @@ def show_home():
                 st.dataframe(df_empenhos, height=200)
 
                 especificacoes_empenhadas = set(df_empenhos["Equipamento"])
-                especificacoes_filtradas = set(eq["especificacao"] for eq in equipamentos_filtrados)
+                especificacoes_filtradas = set(eq["especificacao"] for eq in equipamentos_selecionados)
 
                 especificacoes_nao_empenhadas = especificacoes_filtradas - especificacoes_empenhadas
 
