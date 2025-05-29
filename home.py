@@ -1053,6 +1053,7 @@ def show_home():
                     for especificacao in sorted(especificacoes_nao_empenhadas):
                         st.write(f"- {especificacao}")
 
+                st.markdown("---")
                 st.subheader("📊 Análises e Gráficos")
 
                 # Resumos
