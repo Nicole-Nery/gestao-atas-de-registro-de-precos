@@ -1000,9 +1000,6 @@ def show_home():
             else:
                 equipamentos_selecionados = [eq for eq in equipamentos_filtrados if eq["especificacao"] in equipamento_filtro]
 
-            st.write(equipamentos_selecionados)
-
-            
             # Filtro de data
             col1, col2 = st.columns(2)
             with col1:
@@ -1026,19 +1023,24 @@ def show_home():
                 if not ata:
                     continue
 
-                if categoria_filtro != "Todas" and ata["categoria_ata"] != categoria_filtro:
-                    continue
-
-                ata_nome = ata["nome"]
                 especificacao = equipamento["especificacao"]
                 data_empenho = pd.to_datetime(emp["data_empenho"])
                 categoria = ata["categoria_ata"]
+                ata_nome = ata["nome"]
 
-                # Aplicar filtros
-                if ata_filtro != "Todas" and atas_dict[ata_filtro] != ata_id:
+                # Filtros por categoria (multiselect)
+                if categoria_filtro and "Todas" not in categoria_filtro and categoria not in categoria_filtro:
                     continue
-                if equipamento_filtro != "Todos" and especificacao != equipamento_filtro:
+
+                # Filtros por ata (multiselect)
+                if ata_filtro and "Todas" not in ata_filtro and ata_nome not in ata_filtro:
                     continue
+
+                # Filtros por equipamento (multiselect)
+                if equipamento_filtro and "Todos" not in equipamento_filtro and especificacao not in equipamento_filtro:
+                    continue
+
+                # Filtro de data
                 if not (data_inicio <= data_empenho.date() <= data_fim):
                     continue
 
@@ -1050,6 +1052,7 @@ def show_home():
                     "Data do Empenho": data_empenho.strftime('%d/%m/%Y'),
                     "Observação": emp["observacao"]
                 })
+
 
             if empenhos_filtrados:
                 df_empenhos = pd.DataFrame(empenhos_filtrados)
