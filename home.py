@@ -962,13 +962,15 @@ def show_home():
 
             # Filtrar por ata
             atas_data = buscar_atas(["id", "nome", "categoria_ata"])
-            atas_dict = {ata["nome"]: ata["id"] for ata in atas_data}
 
             if categoria_filtro != "Todas":
                 atas_filtradas = [ata for ata in atas_data if ata["categoria_ata"] == categoria_filtro]
-                atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
+            else:
+                atas_filtradas = atas_data
             
+            atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
             atas_opcoes = ["Todas"] + list(atas_dict.keys())
+            
             ata_filtro = st.selectbox("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro")
 
             # Filtrar por Item
