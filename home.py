@@ -980,9 +980,10 @@ def show_home():
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
 
             if ata_filtro:
+                st.write("entrou")
                 ata_id_selecionada = [atas_dict[nome_ata] for nome_ata in ata_filtro]
                 st.write(ata_id_selecionada)
-                
+
                 equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"]==ata_id_selecionada]
 
                 st.write(equipamentos_filtrados)
