@@ -958,7 +958,7 @@ def show_home():
         try:
             # Filtrar por categoria
             categorias = ["Todas", "Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"]
-            categoria_filtro = st.selectbox("Filtrar por Categoria", categorias, key="selecione_categoria_filtro")
+            categoria_filtro = st.multiselect("Filtrar por Categoria", categorias, key="selecione_categoria_filtro")
 
             # Filtrar por ata
             atas_data = buscar_atas(["id", "nome", "categoria_ata"])
