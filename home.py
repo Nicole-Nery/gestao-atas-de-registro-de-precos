@@ -986,7 +986,7 @@ def show_home():
                     equipamentos_filtrados = [eq for eq in equipamentos_data if eq["ata_id"] in ata_ids_filtradas]
                 else:
                     equipamentos_filtrados = equipamentos_data
-                    
+
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
             equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
             equipamento_filtro = st.selectbox("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento")
@@ -1042,6 +1042,16 @@ def show_home():
             if empenhos_filtrados:
                 df_empenhos = pd.DataFrame(empenhos_filtrados)
                 st.dataframe(df_empenhos, height=200)
+
+                especificacoes_empenhadas = set(df_empenhos["Equipamento"])
+                especificacoes_filtradas = set(eq["especificacao"] for eq in equipamentos_filtrados)
+
+                especificacoes_nao_empenhadas = especificacoes_filtradas - especificacoes_empenhadas
+
+                if especificacoes_nao_empenhadas:
+                    st.write("Itens desta(s) Ata(s) ainda não empenhados:")
+                    for especificacao in sorted(especificacoes_nao_empenhadas):
+                        st.write(f"- {especificacao}")
 
                 st.subheader("📊 Análises e Gráficos")
 
