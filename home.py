@@ -983,7 +983,7 @@ def show_home():
                 equipamentos_filtrados = equipamentos_data
 
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
-            equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_data)))
+            equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
             equipamento_filtro = st.selectbox("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento")
 
             # Filtro de data
