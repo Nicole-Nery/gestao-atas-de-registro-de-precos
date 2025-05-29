@@ -973,26 +973,26 @@ def show_home():
             atas_dict = {ata["nome"]: ata["id"] for ata in atas_filtradas}
             atas_opcoes = list(atas_dict.keys())
 
-            # Filtrar por ata (multiselect)
+            # Filtrar por ata
             ata_filtro = st.multiselect("Filtrar por Ata", atas_opcoes, key="selecione_ata_filtro", placeholder="Selecione")
 
             # Filtrar por Item
             equipamentos_data = buscar_equipamentos(["id", "especificacao", "ata_id"])
 
-            if ata_filtro != "Todas":
+            if ata_filtro:
                 ata_id_selecionada = atas_dict[ata_filtro]
                 equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"]==ata_id_selecionada]
             else:
                 # Quando a categoria está filtrada mas a ata não, buscar todos os equipamentos das atas dessa categoria
-                if categoria_filtro != "Todas":
+                if categoria_filtro:
                     ata_ids_filtradas = [ata["id"] for ata in atas_filtradas]
                     equipamentos_filtrados = [eq for eq in equipamentos_data if eq["ata_id"] in ata_ids_filtradas]
                 else:
                     equipamentos_filtrados = equipamentos_data
 
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
-            equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
-            equipamento_filtro = st.selectbox("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento")
+            equipamentos_opcoes = sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
+            equipamento_filtro = st.multiselect("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento", placeholder="Selecione")
 
             # Filtro de data
             col1, col2 = st.columns(2)
