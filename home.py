@@ -1000,7 +1000,9 @@ def show_home():
             else:
                 equipamentos_selecionados = [eq for eq in equipamentos_filtrados if eq["especificacao"] in equipamento_filtro]
 
+            st.write(equipamentos_selecionados)
 
+            
             # Filtro de data
             col1, col2 = st.columns(2)
             with col1:
