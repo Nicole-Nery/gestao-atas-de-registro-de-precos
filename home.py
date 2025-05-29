@@ -982,8 +982,6 @@ def show_home():
             else:
                 equipamentos_filtrados = equipamentos_data
 
-            st.write(equipamentos_filtrados)
-            st.markdown("---")
             equipamentos_dict = {eq["id"]: eq for eq in equipamentos_filtrados}
             equipamentos_opcoes = ["Todos"] + sorted(list(set(eq["especificacao"] for eq in equipamentos_filtrados)))
             equipamento_filtro = st.selectbox("Filtrar por Item", equipamentos_opcoes, key="filtro_equipamento")
@@ -996,6 +994,7 @@ def show_home():
                 data_fim = st.date_input("Data final", value=pd.to_datetime("today"), format= 'DD/MM/YYYY', key="data_fim_filtro")
 
             # Buscar empenhos
+            st.subheader("Empenhos realizados")
             empenhos_response = supabase.table("empenhos").select("*").order("data_empenho", desc=True).execute()
             empenhos_data = empenhos_response.data
 
