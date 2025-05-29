@@ -981,11 +981,7 @@ def show_home():
 
             if ata_filtro:
                 ata_id_selecionada = [atas_dict[nome_ata] for nome_ata in ata_filtro]
-
                 equipamentos_filtrados = [equip for equip in equipamentos_data if equip["ata_id"] in ata_id_selecionada] 
-
-                st.write(equipamentos_filtrados)
-                st.markdown("---")
             else:
                 # Quando a categoria está filtrada mas a ata não, buscar todos os equipamentos das atas dessa categoria
                 if categoria_filtro:
