@@ -26,9 +26,10 @@ def show_home():
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
-    st.markdown("---")
+
     # Cabeçalho
     with st.container():
+        st.markdown("---")
         st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
         col1, col2 = st.columns([1,5])
         with col1:
