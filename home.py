@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta, date
 import plotly.express as px
-import streamlit.components.v1 as components
 from db import supabase
 import textwrap
 import re
@@ -486,17 +485,10 @@ def show_home():
                 # Adicionar Equipamento na Ata --------------------------------------------
                 st.subheader("Adicionar Item a uma Ata")
 
-                try:
-                    atas_result = buscar_atas(["id", "nome"])
-                    atas_dict = {a["nome"]: a["id"] for a in atas_result}
-                    atas_cadastradas = ["Selecione"] + list(atas_dict.keys())
+                atas_opcoes, atas_dict = selecionar_categoria()
+                atas_result = buscar_atas(["id", "nome"])
 
-                except Exception as e:
-                    st.error(f"Erro ao buscar atas: {e}")
-                    atas_cadastradas = ["Selecione"]
-                    atas_dict = {}
-
-                ata_nome = st.selectbox("Selecione a Ata", atas_cadastradas, key="selecione_ata_nome")
+                ata_nome = st.selectbox("Selecione a Ata", atas_opcoes, key="selecione_ata_nome")
 
                 if ata_nome != "Selecione":
                     ata_id = atas_dict[ata_nome]
