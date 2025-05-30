@@ -257,10 +257,152 @@ def show_home():
         return [atas_cadastradas, atas_dict]
 
     # Estabelecendo o layout com abas
-    tabs = st.tabs(["Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Relatórios de Consumo e Status", "Renovação de Atas"])
+    tabs = st.tabs(["Relatórios de Consumo e Status", "Fornecedores", "Atas", "Empenhos", "Histórico Geral de Empenhos", "Renovação de Atas"])
+    
+    # Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
+    with tabs[0]:
+        col1, col2 = st.columns([1,4])
+
+        with col1:
+            st.image("assets/logos.svg", width=300)
+        with col2:
+            st.subheader("Relatórios de Consumo e Status")
+
+        try:
+            # Buscar atas
+            atas_response = buscar_atas(["id", "nome", "data_validade", "categoria_ata"])
+            atas_data = {ata["id"]: ata for ata in atas_response}
+
+            # Buscar equipamentos
+            equipamentos_data = buscar_equipamentos(["especificacao", "quantidade", "saldo_disponivel", "ata_id", "valor_unitario"])
+
+            if equipamentos_data:
+                relatorio_consumo = []
+                for eq in equipamentos_data:
+                    ata = atas_data.get(eq["ata_id"])
+
+                    if not ata:
+                        continue
+
+                    saldo_utilizado = eq["quantidade"] - eq["saldo_disponivel"]
+                    valor_total = eq["quantidade"] * eq["valor_unitario"]
+                    valor_utilizado = saldo_utilizado * eq["valor_unitario"]
+                    percentual_utilizado = (saldo_utilizado / eq["quantidade"]) * 100 if eq["quantidade"] else 0
+                    percentual_disponivel = 100 - percentual_utilizado
+
+                    relatorio_consumo.append({
+                        "Ata": ata["nome"],
+                        "Ata ID": ata["id"],
+                        "Categoria": ata["categoria_ata"],
+                        "Equipamento": eq["especificacao"],
+                        "Qtd Total": eq["quantidade"],
+                        "Saldo Utilizado": saldo_utilizado,
+                        "Saldo Disponível": eq["saldo_disponivel"],
+                        "% Utilizado": f"{percentual_utilizado:.1f}%",
+                        "% Disponível": f"{percentual_disponivel:.1f}%",
+                        "Valor Total (R$)": valor_total,
+                        "Valor Utilizado (R$)": valor_utilizado,
+                        "Data de Validade": ata["data_validade"]
+                    })
+
+                # Criar DataFrame
+                relatorio_df = pd.DataFrame(relatorio_consumo)
+
+                # Manter validade como datetime antes de formatar
+                relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"])
+
+                # Remover atas vencidas há mais de 30 dias
+                hoje = pd.Timestamp.today()
+                relatorio_df = relatorio_df[(relatorio_df["Data de Validade"] >= hoje - pd.Timedelta(days=30))]
+
+                # Garantir que % utilizado é float antes de formatar
+                relatorio_df["% Utilizado"] = (
+                    relatorio_df["% Utilizado"]
+                    .astype(str)
+                    .str.replace('%', '', regex=False)
+                    .str.replace(',', '.', regex=False)
+                    .astype(float)
+                )
+
+                # Formatações
+                relatorio_df["Data de Validade"] = relatorio_df["Data de Validade"].dt.strftime('%d/%m/%Y')
+                relatorio_df["Valor Total (R$)"] = relatorio_df["Valor Total (R$)"].apply(formatar_moeda)
+                relatorio_df["Valor Utilizado (R$)"] = relatorio_df["Valor Utilizado (R$)"].apply(formatar_moeda)
+                relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].map(lambda x: f"{x:.1f}%")
+
+                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione", key="selecionar_categoria_relatorio")
+                
+                if categorias_selecionadas:
+                    relatorio_df_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
+                    ata_ids_filtradas = set(relatorio_df_filtrado["Ata ID"].unique())
+
+                    st.dataframe(relatorio_df_filtrado, height=200)
+
+                    hoje = datetime.today().date()
+                    data_limite = hoje + timedelta(days=30)
+
+                    # Criar dicionário: ata_id -> saldo total disponível
+                    saldo_por_ata = {}
+                    for eq in equipamentos_data:
+                        ata_id = eq["ata_id"]
+                        saldo_por_ata[ata_id] = saldo_por_ata.get(ata_id, 0) + eq["saldo_disponivel"]
+
+                    atas_vencidas = [
+                        ata for ata in atas_data.values()
+                        if ata["id"] in ata_ids_filtradas and ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() < hoje
+                    ]
+
+                    atas_vencendo = [
+                        ata for ata in atas_data.values()
+                        if ata["id"] in ata_ids_filtradas and ata["data_validade"] and hoje < pd.to_datetime(ata["data_validade"]).date() <= data_limite
+                    ]
+
+                    with st.container(border=True):
+                        st.markdown("""
+                            <div style='background-color:#f7f090; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                ⚠️ Atas vencendo nos próximos 30 dias:
+                            </div>
+                            """, unsafe_allow_html=True)
+                        if atas_vencendo:
+                            for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
+                                validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
+                                saldo = saldo_por_ata.get(ata["id"], 0)
+                                st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
+                                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+                        else:
+                            st.write("Não há atas vencendo nos próximos 30 dias.")
+
+                
+                    with st.container(border=True):
+                        st.markdown("""
+                                <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
+                                    ❌    Atas vencidas:
+                                    <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
+                                </div>
+                                """, unsafe_allow_html=True)
+                        if atas_vencidas:
+                            for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
+                                validade_dt = pd.to_datetime(ata["data_validade"])
+                                dias_vencida = (pd.Timestamp.today() - validade_dt).days
+
+                                if 0 < dias_vencida <= 30:
+                                    validade = validade_dt.strftime('%d/%m/%Y')
+                                    saldo = saldo_por_ata.get(ata["id"], 0)
+                                    st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
+                                    st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
+                        else:
+                            st.write("Não há atas vencidas nos últimos 30 dias.")
+
+            else:
+                st.info("Nenhum consumo cadastrado ainda.")
+
+
+        except Exception as e:
+            st.error(f"Erro ao gerar relatório: {e}")
+
 
     # Fornecedores -----------------------------------------------------------------------------------------------------------------
-    with tabs[0]:
+    with tabs[1]:
         col1, col2 = st.columns([1, 4])
 
         # Sessão de estado para armazenar aba ativa
@@ -431,7 +573,7 @@ def show_home():
 
 
     # Atas -----------------------------------------------------------------------------------------------------------------------
-    with tabs[1]:
+    with tabs[2]:
         col1, col2 = st.columns([1, 4])
 
         # Sessão de estado para armazenar aba ativa
@@ -727,7 +869,7 @@ def show_home():
 
                             
     # Empenhos -----------------------------------------------------------------------------------------------------------------                
-    with tabs[2]:
+    with tabs[3]:
         col1, col2 = st.columns([1, 4])
 
         # Sessão de estado para armazenar aba ativa
@@ -938,7 +1080,7 @@ def show_home():
 
 
     # Histórico de Empenhos -----------------------------------------------------------------------------------------------------------------
-    with tabs[3]:
+    with tabs[4]:
 
         col1, col2 = st.columns([1,4])
 
@@ -1154,152 +1296,11 @@ def show_home():
             st.error(f"Erro ao buscar empenhos: {e}")
 
 
-    # Relatórios de Consumo e Status -----------------------------------------------------------------------------------------------------------------
-    with tabs[4]:
-        col1, col2 = st.columns([1,4])
-
-        with col1:
-            st.image("assets/logos.svg", width=300)
-        with col2:
-            st.subheader("Relatórios de Consumo e Status")
-
-        try:
-            # Buscar atas
-            atas_response = buscar_atas(["id", "nome", "data_validade", "categoria_ata"])
-            atas_data = {ata["id"]: ata for ata in atas_response}
-
-            # Buscar equipamentos
-            equipamentos_data = buscar_equipamentos(["especificacao", "quantidade", "saldo_disponivel", "ata_id", "valor_unitario"])
-
-            if equipamentos_data:
-                relatorio_consumo = []
-                for eq in equipamentos_data:
-                    ata = atas_data.get(eq["ata_id"])
-
-                    if not ata:
-                        continue
-
-                    saldo_utilizado = eq["quantidade"] - eq["saldo_disponivel"]
-                    valor_total = eq["quantidade"] * eq["valor_unitario"]
-                    valor_utilizado = saldo_utilizado * eq["valor_unitario"]
-                    percentual_utilizado = (saldo_utilizado / eq["quantidade"]) * 100 if eq["quantidade"] else 0
-                    percentual_disponivel = 100 - percentual_utilizado
-
-                    relatorio_consumo.append({
-                        "Ata": ata["nome"],
-                        "Ata ID": ata["id"],
-                        "Categoria": ata["categoria_ata"],
-                        "Equipamento": eq["especificacao"],
-                        "Qtd Total": eq["quantidade"],
-                        "Saldo Utilizado": saldo_utilizado,
-                        "Saldo Disponível": eq["saldo_disponivel"],
-                        "% Utilizado": f"{percentual_utilizado:.1f}%",
-                        "% Disponível": f"{percentual_disponivel:.1f}%",
-                        "Valor Total (R$)": valor_total,
-                        "Valor Utilizado (R$)": valor_utilizado,
-                        "Data de Validade": ata["data_validade"]
-                    })
-
-                # Criar DataFrame
-                relatorio_df = pd.DataFrame(relatorio_consumo)
-
-                # Manter validade como datetime antes de formatar
-                relatorio_df["Data de Validade"] = pd.to_datetime(relatorio_df["Data de Validade"])
-
-                # Remover atas vencidas há mais de 30 dias
-                hoje = pd.Timestamp.today()
-                relatorio_df = relatorio_df[(relatorio_df["Data de Validade"] >= hoje - pd.Timedelta(days=30))]
-
-                # Garantir que % utilizado é float antes de formatar
-                relatorio_df["% Utilizado"] = (
-                    relatorio_df["% Utilizado"]
-                    .astype(str)
-                    .str.replace('%', '', regex=False)
-                    .str.replace(',', '.', regex=False)
-                    .astype(float)
-                )
-
-                # Formatações
-                relatorio_df["Data de Validade"] = relatorio_df["Data de Validade"].dt.strftime('%d/%m/%Y')
-                relatorio_df["Valor Total (R$)"] = relatorio_df["Valor Total (R$)"].apply(formatar_moeda)
-                relatorio_df["Valor Utilizado (R$)"] = relatorio_df["Valor Utilizado (R$)"].apply(formatar_moeda)
-                relatorio_df["% Utilizado"] = relatorio_df["% Utilizado"].map(lambda x: f"{x:.1f}%")
-
-                categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], placeholder="Selecione", key="selecionar_categoria_relatorio")
-                
-                if categorias_selecionadas:
-                    relatorio_df_filtrado = relatorio_df[relatorio_df["Categoria"].isin(categorias_selecionadas)]
-                    ata_ids_filtradas = set(relatorio_df_filtrado["Ata ID"].unique())
-
-                    st.dataframe(relatorio_df_filtrado, height=200)
-
-                    hoje = datetime.today().date()
-                    data_limite = hoje + timedelta(days=30)
-
-                    # Criar dicionário: ata_id -> saldo total disponível
-                    saldo_por_ata = {}
-                    for eq in equipamentos_data:
-                        ata_id = eq["ata_id"]
-                        saldo_por_ata[ata_id] = saldo_por_ata.get(ata_id, 0) + eq["saldo_disponivel"]
-
-                    atas_vencidas = [
-                        ata for ata in atas_data.values()
-                        if ata["id"] in ata_ids_filtradas and ata["data_validade"] and pd.to_datetime(ata["data_validade"]).date() < hoje
-                    ]
-
-                    atas_vencendo = [
-                        ata for ata in atas_data.values()
-                        if ata["id"] in ata_ids_filtradas and ata["data_validade"] and hoje < pd.to_datetime(ata["data_validade"]).date() <= data_limite
-                    ]
-
-                    with st.container(border=True):
-                        st.markdown("""
-                            <div style='background-color:#f7f090; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
-                                ⚠️ Atas vencendo nos próximos 30 dias:
-                            </div>
-                            """, unsafe_allow_html=True)
-                        if atas_vencendo:
-                            for ata in sorted(atas_vencendo, key=lambda x: x["data_validade"]):
-                                validade = pd.to_datetime(ata["data_validade"]).strftime('%d/%m/%Y')
-                                saldo = saldo_por_ata.get(ata["id"], 0)
-                                st.write(f"**Ata:** {ata['nome']} — **Validade:** {validade}")
-                                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
-                        else:
-                            st.write("Não há atas vencendo nos próximos 30 dias.")
-
-                
-                    with st.container(border=True):
-                        st.markdown("""
-                                <div style='background-color:#f8d7da; padding:17px; border-radius:7px; position:relative; margin-bottom:1em'>
-                                    ❌    Atas vencidas:
-                                    <span style='float:right; cursor:help;' title='Atas com renovação vencida há mais de 30 dias não são mostradas.'>ℹ️</span>
-                                </div>
-                                """, unsafe_allow_html=True)
-                        if atas_vencidas:
-                            for ata in sorted(atas_vencidas, key=lambda x: x["data_validade"]):
-                                validade_dt = pd.to_datetime(ata["data_validade"])
-                                dias_vencida = (pd.Timestamp.today() - validade_dt).days
-
-                                if 0 < dias_vencida <= 30:
-                                    validade = validade_dt.strftime('%d/%m/%Y')
-                                    saldo = saldo_por_ata.get(ata["id"], 0)
-                                    st.write(f"**Ata:** {ata['nome']} — **Vencida em:** {validade}")
-                                    st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;• **Saldo restante:** {saldo}")
-                        else:
-                            st.write("Não há atas vencidas nos últimos 30 dias.")
-
-            else:
-                st.info("Nenhum consumo cadastrado ainda.")
-
-
-        except Exception as e:
-            st.error(f"Erro ao gerar relatório: {e}")
-
     # Renovação da Ata -----------------------------------------------------------------------------------------------------------------------------
     if 'prazo_renovacao_ata' not in st.session_state:
         st.session_state.prazo_renovacao_ata = get_config('prazo_renovacao_ata')
 
-    with tabs[5]:
+    with tabs[4]:
         col1, col2 = st.columns([1, 4])
         with col1:
             st.image("assets/logos.svg", width=300)
