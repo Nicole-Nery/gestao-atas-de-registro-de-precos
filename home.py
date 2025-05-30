@@ -18,7 +18,7 @@ def show_home():
     with col1:
         st.markdown(
             f"""<p style='margin-bottom:0;'><strong>HC-UFU - Hospital de Clínicas de Uberlândia</strong></p>
-            <p style='margin-top:0;'>Bem-vindo(a), {usuario.get('email', 'usuário')}</p>""",
+            <p style='margin-top:0;'>Bem-vindo(a), {usuario.get('nome', 'usuário')}</p>""",
             unsafe_allow_html=True
         )
     with col2:
