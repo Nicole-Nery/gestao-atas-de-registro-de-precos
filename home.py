@@ -29,7 +29,6 @@ def show_home():
 
     # Cabeçalho
     with st.container():
-        st.markdown("---")
         st.markdown('<div class="fixed-header">', unsafe_allow_html=True)
         col1, col2 = st.columns([1,5])
         with col1:
