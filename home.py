@@ -664,11 +664,19 @@ def show_home():
                     ata_id = atas_dict[ata_nome]
 
                     with st.form("novo_equipamento"):
-                        especificacao = st.text_input("Especificação")
-                        marca_modelo = st.text_input("Marca/Modelo")
-                        quantidade = st.number_input("Quantidade", min_value=1, step=1)
-                        saldo_disponivel = st.number_input("Saldo disponível", min_value=0, step=1)
-                        valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
+                        col1, col2, col3 = st.columns([1,1,1])
+                        with col1:
+                            especificacao = st.text_input("Especificação")
+                        with col2:
+                            marca_modelo = st.text_input("Marca/Modelo")
+                        with col3:
+                            quantidade = st.number_input("Quantidade", min_value=1, step=1)
+                        
+                        col1, col2 = st.columns([1,2])
+                        with col1:
+                            saldo_disponivel = st.number_input("Saldo disponível", min_value=0, step=1)
+                        with col2:
+                            valor_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
                         valor_total = valor_unitario * quantidade
 
                         submit_equipamento = st.form_submit_button("Adicionar Item")
