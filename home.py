@@ -833,11 +833,10 @@ def show_home():
                                     with col2:
                                         novo_saldo = st.number_input("Saldo Disponível", value=equipamento["saldo_disponivel"], step=1)
                                     with col3:
-                                        novo_valor_unit = st.number_input("Valor Unitário (R$)", value=float(equipamento["valor_unitario"]), step=0.01, format="%.2f")
-                                    novo_valor_total = valor_unitario * quantidade        
+                                        novo_valor_unit = st.number_input("Valor Unitário (R$)", value=float(equipamento["valor_unitario"]), step=0.01, format="%.2f")       
  
                                     # Valor total calculado automaticamente
-                                    valor_total = nova_qtd * novo_valor_unit
+                                    novo_valor_total = nova_qtd * novo_valor_unit
                                     st.text(f"Valor Total: R$ {valor_total:.2f}")
 
                                     atualizar = st.form_submit_button("Editar Equipamento")
