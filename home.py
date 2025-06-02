@@ -670,7 +670,6 @@ def show_home():
                         with col2:
                             marca_modelo = st.text_input("Marca/Modelo")
                         
-                        
                         col1, col2, col3 = st.columns([1,1,1])
                         with col1:
                             quantidade = st.number_input("Quantidade", min_value=1, step=1)
@@ -821,12 +820,22 @@ def show_home():
                         for equipamento in equipamentos:
                             with st.expander(f"Equipamento: {equipamento['especificacao']}"):
                                 with st.form(f"form_equip_{equipamento['id']}"):
-                                    nova_especificacao = st.text_input("Especificação", value=equipamento["especificacao"])
-                                    nova_marca_modelo = st.text_input("Marca/Modelo", value=equipamento["marca_modelo"])
-                                    nova_qtd = st.number_input("Quantidade", value=equipamento["quantidade"], step=1)
-                                    novo_saldo = st.number_input("Saldo Disponível", value=equipamento["saldo_disponivel"], step=1)
-                                    novo_valor_unit = st.number_input("Valor Unitário (R$)", value=float(equipamento["valor_unitario"]), step=0.01, format="%.2f")
+
+                                    col1, col2 = st.columns([1,1])
+                                    with col1:
+                                        nova_especificacao = st.text_input("Especificação", value=equipamento["especificacao"])
+                                    with col2:
+                                        nova_marca_modelo = st.text_input("Marca/Modelo", value=equipamento["marca_modelo"])
                                     
+                                    col1, col2, col3 = st.columns([1,1,1])
+                                    with col1:
+                                        nova_qtd = st.number_input("Quantidade", value=equipamento["quantidade"], step=1)
+                                    with col2:
+                                        novo_saldo = st.number_input("Saldo Disponível", value=equipamento["saldo_disponivel"], step=1)
+                                    with col3:
+                                        novo_valor_unit = st.number_input("Valor Unitário (R$)", value=float(equipamento["valor_unitario"]), step=0.01, format="%.2f")
+                                    novo_valor_total = valor_unitario * quantidade        
+ 
                                     # Valor total calculado automaticamente
                                     valor_total = nova_qtd * novo_valor_unit
                                     st.text(f"Valor Total: R$ {valor_total:.2f}")
@@ -843,7 +852,7 @@ def show_home():
                                             "quantidade": nova_qtd,
                                             "saldo_disponivel": novo_saldo,
                                             "valor_unitario": novo_valor_unit,
-                                            "valor_total": valor_total
+                                            "valor_total": novo_valor_total
                                         }).eq("id", equipamento["id"]).execute()
                                         st.success(f"Equipamento '{nova_espeficicacao_formatada}' atualizado com sucesso!")
                                     except Exception as e:
