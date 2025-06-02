@@ -17,7 +17,7 @@ def mostrar_tela_login_ou_cadastro_ou_home():
             <style>
                 .block-container {
                     padding-top: 5vh;
-                    max-width: 900px;
+                    max-width: 700px;
                     margin: auto;
                 }
             </style>
@@ -35,7 +35,7 @@ def tela_login():
         <style>
             .block-container {
                 padding-top: 5vh;
-                max-width: 900px;
+                max-width: 700px;
                 margin: auto;
             }
         </style>
