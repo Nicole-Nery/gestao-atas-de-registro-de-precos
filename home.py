@@ -513,16 +513,16 @@ def show_home():
 
                                     col1, col2 = st.columns([1,2])
                                     with col1:
-                                        novo_cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
+                                        novo_cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)", value=fornecedor_info["cnpj"])
                                     with col2:
-                                        novo_email = st.text_input("E-mail")
+                                        novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
                                     
-                                    novo_endereco = st.text_input("Endereço")
+                                    novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
                                     col1, col2 = st.columns([2,1])
                                     with col1:
-                                        novo_telefone = st.text_input("Telefone")
+                                        novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
                                     with col2:
-                                        novo_cep = st.text_input("CEP (formato = 00000-000)", max_chars=9)
+                                        novo_cep = st.text_input("CEP (formato = 00000-000)", max_chars=9, value=fornecedor_info["cep"])
 
                                     atualizar = st.form_submit_button("Atualizar Fornecedor")
 
