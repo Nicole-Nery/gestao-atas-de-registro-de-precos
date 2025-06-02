@@ -3,8 +3,20 @@ from auth.funcoes_auth import *
 from db import *
 from home import show_home
 
-def mostrar_tela_login_ou_cadastro():
+def mostrar_tela_login_ou_cadastro_ou_home():
+    
     modos_validos = ["login", "cadastro", "home"]
+
+    if modo in ["login", "cadastro"]:
+        st.markdown("""
+            <style>
+                .block-container {
+                    padding-top: 5vh;
+                    max-width: 1000px;
+                    margin: auto;
+                }
+            </style>
+        """, unsafe_allow_html=True)
 
     if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
         st.session_state["modo"] = "login"
