@@ -858,7 +858,7 @@ def show_home():
                                         st.error(f"Erro ao atualizar equipamento: {e}")
 
             elif aba == "Excluir":
-                st.subheader("Excluir Ata/Equipamento(s) da Ata")
+                st.subheader("Excluir Ata/Itens da Ata")
 
                 atas_opcoes, atas_dict = selecionar_categoria()
                 atas_result = buscar_atas()
