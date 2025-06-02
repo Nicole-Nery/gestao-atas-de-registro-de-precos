@@ -421,7 +421,7 @@ def show_home():
 
             if aba == "Cadastrar":
                 st.subheader("Cadastro de Fornecedores")
-                with st.form("novo_fornecedor"):
+                with st.form("novo_fornecedor", border=False):
                     nome_fornecedor = st.text_input("Nome do Fornecedor")
 
                     col1, col2 = st.columns([1,2])
@@ -508,7 +508,7 @@ def show_home():
                             fornecedor_info = buscar_detalhes_fornecedor(fornecedor_id)
 
                             if fornecedor_info:
-                                with st.form("form_editar_fornecedor"):
+                                with st.form("form_editar_fornecedor", border=False):
                                     novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
 
                                     col1, col2 = st.columns([1,2])
@@ -626,7 +626,7 @@ def show_home():
                     fornecedores_dict = {}
 
                 # Formulário para cadastrar nova Ata
-                with st.form("nova_ata"):
+                with st.form("nova_ata", border=False):
                     col1, col2, col3 = st.columns([1,1,1])
                     with col1:
                         num_ata = st.text_input("Número da Ata (ex: 12/2024, 1234/2025)")
@@ -663,7 +663,7 @@ def show_home():
                 if ata_nome != "Selecione":
                     ata_id = atas_dict[ata_nome]
 
-                    with st.form("novo_equipamento"):
+                    with st.form("novo_equipamento", border=False):
                         col1, col2 = st.columns([1,1])
                         with col1:
                             especificacao = st.text_input("Especificação")
@@ -762,7 +762,7 @@ def show_home():
                     categoria_atual = ata_info["categoria_ata"]
 
 
-                    with st.form("form_editar_ata"):
+                    with st.form("form_editar_ata", border=False):
 
                         col1, col2, col3 = st.columns([1,1,1])
                         with col1:
@@ -819,7 +819,7 @@ def show_home():
                     else:
                         for equipamento in equipamentos:
                             with st.expander(f"Equipamento: {equipamento['especificacao']}"):
-                                with st.form(f"form_equip_{equipamento['id']}"):
+                                with st.form(f"form_equip_{equipamento['id']}, border=False"):
 
                                     col1, col2 = st.columns([1,1])
                                     with col1:
@@ -967,7 +967,7 @@ def show_home():
                             if equipamento_nome != "Selecione":
                                 equipamento_id, saldo_disp = equipamentos_dict[equipamento_nome]
 
-                                with st.form("form_registrar_empenho"):
+                                with st.form("form_registrar_empenho", border=False):
                                     quantidade = st.number_input("Quantidade empenhada", min_value=1, max_value=saldo_disp, step=1)
                                     data_empenho = st.date_input("Data do Empenho", format="DD/MM/YYYY")
                                     observacao = st.text_input("Observação (opcional)")
@@ -1049,7 +1049,7 @@ def show_home():
                         if empenhos:
                             for emp in empenhos:
                                 with st.expander(f"Empenho de {emp['quantidade_empenhada']}x {emp['especificacao']} em {pd.to_datetime(emp['data_empenho']).strftime('%d/%m/%Y')}"):
-                                    with st.form(f"form_emp_{emp['id']}"):
+                                    with st.form(f"form_emp_{emp['id']}", border=False):
                                         nova_quantidade = st.number_input("Quantidade", min_value=1, value=emp["quantidade_empenhada"], key=f"qtd_{emp['id']}")
                                         nova_data = st.date_input("Data do Empenho", format="DD/MM/YYYY",value=pd.to_datetime(emp["data_empenho"]).date(), key=f"data_{emp['id']}")
                                         nova_obs = st.text_input("Observação", value=emp["observacao"] or "", key=f"obs_{emp['id']}")
@@ -1369,7 +1369,7 @@ def show_home():
         prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
 
         with st.expander("Alterar prazo de renovação"):
-            with st.form("form_alterar_prazo"):
+            with st.form("form_alterar_prazo", border=False):
                 novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1,max_value=96, value=st.session_state.prazo_renovacao_ata)
                 submitted = st.form_submit_button("Salvar novo prazo")
                 if submitted:
