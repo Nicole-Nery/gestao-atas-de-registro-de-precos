@@ -208,9 +208,9 @@ def show_home():
                     "valor_unitario": valor_unitario,
                     "valor_total": valor_total
                 }).execute()
-                st.success(f"Equipamento '{espeficicacao_formatada}' cadastrado com sucesso na ata '{ata_nome}'!")
+                st.success(f"Item '{espeficicacao_formatada}' cadastrado com sucesso na ata '{ata_nome}'!")
             except Exception as e:
-                st.error(f"Erro ao cadastrar equipamento: {e}")
+                st.error(f"Erro ao cadastrar item: {e}")
         else:
             st.warning("Preencha todos os campos obrigatórios.")
 
@@ -722,7 +722,7 @@ def show_home():
                             ).eq("ata_id", ata_id).execute()
                             equipamentos = response.data
 
-                            st.subheader("Equipamentos desta Ata")
+                            st.subheader("Itens dessa Ata")
 
                             if equipamentos:
                                 df_equip = pd.DataFrame(equipamentos)
@@ -740,9 +740,9 @@ def show_home():
                                 })
                                 st.dataframe(df_equip, height=200)
                             else:
-                                st.info("Nenhum equipamento cadastrado para esta Ata.")
+                                st.info("Nenhum item cadastrado para esta Ata.")
                         except Exception as e:
-                            st.error(f"Erro ao buscar equipamentos: {e}")
+                            st.error(f"Erro ao buscar itens: {e}")
 
             elif aba == "Atualizar":
                 st.subheader("Atualizar dados de uma Ata")
@@ -808,14 +808,14 @@ def show_home():
                             st.error(f"Erro ao atualizar a Ata: {e}")
             
                     # Buscar equipamentos vinculados à Ata
-                    st.subheader("Equipamentos desta Ata")
-                    st.write("Clique no equipamento que deseja atualizar informações")
+                    st.subheader("Itens dessa Ata")
+                    st.write("Clique no item que deseja atualizar informações")
                 
                     response_equip = supabase.table("equipamentos").select("*").eq("ata_id", ata_id).execute()
                     equipamentos = response_equip.data
 
                     if not equipamentos:
-                        st.info("Nenhum equipamento cadastrado para essa Ata.")
+                        st.info("Nenhum item cadastrado para essa Ata.")
                     else:
                         for equipamento in equipamentos:
                             with st.expander(f"Equipamento: {equipamento['especificacao']}"):
@@ -906,22 +906,22 @@ def show_home():
                                 for eq in equipamentos_data:
                                     with st.expander(f"{eq['especificacao']} (Saldo: {eq['saldo_disponivel']})"):
                                         with st.form(f"form_excluir_eq_{eq['id']}", border=False):
-                                            confirmar_eq = st.checkbox("Confirmo que desejo excluir este equipamento.", key=f"chk_{eq['id']}")
-                                            excluir_eq = st.form_submit_button("Excluir Equipamento")
+                                            confirmar_eq = st.checkbox("Confirmo que desejo excluir este item.", key=f"chk_{eq['id']}")
+                                            excluir_eq = st.form_submit_button("Excluir item")
                                             
                                             if excluir_eq and confirmar_eq:
                                                 try:
                                                     supabase.table("equipamentos").delete().eq("id", eq["id"]).execute()
                                                     st.success(f"Equipamento '{eq['especificacao']}' excluído com sucesso!")
                                                 except Exception as e:
-                                                    st.error(f"Erro ao excluir equipamento: {e}")
+                                                    st.error(f"Erro ao excluir item: {e}")
                                             elif excluir_eq and not confirmar_eq:
                                                 st.warning("Você precisa confirmar antes de excluir.")
                             else:
-                                st.info("Nenhum equipamento cadastrado nesta Ata.")
+                                st.info("Nenhum item cadastrado nesta Ata.")
 
                         except Exception as e:
-                            st.error(f"Erro ao carregar equipamentos: {e}")
+                            st.error(f"Erro ao carregar itens: {e}")
 
 
                             
@@ -997,7 +997,7 @@ def show_home():
                                             except Exception as e:
                                                 st.error(f"Erro ao cempenhar: {e}")
                         else:
-                            st.warning("Nenhum equipamento com saldo disponível para esta Ata.")
+                            st.warning("Nenhum item com saldo disponível para esta Ata.")
                     except Exception as e:
                         st.error(f"Erro ao buscar equipamentos: {e}")
             
