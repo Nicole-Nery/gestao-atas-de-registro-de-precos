@@ -13,10 +13,6 @@ html, body, .stApp * {
     margin-bottom: 30px;
 }
 
-.stAppHeader {
-    background-color: #97bf29;
-}
-
 .stMainBlockContainer {
     padding-top:3%;
     padding-left: 10%;
