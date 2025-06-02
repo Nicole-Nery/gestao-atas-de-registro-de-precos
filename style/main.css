@@ -65,22 +65,3 @@ html, body, .stApp * {
     margin: 0;
     color: var(--number-color, #145fbe);
 }
-
-[data-baseweb="tab-list"] {
-    color: #f4f5f7;
-}
-
-/* Aba ativa */
-[data-baseweb="tab-list"] button[role="tab"][aria-selected="true"] {
-    background-color: #e7ebef;
-    color: white;
-}
-
-/* Hover */
-[data-baseweb="tab-list"] button[role="tab"]:hover {
-    background-color: #e7ebef;
-}
-
-div[class*="stTabs-tab-border"] {
-    display: none !important;
-}
