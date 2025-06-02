@@ -7,6 +7,11 @@ def mostrar_tela_login_ou_cadastro_ou_home():
     
     modos_validos = ["login", "cadastro", "home"]
 
+    if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
+        st.session_state["modo"] = "login"
+
+    modo = st.session_state["modo"]
+    
     if modo in ["login", "cadastro"]:
         st.markdown("""
             <style>
@@ -17,11 +22,6 @@ def mostrar_tela_login_ou_cadastro_ou_home():
                 }
             </style>
         """, unsafe_allow_html=True)
-
-    if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
-        st.session_state["modo"] = "login"
-
-    modo = st.session_state["modo"]
 
     if modo == "login":
         tela_login()
