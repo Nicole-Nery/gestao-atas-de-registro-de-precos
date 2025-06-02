@@ -3,7 +3,9 @@ from auth.funcoes_auth import *
 from db import *
 
 def mostrar_tela_login_ou_cadastro():
-    if "modo" not in st.session_state or st.session_state["modo"] not in ["login", "cadastro"]:
+    modos_validos = ["login", "cadastro", "home"]
+    
+    if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
         st.session_state["modo"] = "login"
 
     modo = st.session_state["modo"]
