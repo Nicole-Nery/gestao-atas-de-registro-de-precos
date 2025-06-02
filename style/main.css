@@ -66,16 +66,6 @@ html, body, .stApp * {
     color: var(--number-color, #145fbe);
 }
 
-/* Abas (botões) */
-[data-baseweb="tab-list"] button[role="tab"] {
-    background-color: #f0f2f6;
-    color: #333;
-    font-weight: 600;
-    border-radius: 10px;
-    padding: 0.5rem 1rem;
-    border: none;
-    transition: background-color 0.3s ease;
-}
 
 /* Aba ativa */
 [data-baseweb="tab-list"] button[role="tab"][aria-selected="true"] {
