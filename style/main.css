@@ -72,13 +72,14 @@ html, body, .stApp * {
 }
 
 
-/* Aba ativa */
+/* Aba ativa 
 [data-baseweb="tab-list"] button[role="tab"][aria-selected="true"] {
     background-color: #84a625;
     color: white;
 }
 
-/* Hover */
+Hover 
 [data-baseweb="tab-list"] button[role="tab"]:hover {
     background-color: #dbe4f0;
 }
+*/
