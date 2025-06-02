@@ -14,6 +14,10 @@ def show_home():
 
     usuario = st.session_state.get("usuario", {})
 
+    st.markdown("""
+        <div style="background-color: #f5f5f5; padding: 1rem 2rem; border-radius: 10px; margin-bottom: 1rem;">
+    """, unsafe_allow_html=True)
+
     col1, col2 = st.columns([8, 2])
     with col1:
         st.markdown(
@@ -26,6 +30,8 @@ def show_home():
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # Cabeçalho
     with st.container():
