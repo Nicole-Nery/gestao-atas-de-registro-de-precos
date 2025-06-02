@@ -422,12 +422,22 @@ def show_home():
             if aba == "Cadastrar":
                 st.subheader("Cadastro de Fornecedores")
                 with st.form("novo_fornecedor"):
-                    nome_fornecedor = st.text_input("Nome do Fornecedor")
-                    cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
-                    email = st.text_input("E-mail")
-                    endereco = st.text_input("Endereço")
-                    cep = st.text_input("CEP (formato = 00000-000)", max_chars=9)
-                    telefone = st.text_input("Telefone")
+                    col1, col2 = st.columns([2,1])
+                    with col1:
+                        nome_fornecedor = st.text_input("Nome do Fornecedor")
+                    with col2:
+                        telefone = st.text_input("Telefone")
+                    col1, col2 = st.columns([1,2])
+                    with col1:
+                        cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
+                    with col2:
+                        email = st.text_input("E-mail")
+                    col1, col2 = st.columns([2,1])
+                    with col1:
+                        endereco = st.text_input("Endereço")
+                    with col2:
+                        cep = st.text_input("CEP (formato = 00000-000)", max_chars=9)
+                    
                     submit = st.form_submit_button("Cadastrar Fornecedor")
 
                 if submit:
