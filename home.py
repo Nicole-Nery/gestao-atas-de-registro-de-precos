@@ -627,14 +627,25 @@ def show_home():
 
                 # Formulário para cadastrar nova Ata
                 with st.form("nova_ata"):
-                    num_ata = st.text_input("Número da Ata (ex: 12/2024, 1234/2025)")
-                    data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
-                    validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
+                    col1, col2, col3 = st.columns([1,1,1])
+                    with col1:
+                        num_ata = st.text_input("Número da Ata (ex: 12/2024, 1234/2025)")
+                    with col2:
+                        categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata")
+                    with col3:
+                        ata_renovavel = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
+                        renovavel_bool = ata_renovavel == "Sim"
+
                     fornecedor_exibido = st.selectbox("Fornecedor", fornecedores_cadastrados, key="selecione_fornecedor_nome", help="Digite o nome ou CNPJ para localizar o fornecedor.")
-                    categoria_ata = st.selectbox("Categoria", ["Equipamentos médicos", "Infraestrutura hospitalar", "Suprimentos"], key="selecione_categoria_ata")
-                    link_ata = st.text_input("Número do Protocolo SEI")
-                    ata_renovavel = st.radio("Ata renovável?", options=["Sim", "Não"], horizontal=True)
-                    renovavel_bool = ata_renovavel == "Sim"
+                    
+                    col1, col2, col3 = st.columns([1,1,1])
+                    with col1:
+                        data_ata = st.date_input("Data da Ata", format="DD/MM/YYYY")
+                    with col2:
+                        validade_ata = st.date_input("Validade da Ata", min_value=data_ata, format="DD/MM/YYYY")
+                    with col3:
+                        link_ata = st.text_input("Número do Protocolo SEI")
+                    
 
                     submit_ata = st.form_submit_button("Cadastrar Ata")
 
