@@ -66,15 +66,9 @@ html, body, .stApp * {
     color: var(--number-color, #145fbe);
 }
 
-/* Abas (botões) */
-[data-baseweb="tab-list"] button[role="tab"] {
-    background-color: #f4f5f7;
-    color: black;
-    font-weight: 600;
-    border-radius: 20px;
-    padding: 1rem 2rem;
-    border: none;
-    transition: background-color 0.3s ease;
+[data-baseweb="tab-list"] {
+    color: #f4f5f7;
+    gap: 1rem;
 }
 
 /* Aba ativa */
