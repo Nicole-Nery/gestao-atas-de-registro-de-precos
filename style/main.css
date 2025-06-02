@@ -27,9 +27,8 @@ html, body, .stApp * {
 }
 
 .stButton > button {
-    border-radius: 0;
-    background-color: #f8f8f8;
-    color: #003366 !important;
+    border-radius: 10px;
+    background-color: #9cc237;
     box-shadow:0 4px 8px rgba(0,0,0,0.1);
     padding: 1rem 2rem;
     margin-bottom: 0.7rem;
