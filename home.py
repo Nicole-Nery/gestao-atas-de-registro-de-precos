@@ -23,8 +23,9 @@ def show_home():
         with col2:
             st.html("<div class='header-title'>Sistema Integrado de Gestão de Atas Hospitalares</div>")
         st.markdown('</div>', unsafe_allow_html=True)
-    
 
+    st.markdown("---")
+    
     col1, col2 = st.columns([8, 2])
     with col1:
         st.markdown(
