@@ -818,7 +818,7 @@ def show_home():
                         st.info("Nenhum item cadastrado para essa Ata.")
                     else:
                         for equipamento in equipamentos:
-                            with st.expander(f"Equipamento: {equipamento['especificacao']}"):
+                            with st.expander(f"Item: {equipamento['especificacao']}"):
                                 with st.form(f"form_equip_{equipamento['id']}, border=False"):
 
                                     col1, col2 = st.columns([1,1])
@@ -839,7 +839,7 @@ def show_home():
                                     novo_valor_total = nova_qtd * novo_valor_unit
                                     st.text(f"Valor Total: R$ {valor_total:.2f}")
 
-                                    atualizar = st.form_submit_button("Editar Equipamento")
+                                    atualizar = st.form_submit_button("Editar Item")
 
                                 if atualizar:
                                     try:
@@ -853,9 +853,9 @@ def show_home():
                                             "valor_unitario": novo_valor_unit,
                                             "valor_total": novo_valor_total
                                         }).eq("id", equipamento["id"]).execute()
-                                        st.success(f"Equipamento '{nova_espeficicacao_formatada}' atualizado com sucesso!")
+                                        st.success(f"Item '{nova_espeficicacao_formatada}' atualizado com sucesso!")
                                     except Exception as e:
-                                        st.error(f"Erro ao atualizar equipamento: {e}")
+                                        st.error(f"Erro ao atualizar item: {e}")
 
             elif aba == "Excluir":
                 st.subheader("Excluir Ata/Itens da Ata")
