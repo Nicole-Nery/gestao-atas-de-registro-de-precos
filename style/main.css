@@ -1,9 +1,15 @@
 @import url('https://fonts.cdnfonts.com/css/rawline');
 
+/* Definindo a variável no escopo root */
+:root {
+    --azul-colibri: #61a5ff;
+}
+
+/*
 html, body, .stApp * {
     font-family: 'Rawline', sans-serif !important;
-    color: #333333;
 }
+*/
 
 .login-title {
     font-size: 60px;
@@ -13,91 +19,141 @@ html, body, .stApp * {
     margin-bottom: 30px;
 }
 
+.header-title {
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+.subsubtitle {
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
 .stMainBlockContainer {
-    padding-top:3%;
-    padding-left: 8%;
-    padding-right: 8%;
+    padding-top: 3%;
     padding-bottom: 5%;
 }
 
+/* Estilo unificado para botões e page_link */
+.stButton > button,
+.stPageLink a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    font-size: 18px;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: var(--azul-colibri);
+    color: white !important;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 !important;
+}
+
+/* Garante que texto e ícones fiquem brancos */
+.stPageLink a span,
+.stPageLink a p,
+.stPageLink a svg,
+.stPageLink .stIcon,
+.stPageLink .stIcon svg,
+.stPageLink .stIconMaterial {
+    color: white !important;
+    fill: white !important;
+}
+
+.stPageLink a:hover,
+.stButton > button:hover {
+    background-color: #617eff;
+    color: white !important;
+}
+
+.stHorizontalBlock {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+}
+
+.foto-perfil {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #4f4f4f20;
+    box-shadow: 0 0 10px #00000030;
+    margin-bottom: 10px;
+}
+
+/* Faixa horizontal colorida */
+.header-faixa {
+    background-color: var(--azul-colibri);
+    height: 300px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.stAppHeader {
+    background-color: var(--azul-colibri);
+}
+
+/* Conteúdo do cabeçalho que fica sobre a faixa */
+.header-content {
+    position: relative;
+    z-index: 1;
+    padding: 30px 20px 10px 20px;
+    color: white;
+}
 
 .header-title {
-    font-size: 1.8em;
+    font-size: 24px;
     font-weight: bold;
+    margin-bottom: 4px;
 }
 
-.stButton > button {
-    border-radius: 0;
-    background-color: #f8f8f8;
-    color: #003366 !important;
-    box-shadow:0 4px 8px rgba(0,0,0,0.1);
-    padding: 1rem 2rem;
-    margin-bottom: 0.7rem;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-    cursor: pointer;
-    outline: none !important;
-    border: none !important;
+.stForm {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
 }
 
-.stButton > button:hover {
-    background-color: #dbe8fb;
-    outline: none !important;
-    border: none !important;
-    color: #003366 !important;
+.stSidebar {
+    background-color: #617eff;
+    color: white;
 }
 
-.metric-box {
-    background-color: var(--bg-color, #f8f9fa);
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-.metric-box h5 {
-    margin: 0;
-    color: var(--text-color, #6c757d);
-}
-
-.metric-box h2 {
-    margin: 0;
-    color: var(--number-color, #145fbe);
-}
-
-/* Estilo gov.br para qualquer botão de envio
-
-button[kind="secondaryFormSubmit"],
-.stSubmitButton > button {
-    background-color: #155BCB !important;
+div[data-testid="stSidebarNav"] * {
     color: white !important;
+    fill: white !important;
+}
+
+div[data-testid="stSidebarNav"] a:hover,
+div[data-testid="stSidebarNav"] a:hover * {
+    background-color: #4e6beb !important;  /* fundo no hover */
+    color: white !important;               /* texto no hover */
+    fill: white !important;                /* ícones no hover */
+}
+
+/* Estiliza o item ativo da barra lateral */
+div[data-testid="stSidebarNav"] a[aria-current="page"] {
+    background-color: #4e6beb !important;
+    color: white !important;
+    fill: white !important;
     font-weight: 600 !important;
-    border: none !important;
-    border-radius: 6px !important;
-    padding: 0.6rem 1.5rem !important;
-    font-size: 1rem !important;
-    font-family: "Segoe UI", "Helvetica Neue", sans-serif !important;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: none !important;
-    margin-top: 0.5rem;
+    border-radius: 8px;
 }
-
-button[kind="secondaryFormSubmit"]:hover,
-.stSubmitButton > button:hover {
-    background-color: #0e47a1 !important;
-    color: white !important;
-    cursor: pointer;
-}
-
-button[kind="secondaryFormSubmit"]:active,
-.stSubmitButton > button:active {
-    transform: scale(0.98);
-}
-
-button[kind="secondaryFormSubmit"]:focus,
-.stSubmitButton > button:focus {
-    outline: 3px solid #99c2ff !important;
-    outline-offset: 2px;
-}
-     */
