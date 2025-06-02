@@ -49,7 +49,7 @@ html, body, .stApp * {
 }
 
 /* Estilo gov.br para st.button() e st.submit_button() */
-.stSubmitButton > button {
+.stSubmitButton {
     background-color: #155BCB !important;
     color: white !important;
     font-weight: 600 !important;
