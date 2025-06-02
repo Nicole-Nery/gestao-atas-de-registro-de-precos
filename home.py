@@ -1357,7 +1357,7 @@ def show_home():
     if 'prazo_renovacao_ata' not in st.session_state:
         st.session_state.prazo_renovacao_ata = get_config('prazo_renovacao_ata')
 
-    with tabs[4]:
+    with tabs[5]:
         col1, col2 = st.columns([1, 4])
         with col1:
             st.image("assets/logos.svg", width=300)
