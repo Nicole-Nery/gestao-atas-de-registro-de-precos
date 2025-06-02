@@ -5,30 +5,12 @@ html, body, .stApp * {
     color: #333333;
 }
 
-.login-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 100px;
-}
-
-.login-card {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 350px;
+.login-title {
+    font-size: 60px;
+    color: black;
     text-align: center;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: -20px; /* aproxima do título */
-    width: 350px;
-    margin-left: 10%;
-    margin-right: 10%;
+    font-weight: bold;
+    margin-bottom: 30px;
 }
 
 .stMainBlockContainer {
@@ -38,8 +20,16 @@ html, body, .stApp * {
     padding-bottom: 5%;
 }
 
+.stForm {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
 .header-title {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: bold;
 }
 
