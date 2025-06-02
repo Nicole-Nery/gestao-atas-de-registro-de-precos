@@ -65,3 +65,38 @@ html, body, .stApp * {
     margin: 0;
     color: var(--number-color, #145fbe);
 }
+
+/* Estilo gov.br para qualquer botão de envio */
+
+button[kind="secondaryFormSubmit"],
+.stSubmitButton > button {
+    background-color: #155BCB !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-family: "Segoe UI", "Helvetica Neue", sans-serif !important;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: none !important;
+    margin-top: 0.5rem;
+}
+
+button[kind="secondaryFormSubmit"]:hover,
+.stSubmitButton > button:hover {
+    background-color: #0e47a1 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+button[kind="secondaryFormSubmit"]:active,
+.stSubmitButton > button:active {
+    transform: scale(0.98);
+}
+
+button[kind="secondaryFormSubmit"]:focus,
+.stSubmitButton > button:focus {
+    outline: 3px solid #99c2ff !important;
+    outline-offset: 2px;
+}
