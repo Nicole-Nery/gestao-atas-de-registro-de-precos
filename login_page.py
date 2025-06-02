@@ -11,13 +11,13 @@ def mostrar_tela_login_ou_cadastro_ou_home():
         st.session_state["modo"] = "login"
 
     modo = st.session_state["modo"]
-    
+
     if modo in ["login", "cadastro"]:
         st.markdown("""
             <style>
                 .block-container {
                     padding-top: 5vh;
-                    max-width: 1000px;
+                    max-width: 1500px;
                     margin: auto;
                 }
             </style>
