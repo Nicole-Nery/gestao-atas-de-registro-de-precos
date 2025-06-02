@@ -1,8 +1,5 @@
 import streamlit as st
-import bcrypt
-from home import show_home
 from login_page import *
-from db import supabase
 
 st.set_page_config(page_title= "SIGAH", 
                 page_icon= ("assets/icon.svg"), 
