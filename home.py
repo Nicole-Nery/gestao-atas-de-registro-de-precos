@@ -912,7 +912,7 @@ def show_home():
                                             if excluir_eq and confirmar_eq:
                                                 try:
                                                     supabase.table("equipamentos").delete().eq("id", eq["id"]).execute()
-                                                    st.success(f"Equipamento '{eq['especificacao']}' excluído com sucesso!")
+                                                    st.success(f"Item '{eq['especificacao']}' excluído com sucesso!")
                                                 except Exception as e:
                                                     st.error(f"Erro ao excluir item: {e}")
                                             elif excluir_eq and not confirmar_eq:
