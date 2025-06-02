@@ -896,7 +896,7 @@ def show_home():
                             st.warning("Você precisa confirmar antes de excluir.")
 
                         # Seção de exclusão de equipamentos
-                        st.subheader("Equipamentos desta Ata")
+                        st.subheader("Itens desta Ata")
 
                         try:
                             response_eq = supabase.table("equipamentos").select("id, especificacao, saldo_disponivel").eq("ata_id", ata_id).execute()
