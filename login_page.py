@@ -1,42 +1,25 @@
 import streamlit as st
 from auth.funcoes_auth import *
 from db import *
-from home import show_home
 
-def mostrar_tela_login_ou_cadastro_ou_home():
-    
-    modos_validos = ["login", "cadastro", "home"]
-
-    if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
+def mostrar_tela_login_ou_cadastro():
+    if "modo" not in st.session_state or st.session_state["modo"] not in ["login", "cadastro"]:
         st.session_state["modo"] = "login"
 
     modo = st.session_state["modo"]
-
-    if modo in ["login", "cadastro"]:
-        st.markdown("""
-            <style>
-                .block-container {
-                    padding-top: 5vh;
-                    max-width: 1500px;
-                    margin: auto;
-                }
-            </style>
-        """, unsafe_allow_html=True)
 
     if modo == "login":
         tela_login()
     elif modo == "cadastro":
         tela_cadastro()
-    elif modo == "home":
-        show_home()
 
 def tela_login():
     st.markdown("""
         <style>
             .block-container {
-                padding-top: 5vh;
-                max-width: 500px;
-                margin: auto;
+                padding-top: 5vh !important;
+                max-width: 1000px !important;
+                margin: auto !important;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -55,7 +38,6 @@ def tela_login():
                 usuario_autenticado = autenticar_usuario(email, senha)
                 if usuario_autenticado:
                     st.session_state.usuario = usuario_autenticado
-                    st.session_state["modo"] = "home"
                     st.rerun()
                 else:
                     st.error("E-mail ou senha inválidos.")
@@ -68,9 +50,9 @@ def tela_cadastro():
     st.markdown("""
         <style>
             .block-container {
-                padding-top: 5vh;
-                max-width: 900px;
-                margin: auto;
+                padding-top: 5vh !important;
+                max-width: 1000px !important;
+                margin: auto !important;
             }
         </style>
     """, unsafe_allow_html=True)
