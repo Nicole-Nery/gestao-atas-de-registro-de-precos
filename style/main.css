@@ -48,29 +48,38 @@ html, body, .stApp * {
     color: #003366 !important;
 }
 
-/* Estilo customizado para botão estilo gov.br */
-button[kind="primary"] {
+/* Estilo gov.br para st.button() e st.submit_button() */
+.stSubmitButton > button {
     background-color: #155BCB !important;
-    color: #fff !important;
+    color: white !important;
     font-weight: 600 !important;
     border: none !important;
     border-radius: 6px !important;
-    padding: 0.6rem 1.2rem !important;
+    padding: 0.6rem 1.5rem !important;
     font-size: 1rem !important;
     font-family: "Segoe UI", "Helvetica Neue", sans-serif !important;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
     box-shadow: none !important;
+    margin-top: 0.5rem;
 }
 
-button[kind="primary"]:hover {
+.stSubmitButton > button:hover {
     background-color: #0e47a1 !important;
-    color: #fff !important;
+    color: white !important;
+    cursor: pointer;
 }
 
-button[kind="primary"]:focus {
+.stSubmitButton > button:active {
+    transform: scale(0.98);
+}
+
+.stSubmitButton > button:focus {
     outline: 3px solid #99c2ff !important;
     outline-offset: 2px;
 }
+
+
+
 
 .metric-box {
     background-color: var(--bg-color, #f8f9fa);
