@@ -1,10 +1,11 @@
 import streamlit as st
 from auth.funcoes_auth import *
 from db import *
+from home import show_home
 
 def mostrar_tela_login_ou_cadastro():
     modos_validos = ["login", "cadastro", "home"]
-    
+
     if "modo" not in st.session_state or st.session_state["modo"] not in modos_validos:
         st.session_state["modo"] = "login"
 
@@ -14,6 +15,8 @@ def mostrar_tela_login_ou_cadastro():
         tela_login()
     elif modo == "cadastro":
         tela_cadastro()
+    elif modo == "home":
+        show_home()
 
 def tela_login():
     st.markdown("""
@@ -40,6 +43,7 @@ def tela_login():
                 usuario_autenticado = autenticar_usuario(email, senha)
                 if usuario_autenticado:
                     st.session_state.usuario = usuario_autenticado
+                    st.session_state["modo"] = "home"
                     st.rerun()
                 else:
                     st.error("E-mail ou senha inválidos.")
