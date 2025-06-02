@@ -41,10 +41,9 @@ html, body, .stApp * {
 }
 
 .stButton > button:hover {
-    background-color: #dbe8fb;
+    background-color: #89ab2c;
     outline: none !important;
     border: none !important;
-    color: #003366 !important;
 }
 
 .metric-box {
