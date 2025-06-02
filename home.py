@@ -509,7 +509,7 @@ def show_home():
 
                             if fornecedor_info:
                                 with st.form("form_editar_fornecedor"):
-                                    nome_fornecedor = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
+                                    novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
 
                                     col1, col2 = st.columns([1,2])
                                     with col1:
