@@ -48,6 +48,30 @@ html, body, .stApp * {
     color: #003366 !important;
 }
 
+/* Estilo customizado para botão estilo gov.br */
+button[kind="primary"] {
+    background-color: #155BCB !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 0.6rem 1.2rem !important;
+    font-size: 1rem !important;
+    font-family: "Segoe UI", "Helvetica Neue", sans-serif !important;
+    transition: background-color 0.3s ease;
+    box-shadow: none !important;
+}
+
+button[kind="primary"]:hover {
+    background-color: #0e47a1 !important;
+    color: #fff !important;
+}
+
+button[kind="primary"]:focus {
+    outline: 3px solid #99c2ff !important;
+    outline-offset: 2px;
+}
+
 .metric-box {
     background-color: var(--bg-color, #f8f9fa);
     padding: 20px;
