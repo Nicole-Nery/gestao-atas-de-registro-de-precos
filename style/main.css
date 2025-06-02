@@ -27,8 +27,9 @@ html, body, .stApp * {
 }
 
 .stButton > button {
-    border-radius: 10px;
-    background-color: #9cc237;
+    border-radius: 0;
+    background-color: #f8f8f8;
+    color: #003366 !important;
     box-shadow:0 4px 8px rgba(0,0,0,0.1);
     padding: 1rem 2rem;
     margin-bottom: 0.7rem;
@@ -41,9 +42,10 @@ html, body, .stApp * {
 }
 
 .stButton > button:hover {
-    background-color: #89ab2c;
+    background-color: #dbe8fb;
     outline: none !important;
     border: none !important;
+    color: #003366 !important;
 }
 
 .metric-box {
@@ -63,21 +65,3 @@ html, body, .stApp * {
     margin: 0;
     color: var(--number-color, #145fbe);
 }
-
-/* Container das abas */
-[data-baseweb="tab-list"] {
-    background-color: #9cc237;
-}
-
-
-/* Aba ativa 
-[data-baseweb="tab-list"] button[role="tab"][aria-selected="true"] {
-    background-color: #84a625;
-    color: white;
-}
-
-Hover 
-[data-baseweb="tab-list"] button[role="tab"]:hover {
-    background-color: #dbe4f0;
-}
-*/
