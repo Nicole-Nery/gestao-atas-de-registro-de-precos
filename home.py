@@ -422,19 +422,18 @@ def show_home():
             if aba == "Cadastrar":
                 st.subheader("Cadastro de Fornecedores")
                 with st.form("novo_fornecedor"):
-                    col1, col2 = st.columns([2,1])
-                    with col1:
-                        nome_fornecedor = st.text_input("Nome do Fornecedor")
-                    with col2:
-                        telefone = st.text_input("Telefone")
+                    nome_fornecedor = st.text_input("Nome do Fornecedor")
+
                     col1, col2 = st.columns([1,2])
                     with col1:
                         cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
                     with col2:
                         email = st.text_input("E-mail")
+                    
+                    endereco = st.text_input("Endereço")
                     col1, col2 = st.columns([2,1])
                     with col1:
-                        endereco = st.text_input("Endereço")
+                        telefone = st.text_input("Telefone")
                     with col2:
                         cep = st.text_input("CEP (formato = 00000-000)", max_chars=9)
                     
@@ -510,12 +509,20 @@ def show_home():
 
                             if fornecedor_info:
                                 with st.form("form_editar_fornecedor"):
-                                    novo_nome = st.text_input("Nome do Fornecedor", value=fornecedor_info["nome"])
-                                    novo_cnpj = st.text_input("CNPJ", value=fornecedor_info["cnpj"])
-                                    novo_email = st.text_input("E-mail", value=fornecedor_info["email"])
-                                    novo_endereco = st.text_input("Endereço", value=fornecedor_info["endereco"])
-                                    novo_cep = st.text_input("CEP", value=fornecedor_info["cep"])
-                                    novo_telefone = st.text_input("Telefone", value=fornecedor_info["telefone"])
+                                    nome_fornecedor = st.text_input("Nome do Fornecedor")
+
+                                    col1, col2 = st.columns([1,2])
+                                    with col1:
+                                        novo_cnpj = st.text_input("CNPJ (formato: 00.000.000/0000-00)")
+                                    with col2:
+                                        novo_email = st.text_input("E-mail")
+                                    
+                                    novo_endereco = st.text_input("Endereço")
+                                    col1, col2 = st.columns([2,1])
+                                    with col1:
+                                        novo_telefone = st.text_input("Telefone")
+                                    with col2:
+                                        novo_cep = st.text_input("CEP (formato = 00000-000)", max_chars=9)
 
                                     atualizar = st.form_submit_button("Atualizar Fornecedor")
 
