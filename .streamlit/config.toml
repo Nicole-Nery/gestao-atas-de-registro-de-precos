@@ -3,5 +3,5 @@ base="light"
 primaryColor="#8bc649"
 backgroundColor="#ffffff"
 
-baseFontSize = 15
-baseRadius = "0.8rem"
+baseFontSize = 16
+baseRadius = "0.7rem"
