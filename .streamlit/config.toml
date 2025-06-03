@@ -3,6 +3,6 @@ base="light"
 primaryColor="#8bc649"
 backgroundColor="#fbfbfb"
 secondaryBackgroundColor="#e1e3e5"
-borderColor = "#9c9e9f"
+borderColor =rgb(14, 33, 43)
 textColor="#2b2b2b"
 baseFontSize = 14
