@@ -5,4 +5,4 @@ backgroundColor="#ffffff"
 secondaryBackgroundColor="#edeeee"
 borderColor = "#193543"
 baseFontSize = 14
-baseRadius = 1rem
+baseRadius = 15px
