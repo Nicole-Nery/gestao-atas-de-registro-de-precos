@@ -11,7 +11,7 @@ def autenticar_usuario(email, senha_digitada):
             return usuario
     return None
 
-def cadastrar_novo_usuario(supabase, nome, cargo, email, senha):
+def cadastrar_novo_usuario(supabase, nome, email, senha):
     try:
         # Criptografa a senha
         hashed_password = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -31,8 +31,7 @@ def cadastrar_novo_usuario(supabase, nome, cargo, email, senha):
         # 2. Salva dados adicionais na tabela "usuarios"
         dados_usuario = {
             "id": user_id,     # usa o mesmo ID do auth
-            "nome_usuario": nome,
-            "cargo": cargo,
+            "nome": nome,
             "email": email,
             "senha": hashed_password
         }
