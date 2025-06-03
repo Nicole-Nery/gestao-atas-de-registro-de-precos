@@ -2,7 +2,7 @@
 base="light"
 primaryColor="#8bc649"
 backgroundColor="#ffffff"
-secondaryBackgroundColor="#edeeee"
+
 borderColor = "#193543"
 baseFontSize = 14
 baseRadius = "0.8rem"
