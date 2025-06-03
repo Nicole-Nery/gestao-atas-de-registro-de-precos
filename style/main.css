@@ -5,6 +5,9 @@ html, body, .stApp * {
     color: #2b2b2b;
 }
 
+footer {display: none}
+[data-testid="stHeader"] {display: none}
+
 .login-title {
     font-size: 60px;
     color: black;
