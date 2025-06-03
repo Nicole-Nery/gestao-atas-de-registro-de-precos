@@ -1,7 +1,7 @@
 [theme]
 base="light"
 primaryColor="#8bc649"
-backgroundColor="#fbfbfb"
+backgroundColor="#ffffff"
 secondaryBackgroundColor="#e1e3e5"
 borderColor = "#193543"
 baseFontSize = 14
