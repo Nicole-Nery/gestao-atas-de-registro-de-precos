@@ -4,11 +4,17 @@ import bcrypt
 def autenticar_usuario(email, senha_digitada):
     res = supabase.table("usuarios").select("*").eq("email", email).execute()
 
-    if res.data:
+    if res.data and len(res.data) == 1:
         usuario = res.data[0]
-        senha_hash = usuario["senha"].encode('utf-8')
+        senha_hash = usuario["senha"]
+        
+        # Se estiver como string no banco, encode para bytes
+        if isinstance(senha_hash, str):
+            senha_hash = senha_hash.encode('utf-8')
+        
         if bcrypt.checkpw(senha_digitada.encode('utf-8'), senha_hash):
             return usuario
+    
     return None
 
 def cadastrar_novo_usuario(supabase, nome, email, senha):
