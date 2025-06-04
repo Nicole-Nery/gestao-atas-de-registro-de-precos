@@ -1360,26 +1360,27 @@ def show_home():
     if 'prazo_renovacao_ata' not in st.session_state:
         st.session_state.prazo_renovacao_ata = prazo_renovacao_ata
 
-    with tabs[5]:
-        col1, col2 = st.columns([1, 4])
-        with col1:
-            st.image("assets/logos.svg", width=300)
-        with col2:
-            st.subheader("Renovação de atas")
+    st.subheader("Renovação de atas")
 
-        # Espaço reservado para o texto
-        prazo_placeholder = st.empty()
-        prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
+    # Mostrar o prazo atual
+    prazo_placeholder = st.empty()
+    prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
 
-        with st.expander("Alterar prazo de renovação"):
-            with st.form("form_alterar_prazo", border=False):
-                novo_prazo = st.number_input("Novo prazo de renovação (meses)", min_value=1,max_value=96, value=st.session_state.prazo_renovacao_ata)
-                submitted = st.form_submit_button("Salvar novo prazo")
-                if submitted:
-                    update_config('prazo_renovacao_ata', novo_prazo)
-                    st.session_state.prazo_renovacao_ata = novo_prazo
-                    st.success(f"Prazo atualizado para {novo_prazo} meses!")
-                    st.rerun() 
+    # Formulário para alterar o prazo
+    with st.expander("Alterar prazo de renovação"):
+        with st.form("form_alterar_prazo", border=False):
+            novo_prazo = st.number_input(
+                "Novo prazo de renovação (meses)",
+                min_value=1,
+                max_value=96,
+                value=int(st.session_state.prazo_renovacao_ata)
+            )
+            submitted = st.form_submit_button("Salvar novo prazo")
+            if submitted:
+                update_config('prazo_renovacao_ata', str(novo_prazo))  # salva como string no banco
+                st.session_state.prazo_renovacao_ata = novo_prazo
+                st.success(f"Prazo atualizado para {novo_prazo} meses!")
+                st.rerun()
 
         st.markdown("---")
 
