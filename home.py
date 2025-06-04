@@ -1410,7 +1410,7 @@ def show_home():
                         continue
 
                     data_inicio = date.fromisoformat(ata["data_inicio"])
-                    data_renovacao = data_inicio + relativedelta(months=st.session_state.prazo_renovacao_ata)
+                    data_renovacao = data_inicio + relativedelta(months=prazo_renovacao_ata)
                     dias_para_renovacao = (data_renovacao - date.today()).days
 
                     relatorio_renovacao.append({
