@@ -1410,14 +1410,13 @@ def show_home():
                         continue
                     
                     st.write(ata)
-                    
+
                     data_inicio = date.fromisoformat(ata["data_inicio"])
                     data_renovacao = data_inicio + relativedelta(months=prazo_renovacao_ata)
                     dias_para_renovacao = (data_renovacao - date.today()).days
 
                     relatorio_renovacao.append({
                         "Ata": ata["nome"],
-                        "Ata ID": ata["id"],
                         "Categoria": ata["categoria_ata"],
                         "Data Início": data_inicio.strftime('%d/%m/%Y'),
                         "Data Renovação": data_renovacao.strftime('%d/%m/%Y'),
