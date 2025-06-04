@@ -1354,8 +1354,11 @@ def show_home():
 
 
     # Renovação da Ata -----------------------------------------------------------------------------------------------------------------------------
+    resposta = supabase.table('configuracoes').select("valor").eq("chave", "prazo_renovacao_ata").execute()
+    prazo_renovacao_ata = resposta.data["valor"]
+
     if 'prazo_renovacao_ata' not in st.session_state:
-        st.session_state.prazo_renovacao_ata = get_config('prazo_renovacao_ata')
+        st.session_state.prazo_renovacao_ata = prazo_renovacao_ata
 
     with tabs[5]:
         col1, col2 = st.columns([1, 4])
