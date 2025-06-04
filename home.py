@@ -1439,6 +1439,7 @@ def show_home():
                 # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
                 relatorio_df = relatorio_df[relatorio_df["Dias para renovação"] >= -30]
+                st.write(relatorio_df)
 
                 # Seleção de categorias
                 categorias_selecionadas = st.multiselect("Escolha a(s) categoria(s)", categorias, placeholder="Selecione", key="selecionar_categoria_renovacao")
