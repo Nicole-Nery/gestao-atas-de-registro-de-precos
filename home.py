@@ -1408,8 +1408,6 @@ def show_home():
                 for ata in atas_data.values():
                     if not ata:
                         continue
-                    
-                    st.write(ata)
 
                     data_inicio = date.fromisoformat(ata["data_inicio"])
                     data_renovacao = data_inicio + relativedelta(months=prazo_renovacao_ata)
