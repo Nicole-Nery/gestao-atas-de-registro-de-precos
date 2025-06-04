@@ -1438,8 +1438,6 @@ def show_home():
 
                 # Criar DataFrame
                 relatorio_df = pd.DataFrame(relatorio_renovacao)
-                st.write(relatorio_df)
-                
                 relatorio_df = relatorio_df[relatorio_df["Dias para renovação"] >= -30]
                 
 
