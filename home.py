@@ -1355,32 +1355,40 @@ def show_home():
 
     # Renovação da Ata -----------------------------------------------------------------------------------------------------------------------------
     resposta = supabase.table('configuracoes').select("valor").eq("chave", "prazo_renovacao_ata").single().execute()
-    prazo_renovacao_ata = resposta.data["valor"]
 
-    if 'prazo_renovacao_ata' not in st.session_state:
-        st.session_state.prazo_renovacao_ata = prazo_renovacao_ata
+    # Extrair e converter o valor para inteiro (meses)
+    valor_str = resposta.data["valor"]
+    try:
+        prazo_renovacao_ata = int(valor_str)
+    except ValueError:
+        prazo_renovacao_ata = 12  # valor padrão de segurança
 
-    st.subheader("Renovação de atas")
+    # Aba de renovação
+    with tabs[5]:
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            st.image("assets/logos.svg", width=300)
+        with col2:
+            st.subheader("Renovação de atas")
 
-    # Mostrar o prazo atual
-    prazo_placeholder = st.empty()
-    prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {st.session_state.prazo_renovacao_ata} meses")
+        # Mostrar o prazo atual
+        prazo_placeholder = st.empty()
+        prazo_placeholder.markdown(f"**Prazo padrão de renovação:** {prazo_renovacao_ata} meses")
 
-    # Formulário para alterar o prazo
-    with st.expander("Alterar prazo de renovação"):
-        with st.form("form_alterar_prazo", border=False):
-            novo_prazo = st.number_input(
-                "Novo prazo de renovação (meses)",
-                min_value=1,
-                max_value=96,
-                value=(st.session_state.prazo_renovacao_ata)
-            )
-            submitted = st.form_submit_button("Salvar novo prazo")
-            if submitted:
-                update_config('prazo_renovacao_ata', str(novo_prazo))  # salva como string no banco
-                st.session_state.prazo_renovacao_ata = novo_prazo
-                st.success(f"Prazo atualizado para {novo_prazo} meses!")
-                st.rerun()
+        # Formulário para alterar o prazo
+        with st.expander("Alterar prazo de renovação"):
+            with st.form("form_alterar_prazo", border=False):
+                novo_prazo = st.number_input(
+                    "Novo prazo de renovação (meses)",
+                    min_value=1,
+                    max_value=96,
+                    value=prazo_renovacao_ata
+                )
+                submitted = st.form_submit_button("Salvar novo prazo")
+                if submitted:
+                    update_config('prazo_renovacao_ata', str(novo_prazo))  # salvando como string no banco
+                    st.success(f"Prazo atualizado para {novo_prazo} meses!")
+                    st.rerun()
 
         st.markdown("---")
 
