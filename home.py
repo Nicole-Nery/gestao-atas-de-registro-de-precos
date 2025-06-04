@@ -1373,7 +1373,7 @@ def show_home():
                 "Novo prazo de renovação (meses)",
                 min_value=1,
                 max_value=96,
-                value=int(st.session_state.prazo_renovacao_ata)
+                value=(st.session_state.prazo_renovacao_ata)
             )
             submitted = st.form_submit_button("Salvar novo prazo")
             if submitted:
